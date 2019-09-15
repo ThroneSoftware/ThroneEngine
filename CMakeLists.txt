@@ -10,6 +10,10 @@ set(CMAKE_CXX_STANDARD 17)
 # Add a project and set it's language to c++
 project(Throne CXX)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+
 # Add a custom target for the custom command
 # We make it depends on a DUMMYFILE that never exists so it runs every time we build the project
 add_custom_target(GenerateFileList DEPENDS "DUMMYFILE.h")

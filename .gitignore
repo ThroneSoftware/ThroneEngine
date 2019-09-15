@@ -5,7 +5,6 @@
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
@@ -30,6 +29,9 @@
 *.exe
 *.out
 *.app
+
+# Build
+Build/
 
 # Generated Visual studio files
 *.sln
