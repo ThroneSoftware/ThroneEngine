@@ -1,19 +1,19 @@
 cmake_minimum_required(VERSION 3.14)
 
-# https://gist.github.com/Zeex/5291602
 # Group source files based on their folder
-function(group_target_sources target)
+# Remove the prefix relative_source_path
+function(group_target_sources target relative_source_path)
+	# get all sources files in a target
 	get_target_property(sources ${target} SOURCES)
 	foreach(file ${sources})
-		get_filename_component(path "${file}" ABSOLUTE)
-		get_filename_component(path "${path}" PATH)
-		if(file MATCHES "${PROJECT_BINARY_DIR}")
-			file(RELATIVE_PATH path ${PROJECT_BINARY_DIR} "${path}")
-		else()
-			file(RELATIVE_PATH path ${PROJECT_SOURCE_DIR} "${path}")
-		endif()
-		string(REGEX REPLACE "/" "\\\\" win_path "${path}")
-		source_group("${win_path}" REGULAR_EXPRESSION "${path}/[^/\\]+\\..*")
+		# This get the the path of the parent directory in the file
+		get_filename_component(parent_directory_path ${file} DIRECTORY)
+		
+		source_group(TREE 
+			${PROJECT_SOURCE_DIR}/${relative_source_path} 
+			PREFIX "src\\"
+			FILES ${file}
+		)
 	endforeach()
 endfunction()
 
@@ -24,6 +24,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 set(CMAKE_CXX_STANDARD 17)
 
+# Add a project and set it's language to c++
+# [Visual Studio] This will create the solution named ThroneEngine
+project(ThroneEngine CXX)
+
 # Add a custom target for the custom command
 # We make it depends on a DUMMYFILE that never exists so it runs every time we build the project
 add_custom_target(GenerateFileList DEPENDS "DUMMYFILE.h")
@@ -32,13 +36,13 @@ add_custom_target(GenerateFileList DEPENDS "DUMMYFILE.h")
 add_custom_command(TARGET GenerateFileList 
     PRE_BUILD
     COMMAND python
-    "${PROJECT_SOURCE_DIR}/src/Core/GenerateFileList.py"
+    ${PROJECT_SOURCE_DIR}/src/Core/GenerateFileList.py
 )
 
 add_custom_command(TARGET GenerateFileList 
     PRE_BUILD
     COMMAND python
-    "${PROJECT_SOURCE_DIR}/src/ManualTesting/GenerateFileList.py"
+    ${PROJECT_SOURCE_DIR}/src/ManualTesting/GenerateFileList.py
 )
 
 # Add a command to rerun ZERO_CHECK after generating files
@@ -48,10 +52,6 @@ add_custom_command(TARGET GenerateFileList
 	POST_BUILD 
 	COMMAND cmake --build . --target ZERO_CHECK
 )
-
-# Add a project and set it's language to c++
-# [Visual Studio] This will create the solution named ThroneEngine
-project(ThroneEngine CXX)
 
 # Sets the output directory for different build outputs (exe, dll, lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
@@ -69,7 +69,7 @@ add_subdirectory(src/Core)
 # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
 target_compile_options(Core PRIVATE "/permissive-")
 
-group_target_sources(Core)
+group_target_sources(Core src/Core)
 
 # Creates the executable target
 # The empty "" is required even if it's empty
@@ -90,4 +90,4 @@ target_link_libraries(ManualTesting Core)
 # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
 target_compile_options(ManualTesting PRIVATE "/permissive-")
 
-group_target_sources(ManualTesting)
+group_target_sources(ManualTesting src/ManualTesting)
