@@ -1,0 +1,10 @@
+^C:\USERS\X-PC\DESKTOP\THRONE\CMAKELISTS.TXT
+setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/Users/X-PC/Desktop/Throne -BC:/Users/X-PC/Desktop/Throne/bin --check-stamp-file C:/Users/X-PC/Desktop/Throne/bin/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

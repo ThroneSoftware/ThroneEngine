@@ -191,6 +191,12 @@ Throne_BINARY_DIR:STATIC=C:/Users/X-PC/Desktop/Throne/bin
 //Value Computed by CMake
 Throne_SOURCE_DIR:STATIC=C:/Users/X-PC/Desktop/Throne
 
+//Value Computed by CMake
+ZERO_CHECK_BINARY_DIR:STATIC=C:/Users/X-PC/Desktop/Throne/bin
+
+//Value Computed by CMake
+ZERO_CHECK_SOURCE_DIR:STATIC=C:/Users/X-PC/Desktop/Throne
+
 
 ########################
 # INTERNAL cache entries
