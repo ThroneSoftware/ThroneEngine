@@ -45,6 +45,11 @@ add_custom_command(TARGET GenerateFileList
     ${PROJECT_SOURCE_DIR}/src/ManualTesting/GenerateFileList.py
 )
 
+set_target_properties(GenerateFileList
+	PROPERTIES
+	FOLDER "GenerateFileList"
+)
+
 # Add a command to rerun ZERO_CHECK after generating files
 # I wish we could manualy change dependencies of ZERO_CHECK to make it depend on our projects, but it does
 # not seem to be possible.
