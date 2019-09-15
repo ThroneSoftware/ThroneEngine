@@ -1,0 +1,4 @@
+C:/Users/X-PC/Desktop/Throne/bin/CMakeFiles/GenerateFileList.dir
+C:/Users/X-PC/Desktop/Throne/bin/CMakeFiles/Throne.dir
+C:/Users/X-PC/Desktop/Throne/bin/CMakeFiles/ALL_BUILD.dir
+C:/Users/X-PC/Desktop/Throne/bin/CMakeFiles/ZERO_CHECK.dir

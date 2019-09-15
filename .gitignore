@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+
+# Generated Visual studio files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vs
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
