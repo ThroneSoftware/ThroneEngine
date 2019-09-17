@@ -44,3 +44,4 @@ Build/
 *.user
 *.userosscache
 *.sln.docstates
+FakeCMakeLists.txt

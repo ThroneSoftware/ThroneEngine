@@ -90,7 +90,7 @@ add_subdirectory(src/ManualTesting)
 
 # Specify that a target links with other targets
 # This implies add_dependencies
-target_link_libraries(ManualTesting Core)
+target_link_libraries(ManualTesting Core2)
 
 # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
 target_compile_options(ManualTesting PRIVATE "/permissive-")

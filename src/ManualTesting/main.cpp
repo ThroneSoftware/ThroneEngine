@@ -4,6 +4,7 @@
 #include <windows.h>
 
 #include <Core/Core.h>
+#include <Core2/Core2.h>
 
 using namespace std;
 string ExePath()
@@ -19,6 +20,7 @@ int main()
     std::cout << ExePath() << std::endl;
 	std::cout << "Throne!" << std::endl;
     print(10);
+    print2(11);
 
 
 	std::optional<int> opt;
