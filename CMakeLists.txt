@@ -1,22 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
 
-# Group source files based on their folder
-# Remove the prefix relative_source_path
-function(group_target_sources target relative_source_path)
-	# get all sources files in a target
-	get_target_property(sources ${target} SOURCES)
-	foreach(file ${sources})
-		# This get the the path of the parent directory in the file
-		get_filename_component(parent_directory_path ${file} DIRECTORY)
-		
-		source_group(TREE 
-			${PROJECT_SOURCE_DIR}/${relative_source_path} 
-			PREFIX "src\\"
-			FILES ${file}
-		)
-	endforeach()
-endfunction()
-
 # Separate the cmake projects(ALL_BUILD and ZERO_CHECK) and the actual projects
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -36,13 +19,7 @@ add_custom_target(GenerateFileList DEPENDS "DUMMYFILE.h")
 add_custom_command(TARGET GenerateFileList 
     PRE_BUILD
     COMMAND python
-    ${PROJECT_SOURCE_DIR}/src/Core/GenerateFileList.py
-)
-
-add_custom_command(TARGET GenerateFileList 
-    PRE_BUILD
-    COMMAND python
-    ${PROJECT_SOURCE_DIR}/src/ManualTesting/GenerateFileList.py
+    ${PROJECT_SOURCE_DIR}/GenerateFileList.py
 )
 
 set_target_properties(GenerateFileList
@@ -63,36 +40,4 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin/lib)
 
-# Specify a static library
-# [Visual Studio] This will create a project
-add_library(Core STATIC)
-
-# Specify a directoy to be included in the project source code
-# The subdirectories needs a CMakeLists.txt
-add_subdirectory(src/Core)
-
-# Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
-target_compile_options(Core PRIVATE "/permissive-")
-
-group_target_sources(Core src/Core)
-
-# Creates the executable target
-# The empty "" is required even if it's empty
-# [Visual Studio] This will create a project
-add_executable(ManualTesting "")
-
-# Add an include directory to ManualTesting
-# Thoses are the includes with <>
-include_directories(src)
-
-# Specify a directoy to be included in the project source code
-add_subdirectory(src/ManualTesting)
-
-# Specify that a target links with other targets
-# This implies add_dependencies
-target_link_libraries(ManualTesting Core2)
-
-# Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
-target_compile_options(ManualTesting PRIVATE "/permissive-")
-
-group_target_sources(ManualTesting src/ManualTesting)
+include(Targets.cmake)
