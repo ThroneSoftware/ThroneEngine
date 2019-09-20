@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Help us improve the project by submitting a bug report.
+about: Help us improve the project by submitting a bug report
 title: ''
 labels: Bug
 assignees: ''
@@ -9,6 +9,7 @@ assignees: ''
 
 <!--- Text in these sections will not be visible when the issue is submited -->
 <!--- Provide a general summary of the issue in the Title above -->
+<!--- Please be very clear and detailed in your descriptions to help developpers -->
 
 ## Steps to Reproduce
 <!--- Provide a link to a live example, or an unambiguous set of steps to -->
