@@ -13,6 +13,10 @@ assignees: ''
 ## Detailed Description
 <!--- Provide a detailed description of the change or addition you are proposing -->
 
+## Why is this an improvement
+<!--- Optional, sometime the description is enough -->
+<!--- Provide an explanation of why do you think this is a good improvement to the project -->
+
 ## Context (Environment)
 <!--- How has this issue affected you? What are you trying to accomplish? -->
 <!--- Providing context helps us come up with a solution that is most useful in the real world -->
