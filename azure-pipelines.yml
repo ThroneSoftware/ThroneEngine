@@ -11,12 +11,11 @@ jobs:
   container:
     image: windows-2019
 
-steps:
-- task: CMake@1
-  inputs:
-    cmakeArgs: 'cmake -G "Visual Studio 16 2019" -S "../" -B "."'
-
-steps:
-- task: CMake@1
-  inputs:
-    cmakeArgs: '--build . --target ALL_BUILD'
+  steps:
+    - task: CMake@1
+      inputs:
+        cmakeArgs: 'cmake -G "Visual Studio 16 2019" -S "../" -B "."'
+  steps:
+    - task: CMake@1
+      inputs:
+        cmakeArgs: '--build . --target ALL_BUILD'
