@@ -20,6 +20,8 @@ int main()
     std::cout << ExePath() << std::endl;
 	std::cout << "Throne!" << std::endl;
     print(10);
+    print(11);
+    print(12);
 
 	std::optional<int> opt;
 }
