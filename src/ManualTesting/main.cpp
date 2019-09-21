@@ -16,10 +16,10 @@ string ExePath()
 
 int main()
 {
+    // test
     std::cout << ExePath() << std::endl;
 	std::cout << "Throne!" << std::endl;
     print(10);
-
 
 	std::optional<int> opt;
 }
