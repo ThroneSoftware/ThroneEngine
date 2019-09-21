@@ -19,7 +19,5 @@ assignees: ''
 <!--- Providing context helps us come up with a solution that is most useful in the real world -->
 <!--- You can also add files to help us undestand for example screenshots or logs. --> 
 
-<!--- Provide a general summary of the issue in the Title above -->
-
 ## Possible Implementation
 <!--- Not obligatory, but suggest an idea for implementing addition or change -->
