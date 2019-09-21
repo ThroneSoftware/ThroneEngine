@@ -1,0 +1,11 @@
+pull_request_rules:
+  - name: Automatic merge
+    conditions:
+      - base=master
+      #- "#approved-reviews-by>=1"
+      - status-success=ThroneSoftware.ThroneEngine
+      - -label=[ready-to-merge]
+    actions:
+      merge:
+        method: squash
+        strict: true
