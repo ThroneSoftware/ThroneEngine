@@ -21,5 +21,7 @@ int main()
 	std::cout << "Throne!" << std::endl;
     print(10);
 
+    test;
+
 	std::optional<int> opt;
 }
