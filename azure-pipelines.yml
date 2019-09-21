@@ -4,18 +4,17 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger: [release, master]
+trigger: [master, release]
 
-jobs:
-- job: WindowsBuild
-  container:
-    image: windows-2019
-
-  steps:
-    - task: CMake@1
-      inputs:
-        cmakeArgs: 'cmake -G "Visual Studio 16 2019" -S "../" -B "."'
-  steps:
-    - task: CMake@1
-      inputs:
-        cmakeArgs: '--build . --target ALL_BUILD'
+# jobs:
+# - job: WindowsBuild
+#   container:
+#     image: Windows-2019
+steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: 'cmake -G "Visual Studio 16 2019" -S "../" -B "."'
+steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: '--build . --target ALL_BUILD'
