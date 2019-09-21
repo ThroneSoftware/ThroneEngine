@@ -1,8 +1,8 @@
 ---
-name: Improvement
-about: Improvement of an already existing feature
+name: Repository improvement
+about: Improvement of the repository
 title: ''
-labels: Improvement
+labels: Repository
 assignees: ''
 
 ---
@@ -15,7 +15,7 @@ assignees: ''
 
 ## Context (Environment)
 <!--- How has this issue affected you? What are you trying to accomplish? -->
-<!--- Provide an explanation of why do you think this is a good improvement to the project -->
+<!--- Provide an explanation of why do you think this is a good improvement to the repository-->
 <!--- Providing context helps us come up with a solution that is most useful in the real world -->
 <!--- You can also add files to help us undestand for example screenshots or logs. --> 
 

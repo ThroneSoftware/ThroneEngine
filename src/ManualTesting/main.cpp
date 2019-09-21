@@ -11,7 +11,7 @@ string ExePath()
 	char buffer[MAX_PATH];
 	GetModuleFileName(NULL, buffer, MAX_PATH);
 	string::size_type pos = string(buffer).find_last_of("\\/");
-	return string(buffer).substr(0, pos);
+	return string(buffer).substr(0, pos);//
 }
 
 int main()
@@ -19,7 +19,9 @@ int main()
     // test 4
     std::cout << ExePath() << std::endl;
 	std::cout << "Throne!" << std::endl;
-    print(10);
+    print(10);//
+    print(11);
+    print(12);//
 
 	std::optional<int> opt;
 }
