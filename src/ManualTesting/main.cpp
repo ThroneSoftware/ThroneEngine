@@ -19,7 +19,7 @@ int main()
     // test 4
     std::cout << ExePath() << std::endl;
 	std::cout << "Throne!" << std::endl;
-    print(10);
+    print(10)
 
 	std::optional<int> opt;
 }
