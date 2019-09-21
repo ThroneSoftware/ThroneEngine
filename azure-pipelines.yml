@@ -8,6 +8,10 @@ trigger: [release, master]
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
+  
+- task: CMake@1
+  inputs:
+    cmakeArgs: '--build . --target ALL_BUILD'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
