@@ -6,19 +6,17 @@
 
 trigger: [release, master]
 
+jobs:
+- job: WindowsBuild
+  container:
+    image: windows-2019
+
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-  
 - task: CMake@1
   inputs:
     cmakeArgs: 'cmake -G "Visual Studio 16 2019" -S "../" -B "."'
 
+steps:
 - task: CMake@1
   inputs:
     cmakeArgs: '--build . --target ALL_BUILD'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
