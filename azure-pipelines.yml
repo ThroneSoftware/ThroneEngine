@@ -3,7 +3,7 @@ trigger: [master, release]
 jobs:
 - job: WindowsBuild
   container:
-    image: Windows-2019
+    image: windows-2019
   steps:
     - task: CMake@1
       inputs:
