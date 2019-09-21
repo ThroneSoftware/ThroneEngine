@@ -2,7 +2,7 @@
 name: Repository improvement
 about: Improvement of the repository
 title: ''
-labels: ''
+labels: Repository
 assignees: ''
 
 ---
