@@ -8,6 +8,10 @@ jobs:
     - task: CMake@1
       inputs:
         cmakeArgs: 'cmake -G "Visual Studio 16 2019" -S "../" -B "."'
+
+    - task: CMake@1
+      inputs:
+        cmakeArgs: '--build . --target GenerateFileList'
     - task: CMake@1
       inputs:
         cmakeArgs: '--build . --target ALL_BUILD'
