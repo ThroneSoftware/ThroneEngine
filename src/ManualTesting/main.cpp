@@ -16,7 +16,7 @@ string ExePath()
 
 int main()
 {
-    // test 8
+    // test 9
     std::cout << ExePath() << std::endl;
 	std::cout << "Throne!" << std::endl;
     print(10);//
