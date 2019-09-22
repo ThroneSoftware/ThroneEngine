@@ -1,0 +1,98 @@
+﻿---
+AccessModifierOffset: '-4'
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: 'false'
+AlignConsecutiveDeclarations: 'false'
+AlignEscapedNewlines: Left
+AlignOperands: 'true'
+AlignTrailingComments: 'false'
+AllowAllArgumentsOnNextLine: 'false'
+AllowAllConstructorInitializersOnNextLine: 'false'
+AllowAllParametersOfDeclarationOnNextLine: 'false'
+AllowShortBlocksOnASingleLine: 'false'
+AllowShortCaseLabelsOnASingleLine: 'false'
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: None
+AllowShortLoopsOnASingleLine: 'false'
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: 'false'
+AlwaysBreakTemplateDeclarations: 'Yes'
+BinPackArguments: 'false'
+BinPackParameters: 'false'
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Allman
+BreakBeforeTernaryOperators: 'false'
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+BreakStringLiterals: 'false'
+ColumnLimit: '140'
+CompactNamespaces: 'false'
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'false'
+ConstructorInitializerIndentWidth: '2'
+Cpp11BracedListStyle: 'true'
+DerivePointerAlignment: 'false'
+DisableFormat: 'false'
+ExperimentalAutoDetectBinPacking: 'false'
+FixNamespaceComments: 'true'
+IncludeBlocks: Regroup
+IncludeCategories:
+    - Regex: 'pch.h'
+      Priority: -1
+# Headers in ""
+    - Regex: '\".*\"'
+      Priority: 1
+# Headers in <standard/>
+    - Regex: '<standard/.*>'
+      Priority: 3
+# Headers in <core/>
+    - Regex: '<core/.*>'
+      Priority: 5
+# Headers in <src/>
+    - Regex: '<src.*>'
+      Priority: 10
+# Header in glm
+    - Regex: '.*glm.*'
+      Priority: 13
+# Header in boost
+    - Regex: '.*boost.*'
+      Priority: 14
+# Headers in <vendors/>
+    - Regex: '<vendors.*>'
+      Priority: 15
+# Headers in <> with extension
+    - Regex: '<.*\..*>'
+      Priority: 25
+# Headers in <> with no extension
+    - Regex: '<([A-Za-z0-9\Q/-_\E])+>'
+      Priority: 30
+IndentCaseLabels: 'true'
+IndentPPDirectives: BeforeHash
+IndentWidth: '4'
+IndentWrappedFunctionNames: 'true'
+KeepEmptyLinesAtTheStartOfBlocks: 'false'
+Language: Cpp
+MaxEmptyLinesToKeep: '2'
+NamespaceIndentation: All
+PointerAlignment: Left
+ReflowComments: 'false'
+SortIncludes: 'true'
+SpaceAfterCStyleCast: 'false'
+SpaceAfterTemplateKeyword: 'true'
+SpaceBeforeAssignmentOperators: 'true'
+SpaceBeforeCpp11BracedList: 'false'
+SpaceBeforeCtorInitializerColon: 'true'
+SpaceBeforeInheritanceColon: 'true'
+SpaceBeforeParens: Never
+SpaceBeforeRangeBasedForLoopColon: 'false'
+SpaceInEmptyParentheses: 'false'
+SpacesBeforeTrailingComments: '2'
+SpacesInAngles: 'false'
+SpacesInCStyleCastParentheses: 'false'
+SpacesInParentheses: 'false'
+SpacesInSquareBrackets: 'false'
+Standard: Cpp11
+TabWidth: '4'
+UseTab: Always
+
+...
