@@ -1,6 +1,6 @@
 <!--- This is probably incomplete, we should improve it iterativly--> 
 ## Adding a library
-Add a folder with the name of your library
+Add a folder with the name of your library. Libs should be built.
 
 # Open source library
 You should add a CMakeLists to the library project and add it to the Targets.cmake
