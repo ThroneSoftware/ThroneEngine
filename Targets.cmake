@@ -15,6 +15,25 @@ function(groupTargetSources target relative_source_path)
 	endforeach()
 endfunction()
 
+function(add_vendor_static_library target_name)
+    # Specify a static library
+    # [Visual Studio] This will create a project
+    add_library(${target_name} STATIC)
+
+    # Specify a directoy to be included in the project source code
+    # The subdirectories needs a CMakeLists.txt
+    add_subdirectory(Vendors/${target_name})
+
+    # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
+    target_compile_options(${target_name} PRIVATE "/permissive-")
+
+    groupTargetSources(${target_name} Vendors/${target_name})
+endfunction()
+
+function(add_vendor_external_library target_name)
+    find_library(Vendors/${target_name} ${target_name})
+endfunction()
+
 function(config_target target_name)
     # Add an include directory to target
     # Thoses are the includes with <>
