@@ -42,30 +42,18 @@ IncludeCategories:
 # Headers in ""
     - Regex: '\".*\"'
       Priority: 1
-# Headers in <standard/>
-    - Regex: '<standard/.*>'
+# Headers in <> with extension and in a certain folder
+    - Regex: '<.*(boost|vendors|glm|vulkan).*\..*>'
       Priority: 3
-# Headers in <core/>
-    - Regex: '<core/.*>'
-      Priority: 5
-# Headers in <src/>
-    - Regex: '<src.*>'
-      Priority: 10
-# Header in glm
-    - Regex: '.*glm.*'
-      Priority: 13
-# Header in boost
-    - Regex: '.*boost.*'
-      Priority: 14
-# Headers in <vendors/>
-    - Regex: '<vendors.*>'
-      Priority: 15
-# Headers in <> with extension
+# Headers in <> with extension and in folder
+    - Regex: <.*/.*\..*>
+      Priority: 2
+# Headers in <> with extension and no folder
     - Regex: '<.*\..*>'
-      Priority: 25
+      Priority: 3
 # Headers in <> with no extension
     - Regex: '<([A-Za-z0-9\Q/-_\E])+>'
-      Priority: 30
+      Priority: 4
 IndentCaseLabels: 'true'
 IndentPPDirectives: BeforeHash
 IndentWidth: '4'

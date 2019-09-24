@@ -1,9 +1,18 @@
+//#include "Test.h"
+
+#include <Core/Core.h>
+#include <src/Core/Core.h>
+
+//#include <Test.h>
+#include <Vendors/Test/Test.h>
+//#include <boost/test.h>
+//#include <glm/test.h>
+#include <windows.h>
+
 #include <iostream>
 #include <optional>
 #include <string>
-#include <windows.h>
 
-#include <Core/Core.h>
 //
 using namespace std;
 string ExePath()
@@ -11,17 +20,17 @@ string ExePath()
 	char buffer[MAX_PATH];
 	GetModuleFileName(NULL, buffer, MAX_PATH);
 	string::size_type pos = string(buffer).find_last_of("\\/");
-	return string(buffer).substr(0, pos);//
+	return string(buffer).substr(0, pos);  //
 }
 
 int main()
 {
-    // test 9
-    std::cout << ExePath() << std::endl;
+	// test 9
+	std::cout << ExePath() << std::endl;
 	std::cout << "Throne!" << std::endl;
-    print(10);//
-    print(11);
-    print(12);//
+	print(10);	//
+	print(11);
+	print(12);	//
 
 	std::optional<int> opt;
 }

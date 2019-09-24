@@ -20,6 +20,8 @@ function(config_target target_name)
     # Thoses are the includes with <>
     target_include_directories(${target_name} PRIVATE src)
 
+    target_include_directories(${target_name} PRIVATE ".")
+
     # Specify a directoy to be included in the project source code
     # The subdirectories needs a CMakeLists.txt
     add_subdirectory(src/${target_name})
