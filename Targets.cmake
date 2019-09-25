@@ -41,6 +41,10 @@ function(config_target target_name)
 
     target_include_directories(${target_name} PRIVATE ".")
 
+    target_include_directories(${target_name} PRIVATE "Vendors/Boost/boost_1_71_0/boost")
+
+    target_include_directories(${target_name} PRIVATE "Vendors/glm/glm")
+
     # Specify a directoy to be included in the project source code
     # The subdirectories needs a CMakeLists.txt
     add_subdirectory(src/${target_name})
