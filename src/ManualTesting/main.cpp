@@ -12,6 +12,7 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include <boost/algorithm/string.hpp>
 #include <glm/vec3.hpp>
