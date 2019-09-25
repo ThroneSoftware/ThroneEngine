@@ -1,0 +1,82 @@
+LOCALAPPDATA=C:\Users\X-PC\AppData\Local
+Found with vswhere C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise
+Found with vswhere C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise
+Call_If_Exists "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\..\..\VC\Auxiliary\Build\vcvarsall.bat"  x86
+**********************************************************************
+** Visual Studio 2017 Developer Command Prompt v15.9.5
+** Copyright (c) 2017 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: 'x86'
+###
+### Using 'vc141' toolset.
+###
+
+C:\Users\X-PC\Desktop\Throne\Vendors\Boost\boost_1_71_0\tools\build\src\engine>cl /nologo /Zi /MT /TP /Feb2 /wd4996 /Ox /GL   -DNDEBUG  builtins.cpp class.cpp command.cpp compile.cpp constants.cpp cwd.cpp debug.cpp debugger.cpp execcmd.cpp execnt.cpp filent.cpp filesys.cpp frames.cpp function.cpp glob.cpp hash.cpp hcache.cpp hdrmacro.cpp headers.cpp jam.cpp jambase.cpp jamgram.cpp lists.cpp make.cpp make1.cpp md5.cpp mem.cpp modules.cpp native.cpp object.cpp option.cpp output.cpp parse.cpp pathnt.cpp pathsys.cpp regexp.cpp rules.cpp scan.cpp search.cpp strings.cpp subst.cpp sysinfo.cpp timestamp.cpp variable.cpp w32_getreg.cpp modules/order.cpp modules/path.cpp modules/property-set.cpp modules/regex.cpp modules/sequence.cpp modules/set.cpp /link kernel32.lib advapi32.lib user32.lib 
+builtins.cpp
+class.cpp
+command.cpp
+compile.cpp
+constants.cpp
+cwd.cpp
+debug.cpp
+debugger.cpp
+execcmd.cpp
+execnt.cpp
+filent.cpp
+filesys.cpp
+frames.cpp
+function.cpp
+glob.cpp
+hash.cpp
+hcache.cpp
+hdrmacro.cpp
+headers.cpp
+jam.cpp
+Compilation en cours...
+jambase.cpp
+jamgram.cpp
+lists.cpp
+make.cpp
+make1.cpp
+md5.cpp
+mem.cpp
+modules.cpp
+native.cpp
+object.cpp
+option.cpp
+output.cpp
+parse.cpp
+pathnt.cpp
+pathsys.cpp
+regexp.cpp
+rules.cpp
+scan.cpp
+search.cpp
+strings.cpp
+Compilation en cours...
+subst.cpp
+sysinfo.cpp
+timestamp.cpp
+variable.cpp
+w32_getreg.cpp
+order.cpp
+path.cpp
+property-set.cpp
+regex.cpp
+sequence.cpp
+set.cpp
+Génération de code en cours
+Fin de la génération du code
+
+C:\Users\X-PC\Desktop\Throne\Vendors\Boost\boost_1_71_0\tools\build\src\engine>dir *.exe 
+ Le volume dans le lecteur C s'appelle 1 samsung
+ Le num‚ro de s‚rie du volume est 5413-712D
+
+ R‚pertoire de C:\Users\X-PC\Desktop\Throne\Vendors\Boost\boost_1_71_0\tools\build\src\engine
+
+2019-09-23  21:46           867ÿ840 b2.exe
+               1 fichier(s)          867ÿ840 octets
+               0 R‚p(s)  12ÿ009ÿ037ÿ824 octets libres
+
+C:\Users\X-PC\Desktop\Throne\Vendors\Boost\boost_1_71_0\tools\build\src\engine>copy /b .\b2.exe .\bjam.exe 
+        1 fichier(s) copi‚(s).
