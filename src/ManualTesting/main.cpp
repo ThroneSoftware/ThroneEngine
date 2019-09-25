@@ -13,6 +13,9 @@
 #include <optional>
 #include <string>
 
+#include <boost/algorithm/string.hpp>
+#include <glm/vec3.hpp>
+
 //
 using namespace std;
 string ExePath()
@@ -31,6 +34,12 @@ int main()
 	print(10);	//
 	print(11);
 	print(12);	//
+
+    glm::vec3 vec3;
+	vec3.x = 10;
+
+    std::vector<std::string> vec;
+	boost::join(vec, "/");
 
 	std::optional<int> opt;
 }
