@@ -4,7 +4,7 @@
 #include <src/Core/Core.h>
 
 //#include <Test.h>
-#include <Vendors/Test/Test.h>
+//#include <Vendors/Test/Test.h>
 //#include <boost/test.h>
 //#include <glm/test.h>
 #include <windows.h>
@@ -12,6 +12,10 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include <vector>
+
+#include <boost/algorithm/string.hpp>
+#include <glm/vec3.hpp>
 
 //
 using namespace std;
@@ -31,6 +35,12 @@ int main()
 	print(10);	//
 	print(11);
 	print(12);	//
+
+    glm::vec3 vec3;
+	vec3.x = 10;
+
+    std::vector<std::string> vec;
+	boost::join(vec, "/");
 
 	std::optional<int> opt;
 }
