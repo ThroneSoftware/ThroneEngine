@@ -37,13 +37,15 @@ endfunction()
 function(config_target target_name)
     # Add an include directory to target
     # Thoses are the includes with <>
-    target_include_directories(${target_name} PRIVATE src)
+    target_include_directories(${target_name} PRIVATE "src")
 
-    target_include_directories(${target_name} PRIVATE ".")
+    target_include_directories(${target_name} PRIVATE "Vendors")
 
-    target_include_directories(${target_name} PRIVATE "Vendors/Boost/boost_1_71_0/boost")
+    target_include_directories(${target_name} PRIVATE "Vendors/Boost/boost_1_71_0/Includes")
 
-    target_include_directories(${target_name} PRIVATE "Vendors/glm/glm")
+    target_include_directories(${target_name} PRIVATE "Vendors/glm/Includes")
+
+    target_include_directories(${target_name} PRIAVTE "Vendors/Vulkan/1.1.121.2/Includes")
 
     # Specify a directoy to be included in the project source code
     # The subdirectories needs a CMakeLists.txt
