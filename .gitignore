@@ -44,3 +44,6 @@ Build/
 *.user
 *.userosscache
 *.sln.docstates
+
+# White list
+!Vendors/**/
