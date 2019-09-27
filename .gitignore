@@ -46,4 +46,4 @@ Build/
 *.sln.docstates
 
 # White list
-!Vendors/**/
+!Vendors/**
