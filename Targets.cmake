@@ -41,11 +41,20 @@ function(config_target target_name)
 
     target_include_directories(${target_name} PRIVATE "Vendors")
 
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Boost/boost_1_71_0/Includes")
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Boost/boost_1_71_0/include")
 
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/glm/Includes")
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/glm/include")
 
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Vulkan/1.1.121.2/Includes")
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Vulkan/1.1.121.2/include")
+
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/gsl/include")
+
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/fmt/include")
+
+    target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/fmt/Build/Debug/fmtd.lib")
+    target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/fmt/Build/Release/fmt.lib")
+
+
 
     # Specify a directoy to be included in the project source code
     # The subdirectories needs a CMakeLists.txt
