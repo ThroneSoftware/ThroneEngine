@@ -1,0 +1,10 @@
+^C:\USERS\X-PC\DESKTOP\THRONE\VENDORS\VENDORS\FREETYPE\FREETYPE-2.10.1\BUILD\CMAKEFILES\72FA5DE956588AFC529366B664C9E3AF\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/Users/X-PC/Desktop/Throne/Vendors/Vendors/freetype/freetype-2.10.1 -BC:/Users/X-PC/Desktop/Throne/Vendors/Vendors/freetype/freetype-2.10.1/Build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/freetype/freetype-2.10.1/Build/freetype.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

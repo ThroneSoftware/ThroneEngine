@@ -42,8 +42,8 @@ IncludeCategories:
 # Headers in ""
     - Regex: '\".*\"'
       Priority: 1
-# Headers in <> with extension and in a certain folder
-    - Regex: '<.*(boost|vendors|glm|vulkan).*\..*>'
+# Headers in <> in a certain folder
+    - Regex: '<.*(boost|vendors|glm|vulkan|fmt|gsl).*>'
       Priority: 3
 # Headers in <> with extension and in folder
     - Regex: <.*/.*\..*>

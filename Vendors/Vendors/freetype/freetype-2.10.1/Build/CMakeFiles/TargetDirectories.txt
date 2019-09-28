@@ -1,0 +1,5 @@
+C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/freetype/freetype-2.10.1/Build/CMakeFiles/PACKAGE.dir
+C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/freetype/freetype-2.10.1/Build/CMakeFiles/freetype.dir
+C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/freetype/freetype-2.10.1/Build/CMakeFiles/INSTALL.dir
+C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/freetype/freetype-2.10.1/Build/CMakeFiles/ALL_BUILD.dir
+C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/freetype/freetype-2.10.1/Build/CMakeFiles/ZERO_CHECK.dir
