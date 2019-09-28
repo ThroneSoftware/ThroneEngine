@@ -5,6 +5,8 @@ jobs:
   pool:
     vmImage: windows-2019
   steps:
+    - checkout: self
+      lfs: true
     - task: CMake@1
       inputs:
         cmakeArgs: 'cmake -G "Visual Studio 16 2019" -S "../" -B "."'
