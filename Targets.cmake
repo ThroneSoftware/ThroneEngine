@@ -34,6 +34,11 @@ function(add_vendor_external_library target_name)
     find_library(Vendors/${target_name} ${target_name})
 endfunction()
 
+function(target_link_library_freetype target_name)
+    target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/freetype/freetype-2.10.1/Build/Debug/freetyped.lib")
+    target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/freetype/freetype-2.10.1/Build/Release/freetype.lib")
+endfunction()
+
 function(config_target target_name)
     # Add an include directory to target
     # Thoses are the includes with <>
@@ -53,8 +58,6 @@ function(config_target target_name)
 
     target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/fmt/Build/Debug/fmtd.lib")
     target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/fmt/Build/Release/fmt.lib")
-
-
 
     # Specify a directoy to be included in the project source code
     # The subdirectories needs a CMakeLists.txt
