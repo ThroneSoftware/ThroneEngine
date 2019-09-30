@@ -1,5 +1,7 @@
 //#include "Test.h"
 
+#include <pch.h>
+
 #include <Core/Core.h>
 
 #include <boost/algorithm/string.hpp>
@@ -38,11 +40,11 @@ int main()
 	std::vector<std::string> vec;
 	boost::join(vec, "/");
 
-    gsl::not_null<int*> test = new int();
+	gsl::not_null<int*> test = new int();
 
-    auto str = fmt::format("{} {} {}", "test", "1", "3");
+	auto str = fmt::format("{} {} {}", "test", "1", "3");
 
-    std::cout << str << "\n";
+	std::cout << str << "\n";
 
 	std::optional<int> opt;
 }
