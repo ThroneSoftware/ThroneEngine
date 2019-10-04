@@ -5,15 +5,7 @@
 #include <Core/Core.h>
 
 #include <boost/algorithm/string.hpp>
-#include <fmt/format.h>
-#include <glm/vec3.hpp>
-#include <gsl/pointers>
 #include <windows.h>
-
-#include <iostream>
-#include <optional>
-#include <string>
-#include <vector>
 
 //
 using namespace std;
