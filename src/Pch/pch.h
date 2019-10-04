@@ -27,38 +27,65 @@
 
 #include <algorithm>
 #include <exception>
+#include <filesystem>
 #include <functional>
 #include <limits>
 #include <memory>
 #include <random>
-#include <thread>
+#include <type_traits>
 #include <typeindex>
 
+#pragma region CONCURENCY
+#include <atomic>
+#include <condition_variable>
+#include <future>
+#include <mutex>
+#include <shared_mutex>
+#include <thread>
+#pragma endregion CONCURENCY
+
 #pragma region TIME
-#include <ctime>
 #include <chrono>
+#include <ctime>
 #include <iomanip>
 #include <locale>
 #include <sstream>
 #pragma endregion TIME
 
 #pragma region STREAM
+#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <filesystem>
 #include <sstream>
 #pragma endregion STREAM
 
 #pragma region STD_CONTAINERS
+#include <any>
+#include <array>
+#include <deque>
+#include <forward_list>
+#include <list>
+#include <map>
+#include <optional>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <string_view>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
-#include <map>
-#include <set>
+#include <variant>
 #include <vector>
-#include <deque>
-#include <queue>
-#include <list>
-#include <string>
 #pragma endregion
 
 #pragma endregion STD
+
+#pragma region FMT
+#include <fmt/compile.h>
+#include <fmt/format.h>
+#pragma endregion FMT
+
+#pragma region GSL
+#include <gsl/gsl>
+#pragma endregion GSL
