@@ -6,10 +6,12 @@ jobs:
     vmImage: windows-2019
   steps:
     - checkout: self
-      lfs: true      
-    - task: CmdLine@2
+      lfs: true               
+    - task: CmdLine@1
       inputs:
-        script: '$(Agent.BuildDirectory)/CMakeBuild/bin/cmake.exe -G "Visual Studio 16 2019" -S "../" -B "."'        
-    - task: CmdLine@2
+        filename: '$(Agent.BuildDirectory)/CMakeBuild/bin/cmake.exe'
+        arguments: '-G "Visual Studio 16 2019" -S "../" -B "."'
+    - task: CmdLine@1
       inputs:
-        script: '$(Agent.BuildDirectory)/CMakeBuild/bin/cmake.exe --build . --target ALL_BUILD'
+        filename: '$(Agent.BuildDirectory)/CMakeBuild/bin/cmake.exe'
+        arguments: '--build . --target ALL_BUILD'
