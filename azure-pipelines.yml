@@ -9,9 +9,10 @@ jobs:
       lfs: true               
     - task: CmdLine@2
       inputs:
-        script: 'dir
-                 cd CMakeBuild/
-                 tree /f'
+        script: |
+          dir
+          cd CMakeBuild/
+          tree /f
         #script: 'call $(Build.Repository.LocalPath)\CMakeBuild\bin\cmake.exe -G "Visual Studio 16 2019" -S "../" -B "."'
     - task: CmdLine@2
       inputs:
