@@ -9,7 +9,7 @@ jobs:
       lfs: true               
     - task: CmdLine@2
       inputs:
-        script: 'call "CMakeBuild/bin/cmake.exe" -G "Visual Studio 16 2019" -S "../../../" -B "../../../Build/"'
+        script: 'call "CMakeBuild/bin/cmake.exe" -G "Visual Studio 16 2019" -S "." -B "Build/"'
     - task: CmdLine@2
       inputs:
-        script: 'call "CMakeBuild/bin/cmake.exe" --build ../../../Build/ --target ALL_BUILD'
+        script: 'call "CMakeBuild/bin/cmake.exe" --build "Build/"" --target ALL_BUILD'
