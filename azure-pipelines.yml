@@ -19,3 +19,4 @@ jobs:
     - task: CmdLine@2
       inputs:
         script: 'call "../CMakeBuild/bin/ctest.exe" --force-new-ctest-process --output-on-failure'
+        workingDirectory: 'Build/'
