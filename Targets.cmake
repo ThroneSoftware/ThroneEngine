@@ -15,12 +15,12 @@ function(groupTargetSources target relative_source_path)
 	endforeach()
 endfunction()
 
-function(target_link_library_freetype target_name)
+function(targetLinkLibraryFreetype target_name)
     target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/freetype/freetype-2.10.1/Build/Debug/freetyped.lib")
     target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/freetype/freetype-2.10.1/Build/Release/freetype.lib")
 endfunction()
 
-function(config_target target_name)
+function(configIncludeDirectories target_name)
     # Add an include directory to target
     # Thoses are the includes with <>
     target_include_directories(${target_name} PRIVATE "src")
@@ -36,21 +36,45 @@ function(config_target target_name)
     target_include_directories(${target_name} PRIVATE "Vendors/Vendors/gsl/include")
 
     target_include_directories(${target_name} PRIVATE "Vendors/Vendors/fmt/include")
+endfunction()
 
+function(linkCommonVendors target_name)
     target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/fmt/Build/Debug/fmtd.lib")
     target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/fmt/Build/Release/fmt.lib")
+endfunction()
+
+function(setCompileOptions target_name)
+    # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
+    target_compile_options(${target_name} PRIVATE "/permissive-")
+endfunction()
+
+function(configTarget target_name)
+    configIncludeDirectories(${target_name})
+    linkCommonVendors(${target_name})
 
     # Specify a directoy to be included in the project source code
     # The subdirectories needs a CMakeLists.txt
     add_subdirectory(src/${target_name})
 
-    # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
-    target_compile_options(${target_name} PRIVATE "/permissive-")
+    setCompileOptions(${target_name})
 
     groupTargetSources(${target_name} src/${target_name})
 endfunction()
 
-function(config_target_to_use_pch target_name)
+function(configTestTarget target_name)
+    configIncludeDirectories(${target_name})
+    linkCommonVendors(${target_name})
+
+    # Specify a directoy to be included in the project source code
+    # The subdirectories needs a CMakeLists.txt
+    add_subdirectory(src/Tests/${target_name})
+
+    setCompileOptions(${target_name})
+
+    groupTargetSources(${target_name} src/Tests/${target_name})
+endfunction()
+
+function(configTargetToUsePch target_name)
     target_precompile_headers(${target_name} REUSE_FROM Pch)
     target_include_directories(${target_name} PRIVATE ${PROJECT_SOURCE_DIR}/src/pch)
 endfunction()
@@ -60,9 +84,9 @@ function(addStaticLibrary lib_name)
     # [Visual Studio] This will create a project
     add_library(${lib_name} STATIC)
 
-    config_target(${lib_name})
+    configTarget(${lib_name})
 
-    config_target_to_use_pch(${lib_name})
+    configTargetToUsePch(${lib_name})
 endfunction()
 
 function(addExecutable executable_name)
@@ -71,14 +95,20 @@ function(addExecutable executable_name)
     # [Visual Studio] This will create a project
     add_executable(${executable_name} "")
 
-    config_target(${executable_name})
+    configTarget(${executable_name})
 
-    config_target_to_use_pch(${executable_name})
+    configTargetToUsePch(${executable_name})
+endfunction()
+
+function(addTestTarget target_name)
+    add_executable(${target_name} "")
+
+    configTestTarget(${target_name})
 endfunction()
 
 function(addPchProj)
     add_library(Pch STATIC)
-    config_target(Pch)
+    configTarget(Pch)
     target_precompile_headers(Pch PRIVATE ${PROJECT_SOURCE_DIR}/src/pch/pch.h)
 
     set_target_properties(Pch PROPERTIES LINKER_LANGUAGE CXX)
@@ -118,6 +148,12 @@ function(main)
     ## ManualTesting
     addExecutable(ManualTesting)
     target_link_libraries(ManualTesting Graphics Physics Networking Audio)
+
+    setupTestProjects()
+endfunction()
+
+function(setupTestProjects)
+    addTestTarget(TestTestFramework)
 endfunction()
 
 main()

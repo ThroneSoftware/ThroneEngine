@@ -35,7 +35,7 @@ set_target_properties(GenerateFileList
 # not seem to be possible.
 add_custom_command(TARGET GenerateFileList 
 	POST_BUILD 
-	COMMAND cmake --build . --target ZERO_CHECK
+	COMMAND ${PROJECT_SOURCE_DIR}/CMakeBuild/bin/cmake.exe --build . --target ZERO_CHECK
 )
 
 # Sets the output directory for different build outputs (exe, dll, lib)
