@@ -69,7 +69,7 @@ SCENARIO("vectors can be sized and resized", "[vector]")
 
 			THEN("the size and capacity change")
 			{
-				REQUIRE(v.size() == 10);
+				REQUIRE(v.size() == 9);
 				REQUIRE(v.capacity() >= 10);
 			}
 		}
