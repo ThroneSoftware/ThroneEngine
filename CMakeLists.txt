@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.14)
 # Separate the cmake projects(ALL_BUILD and ZERO_CHECK) and the actual projects
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(CMAKE_UNITY_BUILD ON)
+set(CMAKE_UNITY_BUILD_BATCH_SIZE 0)
+
 # Set the language standard version
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 set(CMAKE_CXX_STANDARD 17)
