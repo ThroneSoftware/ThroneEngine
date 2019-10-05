@@ -7,11 +7,9 @@ jobs:
   steps:
     - checkout: self
       lfs: true               
-    - task: CmdLine@1
+    - task: CmdLine@2
       inputs:
-        filename: '$(Build.Repository.LocalPath)\CMakeBuild\bin\cmake.exe'
-        arguments: '-G "Visual Studio 16 2019" -S "../" -B "."'
-    - task: CmdLine@1
+        script: 'call $(Build.Repository.LocalPath)\CMakeBuild\bin\cmake.exe -G "Visual Studio 16 2019" -S "../" -B "."'
+    - task: CmdLine@2
       inputs:
-        filename: '$(Build.Repository.LocalPath)\CMakeBuild\bin\cmake.exe'
-        arguments: '--build . --target ALL_BUILD'
+        script: 'call $(Build.Repository.LocalPath)\CMakeBuild\bin\cmake.exe --build . --target ALL_BUILD'
