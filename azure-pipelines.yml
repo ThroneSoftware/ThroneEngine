@@ -13,4 +13,5 @@ jobs:
         #script: 'call $(Build.Repository.LocalPath)\CMakeBuild\bin\cmake.exe -G "Visual Studio 16 2019" -S "../" -B "."'
     - task: CmdLine@2
       inputs:
+        script: 'dir'
         #script: 'call $(Build.Repository.LocalPath)\CMakeBuild\bin\cmake.exe --build . --target ALL_BUILD'
