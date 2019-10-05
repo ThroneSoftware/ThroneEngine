@@ -47,3 +47,4 @@ Build/
 
 # White list
 !Vendors/**
+!CMakeBuild/**
