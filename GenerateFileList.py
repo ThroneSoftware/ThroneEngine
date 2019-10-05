@@ -28,7 +28,7 @@ def generateFileListRecursive(targetPath):
     # Change the directory to targetPath
     os.chdir(targetPath)
 
-    if Path('./TARGET').exists:
+    if Path('./TARGET').exists():
         # Open the FileList.cmake file, creates it if not present
         file = open("FileList.cmake","w+")
         

@@ -15,25 +15,6 @@ function(groupTargetSources target relative_source_path)
 	endforeach()
 endfunction()
 
-function(add_vendor_static_library target_name)
-    # Specify a static library
-    # [Visual Studio] This will create a project
-    add_library(${target_name} STATIC)
-
-    # Specify a directoy to be included in the project source code
-    # The subdirectories needs a CMakeLists.txt
-    add_subdirectory(Vendors/${target_name})
-
-    # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
-    target_compile_options(${target_name} PRIVATE "/permissive-")
-
-    groupTargetSources(${target_name} Vendors/${target_name})
-endfunction()
-
-function(add_vendor_external_library target_name)
-    find_library(Vendors/${target_name} ${target_name})
-endfunction()
-
 function(target_link_library_freetype target_name)
     target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/freetype/freetype-2.10.1/Build/Debug/freetyped.lib")
     target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/freetype/freetype-2.10.1/Build/Release/freetype.lib")
@@ -69,6 +50,10 @@ function(config_target target_name)
     groupTargetSources(${target_name} src/${target_name})
 endfunction()
 
+function(config_target_to_use_pch target_name)
+    target_precompile_headers(${target_name} REUSE_FROM Pch)
+    target_include_directories(${target_name} PRIVATE ${PROJECT_SOURCE_DIR}/src/pch)
+endfunction()
 
 function(addStaticLibrary lib_name)
     # Specify a static library
@@ -76,6 +61,8 @@ function(addStaticLibrary lib_name)
     add_library(${lib_name} STATIC)
 
     config_target(${lib_name})
+
+    config_target_to_use_pch(${lib_name})
 endfunction()
 
 function(addExecutable executable_name)
@@ -85,9 +72,22 @@ function(addExecutable executable_name)
     add_executable(${executable_name} "")
 
     config_target(${executable_name})
+
+    config_target_to_use_pch(${executable_name})
+endfunction()
+
+function(addPchProj)
+    add_library(Pch STATIC)
+    config_target(Pch)
+    target_precompile_headers(Pch PRIVATE ${PROJECT_SOURCE_DIR}/src/pch/pch.h)
+
+    set_target_properties(Pch PROPERTIES LINKER_LANGUAGE CXX)
 endfunction()
 
 function(main)
+    ## Precompiled header
+    addPchProj()
+
     ## Standard
     addStaticLibrary(Standard)
 

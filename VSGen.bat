@@ -1,0 +1,1 @@
+call "C:\Users\X-PC\Desktop\Throne\CMakeBuild\bin\cmake.exe" -G "Visual Studio 16 2019" -S "." -B "./Build"
