@@ -1,5 +1,7 @@
 #include <Vendors/Catch2/catch.hpp>
 
+#include <thread>
+
 unsigned int Factorial(unsigned int number)
 {
 	return number > 1 ? Factorial(number - 1) * number : 1;
@@ -12,6 +14,7 @@ TEST_CASE("Factorials are computed", "[factorial]")
 	REQUIRE(Factorial(2) == 2);
 	REQUIRE(Factorial(3) == 6);
 	REQUIRE(Factorial(10) == 3628800);
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 TEST_CASE("vectors can be sized and resized", "[vector]")

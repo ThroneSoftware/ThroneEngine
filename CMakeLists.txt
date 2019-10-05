@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/Vendors/Catch2)
+
 # Separate the cmake projects(ALL_BUILD and ZERO_CHECK) and the actual projects
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -38,9 +40,17 @@ add_custom_command(TARGET GenerateFileList
 	COMMAND ${PROJECT_SOURCE_DIR}/CMakeBuild/bin/cmake.exe --build . --target ZERO_CHECK
 )
 
+add_custom_target(BuildTests)
+
+set_target_properties(BuildTests PROPERTIES FOLDER "Tests/Commands")
+
 # Sets the output directory for different build outputs (exe, dll, lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin/lib)
+
+include(CTest)
+enable_testing()
+include(${PROJECT_SOURCE_DIR}/Vendors/Vendors/Catch2/Catch.cmake)
 
 include(Targets.cmake)

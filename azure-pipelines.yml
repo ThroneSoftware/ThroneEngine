@@ -12,4 +12,10 @@ jobs:
         script: 'call "CMakeBuild/bin/cmake.exe" -G "Visual Studio 16 2019" -S "." -B "Build/"'
     - task: CmdLine@2
       inputs:
-        script: 'call "CMakeBuild/bin/cmake.exe" --build "Build/"" --target ALL_BUILD'
+        script: 'call "CMakeBuild/bin/cmake.exe" --build "Build/"" --target ALL_BUILD -j'
+    - task: CmdLine@2
+      inputs:
+        script: 'call "CMakeBuild/bin/cmake.exe" --build "Build/"" --target BuildTests -j'
+    - task: CmdLine@2
+      inputs:
+        script: 'call "../CMakeBuild/bin/ctest.exe" --force-new-ctest-process --output-on-failure'

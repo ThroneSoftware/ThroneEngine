@@ -69,9 +69,15 @@ function(configTestTarget target_name)
     # The subdirectories needs a CMakeLists.txt
     add_subdirectory(src/Tests/${target_name})
 
+    catch_discover_tests(${target_name})   
+
     setCompileOptions(${target_name})
 
     groupTargetSources(${target_name} src/Tests/${target_name})
+
+    add_dependencies(BuildTests ${target_name})
+
+    set_target_properties(${target_name} PROPERTIES FOLDER "Tests")
 endfunction()
 
 function(configTargetToUsePch target_name)
@@ -104,6 +110,19 @@ function(addTestTarget target_name)
     add_executable(${target_name} "")
 
     configTestTarget(${target_name})
+endfunction()
+
+function(addRunTestsTarget)
+    add_executable(RunTests "")
+
+    add_subdirectory(src/Tests/RunTests)
+
+    setCompileOptions(RunTests)
+
+    groupTargetSources(RunTests src/Tests/RunTests)
+
+    add_dependencies(RunTests BuildTests)
+    set_target_properties(RunTests PROPERTIES FOLDER "Tests/Commands")
 endfunction()
 
 function(addPchProj)
@@ -154,6 +173,8 @@ endfunction()
 
 function(setupTestProjects)
     addTestTarget(TestTestFramework)
+
+    addRunTestsTarget()
 endfunction()
 
 main()
