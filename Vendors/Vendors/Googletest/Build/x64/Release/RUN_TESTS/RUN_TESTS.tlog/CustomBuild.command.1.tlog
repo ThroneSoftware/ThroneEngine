@@ -1,0 +1,10 @@
+^C:\USERS\X-PC\DESKTOP\THRONE\VENDORS\VENDORS\GOOGLETEST\BUILD\CMAKEFILES\1F611D756129C27EA273671E8DFE3A70\RUN_TESTS_FORCE.RULE
+setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

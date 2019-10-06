@@ -1,0 +1,23 @@
+﻿
+Résumé de performance des projets :
+       20 ms  C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\Googletest\Build\googletest\gtest_main.vcxproj   1 appels
+                 20 ms  Clean                                      1 appels
+
+Résumé de performance cible :
+        0 ms  CleanReferencedProjects                    1 appels
+        0 ms  AfterCppClean                              1 appels
+        0 ms  BeforeCppClean                             1 appels
+        0 ms  AfterClean                                 1 appels
+        0 ms  CleanPublishFolder                         1 appels
+        0 ms  CppClean                                   1 appels
+        0 ms  PrepareProjectReferences                   1 appels
+        0 ms  Clean                                      1 appels
+        0 ms  BeforeClean                                1 appels
+        1 ms  _PrepareForClean                           1 appels
+        1 ms  PGInstrumentedClean                        1 appels
+        1 ms  _SplitProjectReferencesByFileExistence     1 appels
+        1 ms  AssignProjectConfiguration                 1 appels
+        1 ms  _GetProjectReferenceTargetFrameworkProperties   1 appels
+        2 ms  CoreClean                                  1 appels
+        2 ms  _CheckForInvalidConfigurationAndPlatform   1 appels
+       14 ms  CoreCppClean                               1 appels

@@ -1,0 +1,25 @@
+# CMake generation dependency list for this directory.
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeCInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeCXXInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeCommonLanguageInclude.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeDependentOption.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeGenericSystem.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeInitializeConfigs.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeLanguageInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeRCInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeSystemSpecificInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeSystemSpecificInitialize.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/Compiler/MSVC-C.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/GNUInstallDirs.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/Platform/Windows-MSVC-C.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/Platform/Windows-MSVC-CXX.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/Platform/Windows-MSVC.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/Platform/Windows.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/Platform/WindowsPaths.cmake
+C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/Googletest/Build/CMakeFiles/3.15.3/CMakeCCompiler.cmake
+C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/Googletest/Build/CMakeFiles/3.15.3/CMakeCXXCompiler.cmake
+C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/Googletest/Build/CMakeFiles/3.15.3/CMakeRCCompiler.cmake
+C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/Googletest/Build/CMakeFiles/3.15.3/CMakeSystem.cmake
+C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/Googletest/CMakeLists.txt

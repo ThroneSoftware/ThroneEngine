@@ -38,9 +38,27 @@ function(configIncludeDirectories target_name)
     target_include_directories(${target_name} PRIVATE "Vendors/Vendors/fmt/include")
 endfunction()
 
+function(configTestIncludeDirectories target_name)
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Googletest/googlemock/include/gmock")
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Googletest/googlemock/include")
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Googletest/googletest/include")
+
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Catch2/include")
+
+endfunction()
+
+
 function(linkCommonVendors target_name)
     target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/fmt/Build/Debug/fmtd.lib")
     target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/fmt/Build/Release/fmt.lib")
+endfunction()
+
+function(linkTestVendors target_name)
+    target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Googletest/Build/lib/Debug/gmockd.lib")
+    target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Googletest/Build/lib/Release/gmock.lib")
+
+    target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Googletest/Build/lib/Debug/gtestd.lib")
+    target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Googletest/Build/lib/Release/gtest.lib")
 endfunction()
 
 function(setCompileOptions target_name)
@@ -63,8 +81,10 @@ endfunction()
 
 function(configTestTarget target_name)
     configIncludeDirectories(${target_name})
-    linkCommonVendors(${target_name})
+    configTestIncludeDirectories(${target_name})
 
+    linkCommonVendors(${target_name})
+    linkTestVendors(${target_name})
     # Specify a directoy to be included in the project source code
     # The subdirectories needs a CMakeLists.txt
     add_subdirectory(src/Tests/${target_name})
@@ -72,6 +92,8 @@ function(configTestTarget target_name)
     catch_discover_tests(${target_name})   
 
     setCompileOptions(${target_name})
+
+    target_compile_definitions(${target_name} PRIVATE GTEST_DONT_DEFINE_FAIL GTEST_DONT_DEFINE_SUCCEED)
 
     groupTargetSources(${target_name} src/Tests/${target_name})
 

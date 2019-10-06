@@ -12,7 +12,4 @@ void executeTest(std::string_view test_name)
 int main()
 {
 	executeTest("TestTestFramework.exe");
-
-	std::cout << "Press enter to close.\n";
-	std::cin.get();
 }
