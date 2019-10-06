@@ -33,6 +33,9 @@
 # Build
 Build/
 
+# Local test data
+Testing/
+
 # Generated Visual studio files
 *.sln
 *.vcxproj
