@@ -39,5 +39,5 @@ int main()
 	std::cout << str << "\n";
 
 	std::optional<int> opt;
-	std::optional<int> opt2;
+	std::optional<int> opt2;//
 }
