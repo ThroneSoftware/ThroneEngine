@@ -47,51 +47,51 @@ namespace Tests
 			}
 		}
 
-		void OnTestProgramStart(const testing::UnitTest& unit_test)
+		void OnTestProgramStart(const testing::UnitTest&)
 		{
 			//printf("OnTestProgramStart\n");
 		}
-		void OnTestIterationStart(const testing::UnitTest& unit_test, int iteration)
+		void OnTestIterationStart(const testing::UnitTest&, int)
 		{
 			//printf("OnTestIterationStart\n");
 		}
-		void OnEnvironmentsSetUpStart(const testing::UnitTest& unit_test)
+		void OnEnvironmentsSetUpStart(const testing::UnitTest&)
 		{
 			//printf("OnEnvironmentsSetUpStart\n");
 		}
-		void OnEnvironmentsSetUpEnd(const testing::UnitTest& unit_test)
+		void OnEnvironmentsSetUpEnd(const testing::UnitTest&)
 		{
 			//printf("OnEnvironmentsSetUpEnd\n");
 		}
-		void OnTestCaseStart(const testing::TestCase& test_case)
+		void OnTestCaseStart(const testing::TestCase&)
 		{
 			//printf("OnTestCaseStart\n");
 		}
-		void OnTestStart(const testing::TestInfo& test_info)
+		void OnTestStart(const testing::TestInfo&)
 		{
 			//printf("OnTestStart\n");
 		}
-		void OnTestEnd(const testing::TestInfo& test_info)
+		void OnTestEnd(const testing::TestInfo&)
 		{
 			//printf("OnTestEnd\n");
 		}
-		void OnTestCaseEnd(const testing::TestCase& test_case)
+		void OnTestCaseEnd(const testing::TestCase&)
 		{
 			//printf("OnTestCaseEnd\n");
 		}
-		void OnEnvironmentsTearDownStart(const testing::UnitTest& unit_test)
+		void OnEnvironmentsTearDownStart(const testing::UnitTest&)
 		{
 			//printf("OnEnvironmentsTearDownStart\n");
 		}
-		void OnEnvironmentsTearDownEnd(const testing::UnitTest& unit_test)
+		void OnEnvironmentsTearDownEnd(const testing::UnitTest&)
 		{
 			//printf("OnEnvironmentsTearDownEnd\n");
 		}
-		void OnTestIterationEnd(const testing::UnitTest& unit_test, int iteration)
+		void OnTestIterationEnd(const testing::UnitTest&, int)
 		{
 			//printf("OnTestIterationEnd\n");
 		}
-		void OnTestProgramEnd(const testing::UnitTest& unit_test)
+		void OnTestProgramEnd(const testing::UnitTest&)
 		{
 			//printf("OnTestProgramEnd\n");
 		}
