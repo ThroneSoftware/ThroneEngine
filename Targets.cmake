@@ -62,8 +62,18 @@ function(linkTestVendors target_name)
 endfunction()
 
 function(setCompileOptions target_name)
-    # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
-    target_compile_options(${target_name} PRIVATE "/permissive-")
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
+        target_compile_options(${target_name} PRIVATE "/permissive-" "/W4" "/WX")
+        # Compile options only in release mode
+        target_compile_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/Oi;/Ot;/GL>") 
+    else()
+        message(FATAL_ERROR "Unsupported compiler. Add the proper compile options to the specified compiler to activate it.\ 
+If you want or need to make it work quick and right now you can comment out the line outputting this message.\n")
+    endif()
+    
+    # Add a #define
+    target_compile_definitions(${target_name} PRIVATE GLM_FORCE_SILENT_WARNINGS)
 endfunction()
 
 function(configTarget target_name)
