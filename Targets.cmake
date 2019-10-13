@@ -87,6 +87,8 @@ function(configTarget target_name)
     setCompileOptions(${target_name})
 
     groupTargetSources(${target_name} src/${target_name})
+
+    set_target_properties(${target_name} PROPERTIES LINKER_LANGUAGE CXX)
 endfunction()
 
 function(configTestTarget target_name)
@@ -110,6 +112,8 @@ function(configTestTarget target_name)
     add_dependencies(BuildTests ${target_name})
 
     set_target_properties(${target_name} PROPERTIES FOLDER "Tests")
+
+    set_target_properties(${target_name} PROPERTIES LINKER_LANGUAGE CXX)
 endfunction()
 
 function(configTargetToUsePch target_name)
