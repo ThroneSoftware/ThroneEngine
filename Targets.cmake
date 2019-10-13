@@ -112,8 +112,6 @@ function(configTestTarget target_name)
     add_dependencies(BuildTests ${target_name})
 
     set_target_properties(${target_name} PROPERTIES FOLDER "Tests")
-
-    set_target_properties(${target_name} PROPERTIES LINKER_LANGUAGE CXX)
 endfunction()
 
 function(configTargetToUsePch target_name)
@@ -178,11 +176,11 @@ function(main)
 
     ## Utilities
     addStaticLibrary(Utilities)
-    target_link_libraries(Utilities Standard)
+    target_link_libraries(Utilities)
 
     ## Core
     addStaticLibrary(Core)
-    target_link_libraries(Core Standard Utilities)
+    target_link_libraries(Core Utilities)
 
     ## Graphics
     addStaticLibrary(Graphics)
