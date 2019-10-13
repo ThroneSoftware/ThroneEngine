@@ -87,6 +87,8 @@ function(configTarget target_name)
     setCompileOptions(${target_name})
 
     groupTargetSources(${target_name} src/${target_name})
+
+    set_target_properties(${target_name} PROPERTIES LINKER_LANGUAGE CXX)
 endfunction()
 
 function(configTestTarget target_name)
@@ -174,11 +176,11 @@ function(main)
 
     ## Utilities
     addStaticLibrary(Utilities)
-    target_link_libraries(Utilities Standard)
+    target_link_libraries(Utilities)
 
     ## Core
     addStaticLibrary(Core)
-    target_link_libraries(Core Standard Utilities)
+    target_link_libraries(Core Utilities)
 
     ## Graphics
     addStaticLibrary(Graphics)
