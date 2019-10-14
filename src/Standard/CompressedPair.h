@@ -44,6 +44,13 @@ namespace trs
 			{
 			}
 
+			template <typename Type1, typename Type2>
+			constexpr CompressedPairImpl(Type1&& type1, Type2&& type2)
+			  : Type1(std::forward<Type1>(type1))
+			  , m_second(std::forward<Type2>(type2))
+			{
+			}
+
 			template <typename... Args1, typename... Args2>
 			constexpr CompressedPairImpl(std::piecewise_construct_t, std::tuple<Args1...>&& type1Args, std::tuple<Args2...>&& type2Args)
 			  : CompressedPairImpl(std::piecewise_construct_t(),
@@ -51,17 +58,6 @@ namespace trs
 								   std::move(type2Args),
 								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args1...>>>(),
 								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args2...>>>())
-			{
-			}
-
-			template <typename... Args1, typename... Args2, std::size_t... Indices1, std::size_t... Indices2>
-			constexpr CompressedPairImpl(std::piecewise_construct_t,
-										 std::tuple<Args1...>&& type1Args,
-										 std::tuple<Args2...>&& type2Args,
-										 std::index_sequence<Indices1...>,
-										 std::index_sequence<Indices2...>)
-			  : Type1(std::get<Indices1>(std::forward<std::tuple<Args1...>>(type1Args))...)
-			  , m_second(std::get<Indices2>(std::forward<std::tuple<Args2...>>(type2Args))...)
 			{
 			}
 
@@ -86,6 +82,17 @@ namespace trs
 			}
 
 		private:
+			template <typename... Args1, typename... Args2, std::size_t... Indices1, std::size_t... Indices2>
+			constexpr CompressedPairImpl(std::piecewise_construct_t,
+										 std::tuple<Args1...>&& type1Args,
+										 std::tuple<Args2...>&& type2Args,
+										 std::index_sequence<Indices1...>,
+										 std::index_sequence<Indices2...>)
+			  : Type1(std::get<Indices1>(std::forward<std::tuple<Args1...>>(type1Args))...)
+			  , m_second(std::get<Indices2>(std::forward<std::tuple<Args2...>>(type2Args))...)
+			{
+			}
+
 			Type2 m_second;
 		};
 
@@ -99,6 +106,13 @@ namespace trs
 			{
 			}
 
+			template <typename Type1, typename Type2>
+			constexpr CompressedPairImpl(Type1&& type1, Type2&& type2)
+			  : Type2(std::forward<Type2>(type2))
+			  , m_first(std::forward<Type1>(type1))
+			{
+			}
+
 			template <typename... Args1, typename... Args2>
 			constexpr CompressedPairImpl(std::piecewise_construct_t, std::tuple<Args1...>&& type1Args, std::tuple<Args2...>&& type2Args)
 			  : CompressedPairImpl(std::piecewise_construct_t(),
@@ -106,17 +120,6 @@ namespace trs
 								   std::move(type2Args),
 								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args1...>>>(),
 								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args2...>>>())
-			{
-			}
-
-			template <typename... Args1, typename... Args2, std::size_t... Indices1, std::size_t... Indices2>
-			constexpr CompressedPairImpl(std::piecewise_construct_t,
-										 std::tuple<Args1...>&& type1Args,
-										 std::tuple<Args2...>&& type2Args,
-										 std::index_sequence<Indices1...>,
-										 std::index_sequence<Indices2...>)
-			  : Type2(std::get<Indices2>(std::forward<std::tuple<Args2...>>(type2Args))...)
-			  , m_first(std::get<Indices1>(std::forward<std::tuple<Args1...>>(type1Args))...)
 			{
 			}
 
@@ -141,6 +144,17 @@ namespace trs
 			}
 
 		private:
+			template <typename... Args1, typename... Args2, std::size_t... Indices1, std::size_t... Indices2>
+			constexpr CompressedPairImpl(std::piecewise_construct_t,
+										 std::tuple<Args1...>&& type1Args,
+										 std::tuple<Args2...>&& type2Args,
+										 std::index_sequence<Indices1...>,
+										 std::index_sequence<Indices2...>)
+			  : Type2(std::get<Indices2>(std::forward<std::tuple<Args2...>>(type2Args))...)
+			  , m_first(std::get<Indices1>(std::forward<std::tuple<Args1...>>(type1Args))...)
+			{
+			}
+
 			Type1 m_first;
 		};
 
@@ -154,6 +168,13 @@ namespace trs
 			{
 			}
 
+			template <typename Type1, typename Type2>
+			constexpr CompressedPairImpl(Type1&& type1, Type2&& type2)
+			  : m_first(std::forward<Type1>(type1))
+			  , m_second(std::forward<Type2>(type2))
+			{
+			}
+
 			template <typename... Args1, typename... Args2>
 			constexpr CompressedPairImpl(std::piecewise_construct_t, std::tuple<Args1...>&& type1Args, std::tuple<Args2...>&& type2Args)
 			  : CompressedPairImpl(std::piecewise_construct_t(),
@@ -161,17 +182,6 @@ namespace trs
 								   std::move(type2Args),
 								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args1...>>>(),
 								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args2...>>>())
-			{
-			}
-
-			template <typename... Args1, typename... Args2, std::size_t... Indices1, std::size_t... Indices2>
-			constexpr CompressedPairImpl(std::piecewise_construct_t,
-										 std::tuple<Args1...>&& type1Args,
-										 std::tuple<Args2...>&& type2Args,
-										 std::index_sequence<Indices1...>,
-										 std::index_sequence<Indices2...>)
-			  : m_first(std::get<Indices1>(std::forward<std::tuple<Args1...>>(type1Args))...)
-			  , m_second(std::get<Indices2>(std::forward<std::tuple<Args2...>>(type2Args))...)
 			{
 			}
 
@@ -196,6 +206,17 @@ namespace trs
 			}
 
 		private:
+			template <typename... Args1, typename... Args2, std::size_t... Indices1, std::size_t... Indices2>
+			constexpr CompressedPairImpl(std::piecewise_construct_t,
+										 std::tuple<Args1...>&& type1Args,
+										 std::tuple<Args2...>&& type2Args,
+										 std::index_sequence<Indices1...>,
+										 std::index_sequence<Indices2...>)
+			  : m_first(std::get<Indices1>(std::forward<std::tuple<Args1...>>(type1Args))...)
+			  , m_second(std::get<Indices2>(std::forward<std::tuple<Args2...>>(type2Args))...)
+			{
+			}
+
 			Type1 m_first;
 			Type2 m_second;
 		};
