@@ -3,6 +3,8 @@
 #include <pch.h>
 
 #include <Core/Core.h>
+#include <Standard/CompressedPair.h>
+#include <Standard/Pointers.h>
 
 #include <boost/algorithm/string.hpp>
 #include <windows.h>
@@ -39,5 +41,39 @@ int main()
 	std::cout << str << "\n";
 
 	std::optional<int> opt;
-	std::optional<int> opt2;//
+	std::optional<int> opt2;  //
+
+	trs::CompressedPair<int, double> pair1;
+	pair1.first();
+	pair1.second();
+
+	class A
+	{
+	public:
+		A(int i, double d, char c)
+		{
+			i = i + static_cast<int>(d) + c;
+		}
+	};
+
+	trs::CompressedPair<A, A> pair2(std::piecewise_construct_t(), std::forward_as_tuple(3, 4.0, 'c'), std::forward_as_tuple(5, 2.0, 'b'));
+
+	//std::pair<int, double> pair2;
+
+	{
+		std::shared_ptr<int> ptr;
+		//std::make_shared<int>();
+	}
+
+	{
+		trs::PtrOwner<int> ptr(10);
+
+		__nop();
+
+		{
+			trs::SharedPtr sPtr(ptr);
+		}
+
+		__nop();
+	}
 }

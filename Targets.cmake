@@ -144,6 +144,8 @@ function(addTestTarget target_name)
     add_executable(${target_name} "")
 
     configTestTarget(${target_name})
+
+    configTargetToUsePch(${target_name})
 endfunction()
 
 function(addRunTestsTarget)
@@ -207,8 +209,10 @@ endfunction()
 
 function(setupTestProjects)
     addTestTarget(TestTestFramework)
+    addTestTarget(TestStandard)
 
     addRunTestsTarget()
 endfunction()
+
 
 main()
