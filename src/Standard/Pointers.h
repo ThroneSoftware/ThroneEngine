@@ -127,6 +127,15 @@ namespace trs
 			pointer m_ptr;
 		};
 
+		template <typename Type>
+		class DefaultNotifier
+		{
+		public:
+			void operator()(Type*)
+			{
+			}
+		};
+
 	}  // namespace PointersPrivate
 
 	template <typename Type>
@@ -142,15 +151,30 @@ namespace trs
 		using reference = value_type&;
 
 	public:
-		template <typename... Args>
-		PtrOwner(Args&&... args)
-		  : m_base(new Private::CombinedResource<value_type>(std::forward<Args>(args)...))
+		PtrOwner(Private::BaseResource<value_type>* resource)
+		  : m_base(resource)
 		{
 		}
 
 	private:
 		PointersPrivate::BasePtr<value_type> m_base;
 	};
+
+	template <typename Type, typename... Args>
+	PtrOwner<Type> makePtrOwner(Args&&... args)
+	{
+		auto* resource =
+			new Private::CombinedResource<Type, PointersPrivate::DefaultNotifier<Type>>(PointersPrivate::DefaultNotifier<Type>(),
+																						std::forward<Args>(args)...);
+		return PtrOwner<Type>(resource);
+	}
+
+	template <typename Type, typename Notifier, typename... Args>
+	PtrOwner<Type> makePtrOwnerWithNotifier(Notifier&& notifier, Args&&... args)
+	{
+		auto* resource = new Private::CombinedResource<Type, Notifier>(std::forward<Notifier>(notifier), std::forward<Args>(args)...);
+		return PtrOwner<Type>(resource);
+	}
 
 	template <typename Type>
 	class SharedPtr

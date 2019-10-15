@@ -2,6 +2,8 @@
 
 #include <pch.h>
 
+#include "Standard/CompressedPair.h"
+
 namespace trs::Private
 {
 	template <typename Type>
@@ -9,8 +11,8 @@ namespace trs::Private
 	{
 	public:
 		using value_type = Type;
-        using pointer = value_type*;
-        using const_pointer = const value_type*;
+		using pointer = value_type*;
+		using const_pointer = const value_type*;
 		using reference = value_type&;
 
 	public:
@@ -41,47 +43,49 @@ namespace trs::Private
 		}
 
 		virtual pointer getPtr() noexcept = 0;
-        virtual const_pointer getPtr() const noexcept = 0;
+		virtual const_pointer getPtr() const noexcept = 0;
 
-		virtual void notify() const noexcept = 0;
+		virtual void notify() noexcept = 0;
 
 	private:
 		std::atomic<uint32_t> m_count = 0;
 	};
 
-	template <typename Type>
+	template <typename Type, typename Notifier>
 	class CombinedResource : public BaseResource<Type>
 	{
 	public:
 		using value_type = Type;
 		using pointer = value_type*;
-        using const_pointer = const value_type*;
+		using const_pointer = const value_type*;
 		using reference = value_type&;
 
 	public:
-		template <typename... Args>
-		CombinedResource(Args&&... args)
+		template <typename Notifier, typename... Args>
+		CombinedResource(Notifier&& notifier, Args&&... args)
 		  : BaseResource<Type>()
-		  , m_value(std::forward<Args>(args)...)
+		  , m_value(std::piecewise_construct_t(),
+					std::forward_as_tuple(std::forward<Args>(args)...),
+					std::forward_as_tuple(std::forward<Notifier>(notifier)))
 		{
 		}
 
-        pointer getPtr() noexcept override
-        {
-            return &m_value;
-        }
-
-        const_pointer getPtr() const noexcept override
+		pointer getPtr() noexcept override
 		{
-            return &m_value;
+			return &m_value.first();
 		}
 
-		void notify() const noexcept override
+		const_pointer getPtr() const noexcept override
 		{
-            assert(false && "Notify not ready!");
+			return &m_value.first();
+		}
+
+		void notify() noexcept override
+		{
+			m_value.second()(getPtr());
 		}
 
 	private:
-		value_type m_value;
+		CompressedPair<value_type, Notifier> m_value;
 	};
 }  // namespace trs::Private

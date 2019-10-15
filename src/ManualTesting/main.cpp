@@ -58,6 +58,8 @@ int main()
 
 	trs::CompressedPair<A, A> pair2(std::piecewise_construct_t(), std::forward_as_tuple(3, 4.0, 'c'), std::forward_as_tuple(5, 2.0, 'b'));
 
+    pair2.first();
+
 	//std::pair<int, double> pair2;
 
 	{
@@ -66,14 +68,23 @@ int main()
 	}
 
 	{
-		trs::PtrOwner<int> ptr(10);
+        auto notifier = [](int*) 
+        {
+        
+        };
+
+        auto ptr = trs::makePtrOwnerWithNotifier<int, decltype(notifier)>(std::move(notifier), 10);
 
 		__nop();
 
-		{
+		{ 
 			trs::SharedPtr sPtr(ptr);
 		}
 
 		__nop();
 	}
+
+    {
+
+    }
 }
