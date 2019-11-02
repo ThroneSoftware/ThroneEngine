@@ -29,12 +29,12 @@ namespace trs
 			{
 			}
 
-			BasePtr(const BasePtr& other)
+			BasePtr(const BasePtr& other) noexcept
 			{
 				reset(other);
 			}
 
-			BasePtr& operator=(const BasePtr& other)
+			BasePtr& operator=(const BasePtr& other) noexcept
 			{
 				if(this != &other)
 				{
@@ -42,12 +42,12 @@ namespace trs
 				}
 			}
 
-			BasePtr(BasePtr&& other)
+			BasePtr(BasePtr&& other) noexcept
 			{
 				reset(std::move(other));
 			}
 
-			BasePtr& operator=(BasePtr&& other)
+			BasePtr& operator=(BasePtr&& other) noexcept
 			{
 				if(this != &other)
 				{
@@ -55,7 +55,7 @@ namespace trs
 				}
 			}
 
-			~BasePtr()
+			~BasePtr() noexcept
 			{
 				resetBasePtr(*this);
 			}
@@ -73,15 +73,6 @@ namespace trs
 			reference operator*() const noexcept
 			{
 				return *getPtr();
-			}
-
-			template <typename Other>
-			void reset(Other&& other)
-			{
-				if(this != &other)
-				{
-					resetImpl(std::forward<Other>(other));
-				}
 			}
 
 			void decreaseRefCount() noexcept
@@ -102,7 +93,25 @@ namespace trs
 				}
 			}
 
+            void destroy() noexcept
+            {
+                if (m_resource != nullptr)
+                {
+					delete m_resource;
+                    resetBasePtr(*this);
+                }
+            }
+
 		private:
+            template <typename Other>
+            void reset(Other&& other) noexcept
+            {
+                if (this != &other)
+                {
+                    resetImpl(std::forward<Other>(other));
+                }
+            }
+
 			void resetImpl(const BasePtr& other) noexcept
 			{
 				m_resource = other.m_resource;
@@ -117,7 +126,7 @@ namespace trs
 				resetBasePtr(other);
 			}
 
-			void resetBasePtr(BasePtr& value)
+			void resetBasePtr(BasePtr& value) noexcept
 			{
 				value.m_resource = nullptr;
 				value.m_ptr = nullptr;
@@ -131,7 +140,7 @@ namespace trs
 		class DefaultNotifier
 		{
 		public:
-			void operator()(Type*)
+			void operator()(Type*) noexcept
 			{
 			}
 		};
@@ -139,10 +148,10 @@ namespace trs
 	}  // namespace PointersPrivate
 
 	template <typename Type>
-	class PtrOwner
+	class PtrOwner final
 	{
 		template <typename Type>
-		friend class SharedPtr;
+		friend class PtrShared;
 
 
 	public:
@@ -151,10 +160,36 @@ namespace trs
 		using reference = value_type&;
 
 	public:
-		PtrOwner(Private::BaseResource<value_type>* resource)
+		PtrOwner(Private::BaseResource<value_type>* resource) noexcept
 		  : m_base(resource)
 		{
 		}
+
+        PtrOwner(const PtrOwner& other) = delete;
+        PtrOwner& operator=(const PtrOwner & other) = delete;
+
+        PtrOwner(PtrOwner && other) = default;
+        PtrOwner& operator=(PtrOwner && other) = default;
+
+        ~PtrOwner() noexcept
+        {
+            m_base.destroy();
+        }
+
+        pointer getPtr() const noexcept
+        {
+            return m_base.getPtr();
+        }
+
+        pointer operator->() const noexcept
+        {
+            return m_base.getPtr();
+        }
+
+        reference operator*() const noexcept
+        {
+            return *m_base.getPtr();
+        }
 
 	private:
 		PointersPrivate::BasePtr<value_type> m_base;
@@ -177,7 +212,7 @@ namespace trs
 	}
 
 	template <typename Type>
-	class SharedPtr
+	class PtrShared final
 	{
 	public:
 		using value_type = Type;
@@ -185,18 +220,18 @@ namespace trs
 		using reference = value_type&;
 
 	public:
-		SharedPtr() noexcept
+		PtrShared() noexcept
 		  : m_base(nullptr)
 		{
 		}
 
-		explicit SharedPtr(const PtrOwner<value_type>& ptrOwner) noexcept
+		explicit PtrShared(const PtrOwner<value_type>& ptrOwner) noexcept
 		  : m_base(ptrOwner.m_base)
 		{
 			m_base.increaseRefCount();
 		}
 
-		SharedPtr(const SharedPtr& other)
+		PtrShared(const PtrShared& other) noexcept
 		  : m_base(nullptr)
 		{
 			m_base.decreaseRefCount();
@@ -204,7 +239,7 @@ namespace trs
 			m_base.increaseRefCount();
 		}
 
-		SharedPtr& operator=(const SharedPtr& other)
+		PtrShared& operator=(const PtrShared& other) noexcept
 		{
 			if(*this != &other)
 			{
@@ -214,14 +249,14 @@ namespace trs
 			}
 		}
 
-		SharedPtr(SharedPtr&& other)
+		PtrShared(PtrShared&& other) noexcept
 		  : m_base(nullptr)
 		{
 			m_base.decreaseRefCount();
 			m_base.reset(other);
 		}
 
-		SharedPtr& operator=(SharedPtr&& other)
+		PtrShared& operator=(PtrShared&& other) noexcept
 		{
 			if(this != &other)
 			{
@@ -230,10 +265,25 @@ namespace trs
 			}
 		}
 
-		~SharedPtr() noexcept
+		~PtrShared() noexcept
 		{
 			m_base.decreaseRefCount();
 		}
+
+        pointer getPtr() const noexcept
+        {
+            return m_base.getPtr();
+        }
+
+        pointer operator->() const noexcept
+        {
+            return m_base.getPtr();
+        }
+
+        reference operator*() const noexcept
+        {
+            return *m_base.getPtr();
+        }
 
 	private:
 		PointersPrivate::BasePtr<value_type> m_base;

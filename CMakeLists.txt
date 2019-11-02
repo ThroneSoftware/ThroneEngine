@@ -49,6 +49,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin/lib)
 
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+file(COPY "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/vld.ini"
+     DESTINATION "${PROJECT_BINARY_DIR}")
+endif()
+
 include(CTest)
 enable_testing()
 include(${PROJECT_SOURCE_DIR}/Vendors/Vendors/Catch2/Catch.cmake)

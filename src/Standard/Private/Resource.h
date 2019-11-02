@@ -37,6 +37,7 @@ namespace trs::Private
 				notify();
 			}
 		}
+
 		void increaseRefCount() noexcept
 		{
 			++m_count;

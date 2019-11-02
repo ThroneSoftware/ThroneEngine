@@ -35,6 +35,7 @@ int main()
 	boost::join(vec, "/");
 
 	gsl::not_null<int*> test = new int();
+    delete test.get();
 
 	auto str = fmt::format("{} {} {}", "test", "1", "3");
 
@@ -78,7 +79,7 @@ int main()
 		__nop();
 
 		{ 
-			trs::SharedPtr sPtr(ptr);
+			trs::PtrShared sPtr(ptr);
 		}
 
 		__nop();

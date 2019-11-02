@@ -1,3 +1,5 @@
+#include <pch.h>
+
 #include <Standard/CompressedPair.h>
 
 #include <catch.hpp>
@@ -5,7 +7,7 @@
 
 namespace Tests
 {
-	// This test is a compilation test, not a runtime test.
+	//This test is a compilation test, not a runtime test.
 	TEST_CASE("Compressed pair sizeof", "CompressedPair")
 	{
 		class EmptyClass
@@ -96,7 +98,7 @@ namespace Tests
 		MOCK_CONST_METHOD0(copy, void());
 		MOCK_METHOD0(move, void());
 
-        int a = 0;
+		int a = 0;
 	};
 
 	class ConstructEmpty
@@ -130,28 +132,28 @@ namespace Tests
 			WHEN("Constructing a compressed pair EmptyNonEmpty")
 			{
 				constructWithMove<ConstructEmpty, ConstructNonEmpty>(std::move(move));
-                THEN("Type is moved 4 times and copy is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&move);
-                }
+				THEN("Type is moved 4 times and copy is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&move);
+				}
 			}
 
 			WHEN("Constructing a compressed pair NonEmptyEmpty")
 			{
 				constructWithMove<ConstructNonEmpty, ConstructEmpty>(std::move(move));
-                THEN("Type is moved 4 times and copy is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&move);
-                }
+				THEN("Type is moved 4 times and copy is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&move);
+				}
 			}
 
 			WHEN("Constructing a compressed pair NonEmptyNonEmpty")
 			{
 				constructWithMove<ConstructNonEmpty, ConstructNonEmpty>(std::move(move));
-                THEN("Type is moved 4 times and copy is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&move);
-                }
+				THEN("Type is moved 4 times and copy is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&move);
+				}
 			}
 		}
 
@@ -166,28 +168,28 @@ namespace Tests
 			WHEN("Constructing a compressed pair EmptyNonEmpty")
 			{
 				constructWithCopy<ConstructEmpty, ConstructNonEmpty>(copy);
-                THEN("Type is copied 4 times and move is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&copy);
-                }
+				THEN("Type is copied 4 times and move is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&copy);
+				}
 			}
 
 			WHEN("Constructing a compressed pair NonEmptyEmpty")
 			{
 				constructWithCopy<ConstructNonEmpty, ConstructEmpty>(copy);
-                THEN("Type is copied 4 times and move is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&copy);
-                }
+				THEN("Type is copied 4 times and move is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&copy);
+				}
 			}
 
 			WHEN("Constructing a compressed pair NonEmptyNonEmpty")
 			{
 				constructWithCopy<ConstructNonEmpty, ConstructNonEmpty>(copy);
-                THEN("Type is copied 4 times and move is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&copy);
-                }
+				THEN("Type is copied 4 times and move is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&copy);
+				}
 			}
 		}
 	}
@@ -213,92 +215,92 @@ namespace Tests
 				FAIL_CHECK("Should not call copy.");
 			});
 
-            NonEmptyType move2;
-            ON_CALL(move2, copy()).WillByDefault([] {
-                FAIL_CHECK("Should not call copy.");
-            });
+			NonEmptyType move2;
+			ON_CALL(move2, copy()).WillByDefault([] {
+				FAIL_CHECK("Should not call copy.");
+			});
 
 			WHEN("Constructing a compressed pair EmptyNonEmpty")
 			{
-                EXPECT_CALL(move1, move()).Times(1);
-                EXPECT_CALL(move2, move()).Times(1);
+				EXPECT_CALL(move1, move()).Times(1);
+				EXPECT_CALL(move2, move()).Times(1);
 				constructWithMove<EmptyType, NonEmptyType>(std::move(move1), std::move(move2));
-                THEN("move1 and move2 are moved 1 time and copy is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&move1);
-                    testing::Mock::VerifyAndClearExpectations(&move2);
-                }
+				THEN("move1 and move2 are moved 1 time and copy is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&move1);
+					testing::Mock::VerifyAndClearExpectations(&move2);
+				}
 			}
 
 			WHEN("Constructing a compressed pair NonEmptyEmpty")
 			{
-                EXPECT_CALL(move1, move()).Times(1);
-                EXPECT_CALL(move2, move()).Times(1);
-                constructWithMove<NonEmptyType, EmptyType>(std::move(move2), std::move(move1));
-                THEN("move1 and move2 are moved 1 time and copy is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&move1);
-                    testing::Mock::VerifyAndClearExpectations(&move2);
-                }
+				EXPECT_CALL(move1, move()).Times(1);
+				EXPECT_CALL(move2, move()).Times(1);
+				constructWithMove<NonEmptyType, EmptyType>(std::move(move2), std::move(move1));
+				THEN("move1 and move2 are moved 1 time and copy is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&move1);
+					testing::Mock::VerifyAndClearExpectations(&move2);
+				}
 			}
 
 			WHEN("Constructing a compressed pair NonEmptyNonEmpty")
 			{
-                EXPECT_CALL(move2, move()).Times(2);
-                constructWithMove<NonEmptyType, NonEmptyType>(std::move(move2), std::move(move2));
-                THEN("move2 is moved 2 time and copy is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&move2);
-                }
+				EXPECT_CALL(move2, move()).Times(2);
+				constructWithMove<NonEmptyType, NonEmptyType>(std::move(move2), std::move(move2));
+				THEN("move2 is moved 2 time and copy is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&move2);
+				}
 			}
 		}
 
 		GIVEN("A copyable Type")
 		{
-            EmptyType copy1;
-            ON_CALL(copy1, move()).WillByDefault([] {
-                FAIL_CHECK("Should not call move.");
-            });
+			EmptyType copy1;
+			ON_CALL(copy1, move()).WillByDefault([] {
+				FAIL_CHECK("Should not call move.");
+			});
 
-            NonEmptyType copy2;
-            ON_CALL(copy2, move()).WillByDefault([] {
-                FAIL_CHECK("Should not call move.");
-            });
+			NonEmptyType copy2;
+			ON_CALL(copy2, move()).WillByDefault([] {
+				FAIL_CHECK("Should not call move.");
+			});
 
-            WHEN("Constructing a compressed pair EmptyNonEmpty")
-            {
-                EXPECT_CALL(copy1, copy()).Times(1);
-                EXPECT_CALL(copy2, copy()).Times(1);
-                constructWithCopy<EmptyType, NonEmptyType>(copy1, copy2);
+			WHEN("Constructing a compressed pair EmptyNonEmpty")
+			{
+				EXPECT_CALL(copy1, copy()).Times(1);
+				EXPECT_CALL(copy2, copy()).Times(1);
+				constructWithCopy<EmptyType, NonEmptyType>(copy1, copy2);
 
-                THEN("copy1 and copy2 are copied 1 time and move is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&copy1);
-                    testing::Mock::VerifyAndClearExpectations(&copy2);
-                }
-            }
+				THEN("copy1 and copy2 are copied 1 time and move is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&copy1);
+					testing::Mock::VerifyAndClearExpectations(&copy2);
+				}
+			}
 
-            WHEN("Constructing a compressed pair NonEmptyEmpty")
-            {
-                EXPECT_CALL(copy1, copy()).Times(1);
-                EXPECT_CALL(copy2, copy()).Times(1);
-                constructWithCopy<NonEmptyType, EmptyType>(copy2, copy1);
-                THEN("copy1 and copy2 are copied 1 time and move is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&copy1);
-                    testing::Mock::VerifyAndClearExpectations(&copy2);
-                }
-            }
+			WHEN("Constructing a compressed pair NonEmptyEmpty")
+			{
+				EXPECT_CALL(copy1, copy()).Times(1);
+				EXPECT_CALL(copy2, copy()).Times(1);
+				constructWithCopy<NonEmptyType, EmptyType>(copy2, copy1);
+				THEN("copy1 and copy2 are copied 1 time and move is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&copy1);
+					testing::Mock::VerifyAndClearExpectations(&copy2);
+				}
+			}
 
-            WHEN("Constructing a compressed pair NonEmptyNonEmpty")
-            {
-                EXPECT_CALL(copy2, copy()).Times(2);
-                constructWithCopy<NonEmptyType, NonEmptyType>(copy2, copy2);
-                THEN("copy2 is copied 2 time and move is never called.")
-                {
-                    testing::Mock::VerifyAndClearExpectations(&copy2);
-                }
-            }
+			WHEN("Constructing a compressed pair NonEmptyNonEmpty")
+			{
+				EXPECT_CALL(copy2, copy()).Times(2);
+				constructWithCopy<NonEmptyType, NonEmptyType>(copy2, copy2);
+				THEN("copy2 is copied 2 time and move is never called.")
+				{
+					testing::Mock::VerifyAndClearExpectations(&copy2);
+				}
+			}
 		}
 	}
 }  // namespace Tests
