@@ -25,7 +25,17 @@ namespace Tests
 	// Both ptrs in collaboration
 
 
-	SCENARIO("", "Pointers")
+	SCENARIO("Test Construction", "Pointers")
 	{
+        GIVEN("A PtrOwner")
+        {
+            WHEN("When construction")
+            {
+                THEN("Then object container by PtrOwner is properly constructed")
+                {
+
+                }
+            }
+        }
 	}
 }  // namespace Tests
