@@ -23,6 +23,11 @@ namespace trs
 			{
 			}
 
+			BasePtr(std::nullptr_t) noexcept
+			  : BasePtr<value_type>()
+			{
+			}
+
 			BasePtr(Private::BaseResource<value_type>* resource) noexcept
 			  : m_resource(resource)
 			  , m_ptr(resource->getPtr())
@@ -40,6 +45,7 @@ namespace trs
 				{
 					reset(other);
 				}
+				return *this;
 			}
 
 			BasePtr(BasePtr&& other) noexcept
@@ -53,6 +59,7 @@ namespace trs
 				{
 					reset(std::move(other));
 				}
+				return *this;
 			}
 
 			~BasePtr() noexcept
@@ -77,7 +84,6 @@ namespace trs
 
 			void decreaseRefCount() noexcept
 			{
-				assert(m_resource != nullptr);
 				if(m_resource != nullptr)
 				{
 					m_resource->decreaseRefCount();
@@ -87,10 +93,7 @@ namespace trs
 			void increaseRefCount() noexcept
 			{
 				assert(m_resource != nullptr);
-				if(m_resource != nullptr)
-				{
-					m_resource->increaseRefCount();
-				}
+			    m_resource->increaseRefCount();
 			}
 
 			void destroy() noexcept
@@ -143,7 +146,7 @@ namespace trs
 	class PtrOwner final
 	{
 		template <typename Type>
-		friend class PtrShared;
+		friend class SharedPtr;
 
 
 	public:
@@ -204,7 +207,7 @@ namespace trs
 	}
 
 	template <typename Type>
-	class PtrShared final
+	class SharedPtr final
 	{
 	public:
 		using value_type = Type;
@@ -212,52 +215,51 @@ namespace trs
 		using reference = value_type&;
 
 	public:
-		PtrShared() noexcept
+		SharedPtr() noexcept
 		  : m_base(nullptr)
 		{
 		}
 
-		explicit PtrShared(const PtrOwner<value_type>& ptrOwner) noexcept
+		explicit SharedPtr(const PtrOwner<value_type>& ptrOwner) noexcept
 		  : m_base(ptrOwner.m_base)
 		{
 			m_base.increaseRefCount();
 		}
 
-		PtrShared(const PtrShared& other) noexcept
+		SharedPtr(const SharedPtr& other) noexcept
 		  : m_base(nullptr)
 		{
-			m_base.decreaseRefCount();
-			m_base = other;
+			m_base = other.m_base;
 			m_base.increaseRefCount();
 		}
 
-		PtrShared& operator=(const PtrShared& other) noexcept
-		{
-			if(*this != &other)
-			{
-				m_base.decreaseRefCount();
-				m_base = other;
-				m_base.increaseRefCount();
-			}
-		}
-
-		PtrShared(PtrShared&& other) noexcept
-		  : m_base(nullptr)
-		{
-			m_base.decreaseRefCount();
-			m_base = std::move(other);
-		}
-
-		PtrShared& operator=(PtrShared&& other) noexcept
+		SharedPtr& operator=(const SharedPtr& other) noexcept
 		{
 			if(this != &other)
 			{
 				m_base.decreaseRefCount();
-				m_base = std::move(other);
+				m_base = other.m_base;
+				m_base.increaseRefCount();
 			}
+			return *this;
 		}
 
-		~PtrShared() noexcept
+		SharedPtr(SharedPtr&& other) noexcept
+		  : m_base(std::move(other.m_base))
+		{
+		}
+
+		SharedPtr& operator=(SharedPtr&& other) noexcept
+		{
+			if(this != &other)
+			{
+				m_base.decreaseRefCount();
+				m_base = std::move(other.m_base);
+			}
+			return *this;
+		}
+
+		~SharedPtr() noexcept
 		{
 			m_base.decreaseRefCount();
 		}

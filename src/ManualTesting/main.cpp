@@ -79,7 +79,7 @@ int main()
 		__nop();
 
 		{ 
-			trs::PtrShared sPtr(ptr);
+			trs::SharedPtr sPtr(ptr);
 		}
 
 		__nop();
