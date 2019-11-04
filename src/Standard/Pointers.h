@@ -11,6 +11,9 @@ namespace trs
 		template <typename Type>
 		class BasePtr
 		{
+			template <typename Type>
+			friend bool operator==(const BasePtr<Type>& left, const BasePtr<Type>& right);
+
 		public:
 			using value_type = Type;
 			using pointer = value_type*;
@@ -93,7 +96,7 @@ namespace trs
 			void increaseRefCount() noexcept
 			{
 				assert(m_resource != nullptr);
-			    m_resource->increaseRefCount();
+				m_resource->increaseRefCount();
 			}
 
 			void destroy() noexcept
@@ -132,6 +135,18 @@ namespace trs
 		};
 
 		template <typename Type>
+		bool operator==(const BasePtr<Type>& left, const BasePtr<Type>& right)
+		{
+			return left.m_resource == right.m_resource;
+		}
+
+		template <typename Type>
+		bool operator!=(const BasePtr<Type>& left, const BasePtr<Type>& right)
+		{
+			return !(left == right);
+		}
+
+		template <typename Type>
 		class DefaultNotifier
 		{
 		public:
@@ -164,7 +179,15 @@ namespace trs
 		PtrOwner& operator=(const PtrOwner& other) = delete;
 
 		PtrOwner(PtrOwner&& other) noexcept = default;
-		PtrOwner& operator=(PtrOwner&& other) noexcept = default;
+        PtrOwner& operator=(PtrOwner&& other) noexcept
+        {
+            if (this != &other)
+            {
+                m_base.destroy();
+                m_base = std::move(other.m_base);
+            }
+            return *this;
+        }
 
 		~PtrOwner() noexcept
 		{
@@ -227,9 +250,8 @@ namespace trs
 		}
 
 		SharedPtr(const SharedPtr& other) noexcept
-		  : m_base(nullptr)
+		  : m_base(other.m_base)
 		{
-			m_base = other.m_base;
 			m_base.increaseRefCount();
 		}
 
@@ -253,7 +275,10 @@ namespace trs
 		{
 			if(this != &other)
 			{
-				m_base.decreaseRefCount();
+				if(m_base != other.m_base)
+				{
+					m_base.decreaseRefCount();
+				}
 				m_base = std::move(other.m_base);
 			}
 			return *this;

@@ -13,6 +13,7 @@ namespace Tests
 		ProxyNotifier<int> notifier(mock);
 		trs::Private::BaseResource<int>* resource = new trs::Private::CombinedResource<int, ProxyNotifier<int>>(notifier, 10);
 		REQUIRE(*resource->getPtr() == 10);
+        delete resource;
 	}
 
 	SCENARIO("Resource notifier", "Resource")
