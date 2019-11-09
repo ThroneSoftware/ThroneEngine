@@ -16,7 +16,7 @@ namespace Tests
 		MOCK_METHOD1(operatorProxy, void(int*));
 	};
 
-	// The notifier is required to be copyable but gmock mocks are not
+	// The notifier is required to be copyable but gmock mocks are not so instead we keep a reference to the mock
 	template <typename Type>
 	class ProxyNotifier
 	{

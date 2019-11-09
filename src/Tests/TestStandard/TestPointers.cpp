@@ -9,15 +9,7 @@
 
 namespace Tests
 {
-	// Every tests need to test leaks
-
-	// PtrOwner Alone
-
-	// SharedPtr Alone (this means that the PtrOwner was destroyed before PtrOwner). Do we even allow this? With delete this in the resource I think it could be possible.
-
-	// Both ptrs in collaboration
-
-	class ClassWithMembers
+class ClassWithMembers
 	{
 	public:
 		ClassWithMembers(int val, std::string str)
@@ -156,7 +148,7 @@ namespace Tests
                 }
             }
 
-            WHEN("Moving SharedPtr into itslef")
+            WHEN("Moving SharedPtr into itself")
             {
                 sharedPtr = std::move(sharedPtr);
                 THEN("Nothing happens")
@@ -208,13 +200,40 @@ namespace Tests
                 }
             }
 
-            WHEN("Copying SharedPtr into itslef")
+            WHEN("Copying SharedPtr into itself")
             {
                 sharedPtr = sharedPtr;
                 THEN("Nothing happens")
                 {
                     REQUIRE(sharedPtr.getPtr() != nullptr);
                     REQUIRE(*sharedPtr == 10);
+                }
+            }
+        }
+    }
+
+
+    SCENARIO("Notifier", "Pointers")
+    {
+        GIVEN("A PtrOwner with notifier and SharedPtrs")
+        {
+            MockNotifier<int> mock;
+            ProxyNotifier<int> notifier(mock);
+            auto ptrOwner = trs::makePtrOwnerWithNotifier<int>(notifier, 10);
+
+            EXPECT_CALL(mock, operatorProxy(testing::_)).Times(1);
+
+            WHEN("SharedPtrs are all destroyed")
+            {
+                {
+                    auto shared1 = trs::SharedPtr(ptrOwner);
+                    auto shared2 = trs::SharedPtr(ptrOwner);
+                    auto shared3 = trs::SharedPtr(ptrOwner);
+                }
+
+                THEN("Notifier is called")
+                {
+                    testing::Mock::VerifyAndClearExpectations(&mock);
                 }
             }
         }

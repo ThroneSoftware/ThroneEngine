@@ -26,7 +26,7 @@ namespace Tests
 
 			WHEN("Increasing then decreasing count")
 			{
-				EXPECT_CALL(mock, operatorProxy(testing::_));
+				EXPECT_CALL(mock, operatorProxy(resource->getPtr()));
 
 				resource->increaseRefCount();
 				resource->increaseRefCount();
