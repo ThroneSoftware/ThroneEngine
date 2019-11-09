@@ -15,7 +15,7 @@ string ExePath()
 {
 	char buffer[MAX_PATH];
 	GetModuleFileName(NULL, buffer, MAX_PATH);
-	string::size_type pos = string(buffer).find_last_of("\\/");
+	string::size_type pos = string(buffer).find_last_of("\\/");  
 	return string(buffer).substr(0, pos);  //
 }
 
@@ -35,7 +35,7 @@ int main()
 	boost::join(vec, "/");
 
 	gsl::not_null<int*> test = new int();
-    delete test.get();
+	delete test.get();
 
 	auto str = fmt::format("{} {} {}", "test", "1", "3");
 
@@ -59,7 +59,13 @@ int main()
 
 	trs::CompressedPair<A, A> pair2(std::piecewise_construct_t(), std::forward_as_tuple(3, 4.0, 'c'), std::forward_as_tuple(5, 2.0, 'b'));
 
-    pair2.first();
+    A a = A(5, 10.0, 'd');
+
+    trs::CompressedPair<A, A> pair3(std::piecewise_construct_t(), std::forward_as_tuple(a), std::forward_as_tuple(5, 2.0, 'b'));
+
+	pair2.first();
+
+    std::forward<int>(10);
 
 	//std::pair<int, double> pair2;
 
@@ -69,23 +75,21 @@ int main()
 	}
 
 	{
-        auto notifier = [](int*) 
-        {
-        
-        };
+		auto notifier = [](int*) {
 
-        auto ptr = trs::makePtrOwnerWithNotifier<int, decltype(notifier)>(std::move(notifier), 10);
+		};
+
+		auto ptr = trs::makePtrOwnerWithNotifier<int, decltype(notifier)>(std::move(notifier), 10);
 
 		__nop();
 
-		{ 
+		{
 			trs::SharedPtr sPtr(ptr);
 		}
 
 		__nop();
 	}
 
-    {
-
-    }
+	{
+	}
 }
