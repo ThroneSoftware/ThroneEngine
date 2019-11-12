@@ -65,7 +65,7 @@ int main()
 
 	pair2.first();
 
-    std::forward<int>(10);
+    //std::forward<int>(10);
 
 	//std::pair<int, double> pair2;
 
