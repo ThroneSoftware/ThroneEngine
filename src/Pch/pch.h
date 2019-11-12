@@ -1,8 +1,8 @@
 #pragma once
 
 #if defined(_DEBUG) && defined(_MSC_VER)
-    //Uncomment this if you want to track leaks.
-	//#include <vld.h>
+//Uncomment this if you want to track leaks.
+//#include <vld.h>
 #endif
 
 #include <Vulkan/vulkan.hpp>
