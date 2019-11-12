@@ -98,7 +98,8 @@ namespace Tests
 		MOCK_CONST_METHOD0(copy, void());
 		MOCK_METHOD0(move, void());
 
-		int a = 0;
+	private:
+		int a = 0;	// This is only used to give the type some data so it is not empty.
 	};
 
 	class ConstructEmpty
@@ -116,10 +117,36 @@ namespace Tests
 		{
 		}
 
-		int a = 0;
+	private:
+		int a = 0;	// This is only used to give the type some data so it is not empty.
 	};
 
-	SCENARIO("Compressed pair piecewise construction", "CompressedPair")
+	class ComplexClass
+	{
+	public:
+		ComplexClass(int a, char b)
+		  : m_a(a)
+		  , m_b(b)
+		{
+		}
+
+		int m_a;
+		char m_b;
+	};
+
+	bool operator==(const ComplexClass& left, const ComplexClass& right)
+	{
+		return left.m_a == right.m_a && left.m_b == right.m_b;
+	}
+
+	bool operator!=(const ComplexClass& left, const ComplexClass& right)
+	{
+		return !(left == right);
+	}
+
+	SCENARIO("Test the piecewise construction when the arguments passed are arguments that"
+			 " need to be passed to the constructors of both types in the pair",
+			 "CompressedPair")
 	{
 		GIVEN("A movable Type")
 		{
@@ -192,6 +219,44 @@ namespace Tests
 				}
 			}
 		}
+
+		WHEN("Constructing a compressed pair EmptyNonEmpty with a ComplexType")
+		{
+			auto expectedValue = ComplexClass(10, 'c');
+			trs::CompressedPair<EmptyType, ComplexClass> pair(std::piecewise_construct_t(),
+															  std::forward_as_tuple(),
+															  std::forward_as_tuple(10, 'c'));
+			THEN("The values have been correctly initialized")
+			{
+				REQUIRE(pair.second() == expectedValue);
+			}
+		}
+
+		WHEN("Constructing a compressed pair NonEmptyEmpty with a ComplexType")
+		{
+			auto expectedValue = ComplexClass(10, 'c');
+			trs::CompressedPair<ComplexClass, EmptyType> pair(std::piecewise_construct_t(),
+															  std::forward_as_tuple(10, 'c'),
+															  std::forward_as_tuple());
+			THEN("The values have been correctly initialized")
+			{
+				REQUIRE(pair.first() == expectedValue);
+			}
+		}
+
+		WHEN("Constructing a compressed pair NonEmptyNonEmpty with a ComplexType")
+		{
+			auto firstExpectedValue = ComplexClass(10, 'c');
+			auto secondExpectedValue = ComplexClass(15, 'e');
+			trs::CompressedPair<ComplexClass, ComplexClass> pair(std::piecewise_construct_t(),
+																 std::forward_as_tuple(10, 'c'),
+																 std::forward_as_tuple(15, 'e'));
+			THEN("The values have been correctly initialized")
+			{
+				REQUIRE(pair.first() == firstExpectedValue);
+				REQUIRE(pair.second() == secondExpectedValue);
+			}
+		}
 	}
 
 	template <typename Type1, typename Type2>
@@ -206,7 +271,9 @@ namespace Tests
 		trs::CompressedPair<Type1, Type2> pair(copy1, copy2);
 	}
 
-	SCENARIO("Compressed pair forwarding construction", "CompressedPair")
+	SCENARIO("Test the forwarding construction when the arguments passed "
+			 "to the constructors are the same type as the types in the pair.",
+			 "CompressedPair")
 	{
 		GIVEN("A movable Type")
 		{

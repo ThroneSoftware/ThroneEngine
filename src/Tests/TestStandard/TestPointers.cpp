@@ -22,7 +22,7 @@ class ClassWithMembers
 		std::string str;
 	};
 
-	SCENARIO("Test Construction", "Pointers")
+	SCENARIO("Test the construction of PtrOwner and SharedPtr", "Pointers")
 	{
 		WHEN("Constructing PtrOwner with makePtrOwner")
 		{
@@ -72,7 +72,7 @@ class ClassWithMembers
         }
 	}
 
-    SCENARIO("Test move")
+    SCENARIO("Test the move of PtrOwner and SharedPtr")
     {
         GIVEN("A PtrOwner")
         {
@@ -160,7 +160,7 @@ class ClassWithMembers
         }
     }
 
-    SCENARIO("Test SharedPtr copies", "Pointers")
+    SCENARIO("Test the copies of SharedPtr", "Pointers")
     {
         GIVEN("A SharedPtr")
         {
@@ -213,7 +213,7 @@ class ClassWithMembers
     }
 
 
-    SCENARIO("Notifier", "Pointers")
+    SCENARIO("Test that the notifier is properly called", "Pointers")
     {
         GIVEN("A PtrOwner with notifier and SharedPtrs")
         {

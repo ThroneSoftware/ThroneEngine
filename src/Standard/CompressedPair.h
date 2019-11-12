@@ -56,8 +56,8 @@ namespace trs
 			  : CompressedPairImpl(std::piecewise_construct_t(),
 								   std::move(type1Args),
 								   std::move(type2Args),
-								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args1...>>>(),
-								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args2...>>>())
+								   std::make_index_sequence<sizeof...(Args1)>(),
+								   std::make_index_sequence<sizeof...(Args2)>())
 			{
 			}
 
@@ -118,8 +118,8 @@ namespace trs
 			  : CompressedPairImpl(std::piecewise_construct_t(),
 								   std::move(type1Args),
 								   std::move(type2Args),
-								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args1...>>>(),
-								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args2...>>>())
+								   std::make_index_sequence<sizeof...(Args1)>(),
+								   std::make_index_sequence<sizeof...(Args2)>())
 			{
 			}
 
@@ -180,8 +180,8 @@ namespace trs
 			  : CompressedPairImpl(std::piecewise_construct_t(),
 								   std::move(type1Args),
 								   std::move(type2Args),
-								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args1...>>>(),
-								   std::make_index_sequence<std::tuple_size_v<std::tuple<Args2...>>>())
+								   std::make_index_sequence<sizeof...(Args1)>(),
+								   std::make_index_sequence<sizeof...(Args2)>())
 			{
 			}
 
