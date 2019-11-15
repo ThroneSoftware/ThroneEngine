@@ -177,8 +177,8 @@ namespace trs
 		PtrOwner(PtrOwner&& other) noexcept = default;
 		PtrOwner& operator=(PtrOwner&& other) noexcept
 		{
-            // Only need to implement operator= since it is not a use case to construct a PtrOwner with itself.
-            // Also, the base cannot be set so it does not need to be destroyed.
+			// Only need to implement operator= since it is not a use case to construct a PtrOwner with itself.
+			// Also, the base cannot be set so it does not need to be destroyed.
 			if(this != &other)
 			{
 				m_base.destroy();
@@ -197,7 +197,7 @@ namespace trs
 			return m_base.getPtr();
 		}
 
-        pointer operator->() const noexcept
+		pointer operator->() const noexcept
 		{
 			return m_base.getPtr();
 		}
@@ -264,11 +264,11 @@ namespace trs
 			return *this;
 		}
 
-        SharedPtr(SharedPtr&& other) noexcept = default;
+		SharedPtr(SharedPtr&& other) noexcept = default;
 		SharedPtr& operator=(SharedPtr&& other) noexcept
 		{
-            // Only need to implement operator= since it is not a use case to construct a SharedPtr with itself.
-            // Also, the base cannot be set so its ref count does not need to be decreased.
+			// Only need to implement operator= since it is not a use case to construct a SharedPtr with itself.
+			// Also, the base cannot be set so its ref count does not need to be decreased.
 			if(this != &other)
 			{
 				if(m_base != other.m_base)
