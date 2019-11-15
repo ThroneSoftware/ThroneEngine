@@ -15,7 +15,7 @@ string ExePath()
 {
 	char buffer[MAX_PATH];
 	GetModuleFileName(NULL, buffer, MAX_PATH);
-	string::size_type pos = string(buffer).find_last_of("\\/");  
+	string::size_type pos = string(buffer).find_last_of("\\/");
 	return string(buffer).substr(0, pos);  //
 }
 
@@ -59,13 +59,13 @@ int main()
 
 	trs::CompressedPair<A, A> pair2(std::piecewise_construct_t(), std::forward_as_tuple(3, 4.0, 'c'), std::forward_as_tuple(5, 2.0, 'b'));
 
-    A a = A(5, 10.0, 'd');
+	A a = A(5, 10.0, 'd');
 
-    trs::CompressedPair<A, A> pair3(std::piecewise_construct_t(), std::forward_as_tuple(a), std::forward_as_tuple(5, 2.0, 'b'));
+	trs::CompressedPair<A, A> pair3(std::piecewise_construct_t(), std::forward_as_tuple(a), std::forward_as_tuple(5, 2.0, 'b'));
 
 	pair2.first();
 
-    //std::forward<int>(10);
+	//std::forward<int>(10);
 
 	//std::pair<int, double> pair2;
 
@@ -91,5 +91,24 @@ int main()
 	}
 
 	{
+		class B
+		{
+		public:
+			B(int a)
+			  : m_a(a)
+			{
+			}
+
+			int m_a;
+		};
+
+		auto ptrOwner = trs::makePtrOwner<B>(10);
+        ptrOwner->m_a;
 	}
+
+    {
+        auto s1 = std::make_shared<int>(10);
+        auto s2 = s1;
+        s1 = std::move(s2);
+    }
 }
