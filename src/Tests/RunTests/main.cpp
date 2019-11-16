@@ -12,5 +12,5 @@ void executeTest(std::string_view test_name)
 int main()
 {
 	executeTest("TestTestFramework.exe");
-    executeTest("TestStandard.exe");
+	executeTest("TestStandard.exe");
 }

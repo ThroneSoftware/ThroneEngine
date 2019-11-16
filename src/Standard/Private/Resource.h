@@ -12,7 +12,6 @@ namespace trs::Private
 	public:
 		using value_type = Type;
 		using pointer = value_type*;
-		using const_pointer = const value_type*;
 		using reference = value_type&;
 
 	public:
@@ -44,7 +43,6 @@ namespace trs::Private
 		}
 
 		virtual pointer getPtr() noexcept = 0;
-		virtual const_pointer getPtr() const noexcept = 0;
 
 		virtual void notify() noexcept = 0;
 
@@ -58,7 +56,6 @@ namespace trs::Private
 	public:
 		using value_type = Type;
 		using pointer = value_type*;
-		using const_pointer = const value_type*;
 		using reference = value_type&;
 
 	public:
@@ -72,11 +69,6 @@ namespace trs::Private
 		}
 
 		pointer getPtr() noexcept override
-		{
-			return &m_value.first();
-		}
-
-		const_pointer getPtr() const noexcept override
 		{
 			return &m_value.first();
 		}
