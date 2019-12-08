@@ -271,7 +271,7 @@ namespace trs
 			// Also, the base cannot be set so its ref count does not need to be decreased.
 			if(this != &other)
 			{
-			    m_base.decreaseRefCount();
+				m_base.decreaseRefCount();
 				m_base = std::move(other.m_base);
 			}
 			return *this;

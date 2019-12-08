@@ -26,11 +26,11 @@ namespace Tests
 	{
 		WHEN("Constructing PtrOwner with makePtrOwner")
 		{
-			auto ptr = trs::makePtrOwner<int>(10);
+			auto owner = trs::makePtrOwner<int>(10);
 			THEN("Object contained by PtrOwner is properly constructed")
 			{
-				REQUIRE(ptr.getPtr() != nullptr);
-				REQUIRE(*ptr == 10);
+				REQUIRE(owner.getPtr() != nullptr);
+				REQUIRE(*owner == 10);
 			}
 		}
 
@@ -38,36 +38,36 @@ namespace Tests
 		{
 			MockNotifier<int> mock;
 			ProxyNotifier<int> notifier(mock);
-			auto ptr = trs::makePtrOwnerWithNotifier<int, ProxyNotifier<int>>(std::move(notifier), 10);
+			auto owner = trs::makePtrOwnerWithNotifier<int>(std::move(notifier), 10);
 			THEN("Object contained by PtrOwner is properly constructed")
 			{
-				REQUIRE(ptr.getPtr() != nullptr);
-				REQUIRE(*ptr == 10);
+				REQUIRE(owner.getPtr() != nullptr);
+				REQUIRE(*owner == 10);
 			}
 		}
 
 		WHEN("Constructing PtrOwner with complex object")
 		{
-			auto ptr = trs::makePtrOwner<ClassWithMembers>(10, "string");
+			auto owner = trs::makePtrOwner<ClassWithMembers>(10, "string");
 			THEN("Object contained by PtrOwner is properly constructed")
 			{
-				REQUIRE(ptr.getPtr() != nullptr);
-				REQUIRE(ptr.getPtr()->val == 10);
-				REQUIRE(ptr.getPtr()->str == "string");
+				REQUIRE(owner.getPtr() != nullptr);
+				REQUIRE(owner.getPtr()->val == 10);
+				REQUIRE(owner.getPtr()->str == "string");
 			}
 		}
 
 		WHEN("Constructing SharedPtr with PtrOwner")
 		{
-			auto ptr = trs::makePtrOwner<int>(10);
-			auto sharedPtr = trs::SharedPtr(ptr);
+			auto owner = trs::makePtrOwner<int>(10);
+			auto sharedPtr = trs::SharedPtr(owner);
 			THEN("SharedPtr is properly constructed")
 			{
 				REQUIRE(sharedPtr.getPtr() != nullptr);
 				REQUIRE(*sharedPtr == 10);
 
-				REQUIRE(ptr.getPtr() != nullptr);
-				REQUIRE(*ptr == 10);
+				REQUIRE(owner.getPtr() != nullptr);
+				REQUIRE(*owner == 10);
 			}
 		}
 	}
@@ -76,47 +76,47 @@ namespace Tests
 	{
 		GIVEN("A PtrOwner")
 		{
-			auto ptr = trs::makePtrOwner<int>(10);
+			auto owner1 = trs::makePtrOwner<int>(10);
 
 			WHEN("Moving PtrOwner")
 			{
-				auto ptr2 = std::move(ptr);
+				auto owner2 = std::move(owner1);
 				THEN("PtrOwner is properly moved")
 				{
-					REQUIRE(ptr2.getPtr() != nullptr);
-					REQUIRE(*ptr2 == 10);
-					REQUIRE(ptr.getPtr() == nullptr);
+					REQUIRE(owner2.getPtr() != nullptr);
+					REQUIRE(*owner2 == 10);
+					REQUIRE(owner1.getPtr() == nullptr);
 				}
 			}
 
 			WHEN("Moving PtrOwner with assignment operator")
 			{
-				auto ptr2 = trs::makePtrOwner<int>(5);
-				ptr2 = std::move(ptr);
+				auto owner2 = trs::makePtrOwner<int>(5);
+                owner2 = std::move(owner1);
 
 				THEN("PtrOwner is properly moved")
 				{
-					REQUIRE(ptr2.getPtr() != nullptr);
-					REQUIRE(*ptr2 == 10);
-					REQUIRE(ptr.getPtr() == nullptr);
+					REQUIRE(owner2.getPtr() != nullptr);
+					REQUIRE(*owner2 == 10);
+					REQUIRE(owner1.getPtr() == nullptr);
 				}
 			}
 
 			WHEN("Moving PtrOwner into itself")
 			{
-				ptr = std::move(ptr);
+                owner1 = std::move(owner1);
 				THEN("Nothing happens")
 				{
-					REQUIRE(ptr.getPtr() != nullptr);
-					REQUIRE(*ptr == 10);
+					REQUIRE(owner1.getPtr() != nullptr);
+					REQUIRE(*owner1 == 10);
 				}
 			}
 		}
 
 		GIVEN("A SharedPtr")
 		{
-			auto ptr = trs::makePtrOwner<int>(10);
-			auto sharedPtr = trs::SharedPtr(ptr);
+			auto owner = trs::makePtrOwner<int>(10);
+			auto sharedPtr = trs::SharedPtr(owner);
 
 			WHEN("Moving SharedPtr")
 			{
@@ -128,15 +128,15 @@ namespace Tests
 
 					REQUIRE(sharedPtr.getPtr() == nullptr);
 
-					REQUIRE(ptr.getPtr() != nullptr);
-					REQUIRE(*ptr == 10);
+					REQUIRE(owner.getPtr() != nullptr);
+					REQUIRE(*owner == 10);
 				}
 			}
 
 			WHEN("Moving SharedPtr with assignment operator")
 			{
-				auto ptr2 = trs::makePtrOwner<int>(5);
-				auto sharedPtr2 = trs::SharedPtr(ptr2);
+				auto owner2 = trs::makePtrOwner<int>(5);
+				auto sharedPtr2 = trs::SharedPtr(owner2);
 
 				sharedPtr2 = std::move(sharedPtr);
 				THEN("SharedPtr is moved")
@@ -164,8 +164,8 @@ namespace Tests
 	{
 		GIVEN("A SharedPtr")
 		{
-			auto ptr = trs::makePtrOwner<int>(10);
-			auto sharedPtr = trs::SharedPtr(ptr);
+			auto owner = trs::makePtrOwner<int>(10);
+			auto sharedPtr = trs::SharedPtr(owner);
 
 			WHEN("Copying SharedPtr")
 			{
@@ -184,8 +184,8 @@ namespace Tests
 
 			WHEN("Copying SharedPtr with assignment operator")
 			{
-				auto ptr2 = trs::makePtrOwner<int>(5);
-				auto sharedPtr2 = trs::SharedPtr(ptr);
+				auto owner2 = trs::makePtrOwner<int>(5);
+				auto sharedPtr2 = trs::SharedPtr(owner2);
 
 				sharedPtr2 = sharedPtr;
 				THEN("SharedPtr is copied and unchanged")
@@ -219,16 +219,16 @@ namespace Tests
 		{
 			MockNotifier<int> mock;
 			ProxyNotifier<int> notifier(mock);
-			auto ptrOwner = trs::makePtrOwnerWithNotifier<int>(notifier, 10);
+			auto owner = trs::makePtrOwnerWithNotifier<int>(notifier, 10);
 
 			EXPECT_CALL(mock, operatorProxy(testing::_)).Times(1);
 
 			WHEN("SharedPtrs are all destroyed")
 			{
 				{
-					auto shared1 = trs::SharedPtr(ptrOwner);
-					auto shared2 = trs::SharedPtr(ptrOwner);
-					auto shared3 = trs::SharedPtr(ptrOwner);
+					auto shared1 = trs::SharedPtr(owner);
+					auto shared2 = trs::SharedPtr(owner);
+					auto shared3 = trs::SharedPtr(owner);
 				}
 
 				THEN("Notifier is called")
