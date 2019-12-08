@@ -144,6 +144,8 @@ function(addTestTarget target_name)
     add_executable(${target_name} "")
 
     configTestTarget(${target_name})
+
+    configTargetToUsePch(${target_name})
 endfunction()
 
 function(addRunTestsTarget)
@@ -165,6 +167,9 @@ function(addPchProj)
     target_precompile_headers(Pch PRIVATE ${PROJECT_SOURCE_DIR}/src/pch/pch.h)
 
     set_target_properties(Pch PROPERTIES LINKER_LANGUAGE CXX)
+
+    target_include_directories(Pch PRIVATE "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/include")
+    target_link_libraries(Pch debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/lib/Win64/vld.lib")
 endfunction()
 
 function(main)
@@ -207,8 +212,10 @@ endfunction()
 
 function(setupTestProjects)
     addTestTarget(TestTestFramework)
+    addTestTarget(TestStandard)
 
     addRunTestsTarget()
 endfunction()
+
 
 main()

@@ -1,5 +1,10 @@
 #pragma once
 
+#if defined(_DEBUG) && defined(_MSC_VER)
+//Uncomment this if you want to track leaks.
+//#include <vld.h>
+#endif
+
 #include <Vulkan/vulkan.hpp>
 
 #pragma region GLM
@@ -89,3 +94,6 @@
 #pragma region GSL
 #include <gsl/gsl>
 #pragma endregion GSL
+
+#pragma region BOOST
+#pragma endregion
