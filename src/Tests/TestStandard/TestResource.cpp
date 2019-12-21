@@ -41,5 +41,30 @@ namespace Tests
 			}
 			delete resource;
 		}
+
+		GIVEN("A separate resource")
+		{
+			MockNotifier<int> mock;
+			ProxyNotifier<int> notifier(mock);
+			int* ptr = new int(10);
+			trs::Private::BaseResource<int>* resource = new trs::Private::SeparateResource<int, ProxyNotifier<int>>(notifier, ptr);
+
+			WHEN("Increasing then decreasing count")
+			{
+				EXPECT_CALL(mock, operatorProxy(resource->getPtr()));
+
+				resource->increaseRefCount();
+				resource->increaseRefCount();
+
+				resource->decreaseRefCount();
+				resource->decreaseRefCount();
+
+				THEN("Notifier is called")
+				{
+					testing::Mock::VerifyAndClearExpectations(&mock);
+				}
+			}
+			delete resource;
+		}
 	}
 }  // namespace Tests

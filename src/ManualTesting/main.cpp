@@ -111,4 +111,9 @@ int main()
         auto s2 = s1;
         s1 = std::move(s2);
     }
+
+	{
+		int* ptr = new int();
+		auto o1 = trs::makePtrOwner<int>(ptr);
+	}
 }
