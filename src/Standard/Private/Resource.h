@@ -67,20 +67,25 @@ namespace trs::Private
 
 		pointer getPtr() noexcept override
 		{
-			return &m_value.first();
+			return get();
 		}
 
 		void notify() noexcept override
 		{
-			m_value.second()(&m_value.first());
+			m_value.second()(get());
 		}
 
 	private:
+		pointer get() noexcept
+		{
+			return &m_value.first();
+		}
+
 		CompressedPair<value_type, Notifier> m_value;
 	};
 
 	template <typename Type, typename Notifier>
-	class SeparateResource : public BaseResource<Type>
+	class SeparatedResource : public BaseResource<Type>
 	{
 	public:
 		using value_type = Type;
@@ -88,7 +93,7 @@ namespace trs::Private
 
 	public:
 		template <typename Notifier>
-		SeparateResource(Notifier&& notifier, value_type* value)
+		SeparatedResource(Notifier&& notifier, value_type* value)
 		  : BaseResource<value_type>()
 		  , m_value(std::piecewise_construct_t(), std::forward_as_tuple(value), std::forward_as_tuple(std::forward<Notifier>(notifier)))
 		{
@@ -96,15 +101,20 @@ namespace trs::Private
 
 		pointer getPtr() noexcept override
 		{
-			return m_value.first();
+			return get();
 		}
 
 		void notify() noexcept override
 		{
-			m_value.second()(m_value.first());
+			m_value.second()(get());
 		}
 
 	private:
+		pointer get() noexcept
+		{
+			return m_value.first();
+		}
+
 		CompressedPair<value_type*, Notifier> m_value;
 	};
 }  // namespace trs::Private

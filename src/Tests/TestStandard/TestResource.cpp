@@ -42,12 +42,12 @@ namespace Tests
 			delete resource;
 		}
 
-		GIVEN("A separate resource")
+		GIVEN("A separated resource")
 		{
 			MockNotifier<int> mock;
 			ProxyNotifier<int> notifier(mock);
 			int* ptr = new int(10);
-			trs::Private::BaseResource<int>* resource = new trs::Private::SeparateResource<int, ProxyNotifier<int>>(notifier, ptr);
+			trs::Private::BaseResource<int>* resource = new trs::Private::SeparatedResource<int, ProxyNotifier<int>>(notifier, ptr);
 
 			WHEN("Increasing then decreasing count")
 			{
