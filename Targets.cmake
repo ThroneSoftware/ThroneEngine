@@ -64,10 +64,14 @@ endfunction()
 function(setCompileOptions target_name)
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
-        target_compile_options(${target_name} PRIVATE "/permissive-" "/W4" "/WX")
+        target_compile_options(${target_name} PRIVATE "/permissive-" "/W4" "/WX") 
         # Compile options only in release mode
         target_compile_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/Oi;/Ot;/GL>") 
-    else()
+        
+        # Adds linker options to release mode
+        target_link_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/LTCG:INCREMENTAL>")
+
+        else()
         message(FATAL_ERROR "Unsupported compiler. Add the proper compile options to the specified compiler to activate it.\ 
 If you want or need to make it work quick and right now you can comment out the line outputting this message.\n")
     endif()
@@ -165,6 +169,8 @@ function(addPchProj)
     add_library(Pch STATIC)
     configTarget(Pch)
     target_precompile_headers(Pch PRIVATE ${PROJECT_SOURCE_DIR}/src/pch/pch.h)
+
+    setCompileOptions(Pch)
 
     set_target_properties(Pch PROPERTIES LINKER_LANGUAGE CXX)
 
