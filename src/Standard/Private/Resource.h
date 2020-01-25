@@ -12,7 +12,6 @@ namespace trs::Private
 	public:
 		using value_type = Type;
 		using pointer = value_type*;
-		using reference = value_type&;
 
 	public:
 		BaseResource() noexcept = default;
@@ -55,12 +54,11 @@ namespace trs::Private
 	public:
 		using value_type = Type;
 		using pointer = value_type*;
-		using reference = value_type&;
 
 	public:
 		template <typename Notifier, typename... Args>
 		CombinedResource(Notifier&& notifier, Args&&... args)
-		  : BaseResource<Type>()
+		  : BaseResource<value_type>()
 		  , m_value(std::piecewise_construct_t(),
 					std::forward_as_tuple(std::forward<Args>(args)...),
 					std::forward_as_tuple(std::forward<Notifier>(notifier)))
@@ -69,15 +67,54 @@ namespace trs::Private
 
 		pointer getPtr() noexcept override
 		{
-			return &m_value.first();
+			return get();
 		}
 
 		void notify() noexcept override
 		{
-			m_value.second()(getPtr());
+			m_value.second()(get());
 		}
 
 	private:
+		pointer get() noexcept
+		{
+			return &m_value.first();
+		}
+
 		CompressedPair<value_type, Notifier> m_value;
+	};
+
+	template <typename Type, typename Notifier>
+	class SeparatedResource : public BaseResource<Type>
+	{
+	public:
+		using value_type = Type;
+		using pointer = value_type*;
+
+	public:
+		template <typename Notifier>
+		SeparatedResource(Notifier&& notifier, value_type* value)
+		  : BaseResource<value_type>()
+		  , m_value(std::piecewise_construct_t(), std::forward_as_tuple(value), std::forward_as_tuple(std::forward<Notifier>(notifier)))
+		{
+		}
+
+		pointer getPtr() noexcept override
+		{
+			return get();
+		}
+
+		void notify() noexcept override
+		{
+			m_value.second()(get());
+		}
+
+	private:
+		pointer get() noexcept
+		{
+			return m_value.first();
+		}
+
+		CompressedPair<value_type*, Notifier> m_value;
 	};
 }  // namespace trs::Private
