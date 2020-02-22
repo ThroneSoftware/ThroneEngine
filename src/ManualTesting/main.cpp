@@ -140,6 +140,7 @@ int main()
 		manager.emplace(14, 15);
 		manager.emplace(16, 17);
 		manager.emplace(18, 19);
+		manager.emplace(20, 21);
 
 		__nop();
 	}

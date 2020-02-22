@@ -46,7 +46,7 @@ namespace trs
 		{
 			auto& ref = m_pool.emplace_back(std::forward<Args>(args)...);
 
-			auto ptrOwner = trs::makePtrOwnerWithNotifierPtr<value_type, Notifier>(Notifier(*this), &ref);
+			auto ptrOwner = trs::makePtrOwnerWithNotifier<value_type, Notifier>(Notifier(*this), &ref);
 			m_objects.emplace_back(std::move(ptrOwner));
 		}
 
