@@ -13,14 +13,10 @@ namespace trs
 		using value_type = ObjectType;
 
 	private:
-		template <typename ObjectType>
 		class Notifier
 		{
 		public:
-			using value_type = ObjectType;
-
-		public:
-			Notifier(Manager<value_type>& manager)
+			Notifier(Manager& manager)
 			  : m_manager(manager)
 			{
 			}
@@ -31,7 +27,7 @@ namespace trs
 			}
 
 		private:
-			Manager<value_type>& m_manager;
+			Manager& m_manager;
 		};
 
 	public:
@@ -50,14 +46,14 @@ namespace trs
 		{
 			auto& ref = m_pool.emplace_back(std::forward<Args>(args)...);
 
-			auto ptrOwner = trs::makePtrOwnerWithNotifier<value_type, Notifier>(Notifier(*this), &ref);
+			auto ptrOwner = trs::makePtrOwnerWithNotifierPtr<value_type, Notifier>(Notifier(*this), &ref);
 			m_objects.emplace_back(std::move(ptrOwner));
 		}
 
 		void erase(value_type* ptr)
 		{
 			{
-				auto found = std::find_if(m_objects.begin(), m_objects.end(), [](PtrOwner<value_type>& ptrOwner) {
+				auto found = std::find_if(m_objects.begin(), m_objects.end(), [ptr](PtrOwner<value_type>& ptrOwner) {
 					return ptrOwner.getPtr() == ptr;
 				});
 
@@ -65,11 +61,11 @@ namespace trs
 			}
 
 			{
-				//auto found = std::find_if(m_pool.begin(), m_pool.end(), [](value_type& value) {
-				//	return &value == ptr;
-				//});
+				auto found = std::find_if(m_pool.begin(), m_pool.end(), [ptr](value_type& value) {
+					return &value == ptr;
+				});
 
-				//m_pool.erase(found);
+				m_pool.erase(found);
 			}
 		}
 

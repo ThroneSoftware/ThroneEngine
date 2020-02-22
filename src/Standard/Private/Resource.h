@@ -44,6 +44,8 @@ namespace trs::Private
 
 		virtual void notify() noexcept = 0;
 
+		//virtual void setPtr();
+
 	private:
 		std::atomic<uint32_t> m_count = 0;
 	};

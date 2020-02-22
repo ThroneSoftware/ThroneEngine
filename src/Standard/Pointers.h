@@ -212,7 +212,7 @@ namespace trs
 	};
 
 	template <typename Type>
-	PtrOwner<Type> makePtrOwner(Type* ptr)
+	PtrOwner<Type> makePtrOwnerPtr(Type* ptr)
 	{
 		auto* resource =
 			new Private::SeparatedResource<Type, PointersPrivate::DefaultNotifier<Type>>(PointersPrivate::DefaultNotifier<Type>(), ptr);
@@ -229,7 +229,7 @@ namespace trs
 	}
 
 	template <typename Type, typename Notifier>
-	PtrOwner<Type> makePtrOwnerWithNotifier(Notifier&& notifier, Type* ptr)
+	PtrOwner<Type> makePtrOwnerWithNotifierPtr(Notifier&& notifier, Type* ptr)
 	{
 		auto* resource = new Private::SeparatedResource<Type, Notifier>(std::forward<Notifier>(notifier), ptr);
 		return PtrOwner<Type>(resource);
