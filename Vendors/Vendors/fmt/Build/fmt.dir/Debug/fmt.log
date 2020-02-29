@@ -5,16 +5,17 @@
   fmt.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\Debug\fmtd.lib
 
 Résumé de performance des projets :
-        1 ms  C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\ZERO_CHECK.vcxproj   4 appels
-                  1 ms  GetTargetPath                              1 appels
-                  0 ms  GetNativeManifest                          1 appels
+        2 ms  C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\ZERO_CHECK.vcxproj   4 appels
+                  0 ms  GetTargetPath                              1 appels
+                  2 ms  GetNativeManifest                          1 appels
                   0 ms  GetResolvedLinkLibs                        1 appels
-                  1 ms  GetCopyToOutputDirectoryItems              1 appels
-     1768 ms  C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\fmt.vcxproj   1 appels
-               1768 ms  Build                                      1 appels
+                  0 ms  GetCopyToOutputDirectoryItems              1 appels
+     1576 ms  C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\fmt.vcxproj   1 appels
+               1576 ms  Build                                      1 appels
 
 Résumé de performance cible :
         0 ms  _CheckForInvalidConfigurationAndPlatform   1 appels
+        0 ms  _BuildCompileAction                        1 appels
         0 ms  AfterBuildCompileEvent                     1 appels
         0 ms  _Lib                                       1 appels
         0 ms  AfterLib                                   1 appels
@@ -23,8 +24,8 @@ Résumé de performance cible :
         0 ms  ComputeReferenceLibInputs                  1 appels
         0 ms  GetResolvedLinkLibs                        1 appels
         0 ms  ComputeLibInputsFromProject                1 appels
+        0 ms  BuildCompile                               1 appels
         0 ms  ComputeCLGeneratedLibInputs                1 appels
-        0 ms  ComputeRCGeneratedLibInputs                1 appels
         0 ms  ComputeRCOutputs                           1 appels
         0 ms  ComputeLibAdditionalOptions                1 appels
         0 ms  BeforeLib                                  1 appels
@@ -33,91 +34,91 @@ Résumé de performance cible :
         0 ms  MakeDirsForResourceCompile                 1 appels
         0 ms  BeforeResourceCompile                      1 appels
         0 ms  _ClCompile                                 1 appels
-        0 ms  SelectClCompile                            1 appels
-        0 ms  _BuildCompileAction                        1 appels
-        0 ms  BuildCompile                               1 appels
+        0 ms  AfterClCompile                             1 appels
+        0 ms  ComputeRCGeneratedLibInputs                1 appels
         0 ms  BuildLinkTraverse                          1 appels
         0 ms  ComputeLegacyManifestEmbedding             1 appels
+        0 ms  _ALink                                     1 appels
         0 ms  AfterBuild                                 1 appels
         0 ms  BuildLink                                  1 appels
         0 ms  _BuildLinkAction                           1 appels
         0 ms  PostBuildEvent                             1 appels
         0 ms  PrepareForRun                              1 appels
+        0 ms  CopyFilesToOutputDirectory                 1 appels
         0 ms  _CheckForCompileOutputs                    1 appels
         0 ms  _CopySourceItemsToOutputDirectory          1 appels
+        0 ms  GetCopyToOutputDirectoryXamlAppDefs        2 appels
+        0 ms  AssignTargetPaths                          2 appels
         0 ms  _Deploy                                    1 appels
         0 ms  _Appverifier                               1 appels
-        0 ms  MakeDirsForCl                              1 appels
         0 ms  CreateSatelliteAssemblies                  1 appels
+        0 ms  _GenerateSatelliteAssemblyInputs           1 appels
         0 ms  _BscMake                                   1 appels
-        0 ms  MakeDirsForBscMake                         1 appels
-        0 ms  ComputeCLCompileGeneratedSbrFiles          1 appels
         0 ms  _XdcMake                                   1 appels
         0 ms  MakeDirsForXdcMake                         1 appels
         0 ms  ComputeCLCompileGeneratedXDCFiles          1 appels
         0 ms  ResolvedXDCMake                            1 appels
+        0 ms  RegisterOutput                             1 appels
         0 ms  _Manifest                                  1 appels
-        0 ms  _ALink                                     1 appels
-        0 ms  _GenerateSatelliteAssemblyInputs           1 appels
-        0 ms  WarnCompileDuplicatedFilename              1 appels
-        0 ms  AfterClCompile                             1 appels
+        0 ms  SelectClCompile                            1 appels
+        0 ms  FixupCLCompileOptions                      1 appels
+        0 ms  Build                                      1 appels
         0 ms  AfterResolveReferences                     1 appels
+        0 ms  _PrepareForReferenceResolution             1 appels
         0 ms  BeforeBuildGenerateSources                 1 appels
         0 ms  BuildGenerateSourcesTraverse               1 appels
         0 ms  ResolveReferences                          1 appels
-        0 ms  ComputeCLInputPDBName                      1 appels
+        0 ms  ComputeReferenceCLInput                    1 appels
+        0 ms  BeforeResolveReferences                    1 appels
+        0 ms  _HandlePackageFileConflicts                1 appels
         0 ms  ExpandSDKReferences                        1 appels
+        0 ms  PrepareProjectReferences                   1 appels
         0 ms  ResolveSDKReferences                       1 appels
+        0 ms  SetCABuildNativeEnvironmentVariables       1 appels
         0 ms  _CheckWindowsSDKInstalled                  1 appels
         0 ms  GetResolvedWinMD                           1 appels
-        0 ms  GetReferenceAssemblyPaths                  1 appels
-        0 ms  GetNativeManifest                          1 appels
-        0 ms  GetTargetPath                              1 appels
-        0 ms  _RemoveNameMetadataFromProjectReferenceItems   1 appels
-        0 ms  PrepareProjectReferences                   1 appels
+        0 ms  SetBuildDefaultEnvironmentVariables        1 appels
+        0 ms  GetFrameworkPaths                          1 appels
         0 ms  _GetProjectReferenceTargetFrameworkProperties   1 appels
-        0 ms  BeforeResolveReferences                    1 appels
-        0 ms  _PrepareForReferenceResolution             1 appels
-        0 ms  _PrepareForBuild                           1 appels
-        0 ms  PreBuildEvent                              1 appels
+        0 ms  GetTargetPath                              1 appels
+        0 ms  GetTargetPathWithTargetPlatformMoniker     1 appels
+        0 ms  AssignProjectConfiguration                 1 appels
         0 ms  _SelectedFiles                             1 appels
-        0 ms  Build                                      1 appels
-        0 ms  AfterBuildGenerateSourcesEvent             1 appels
+        0 ms  PreBuildEvent                              1 appels
         0 ms  SelectCustomBuild                          1 appels
+        0 ms  ComputeCLInputPDBName                      1 appels
+        0 ms  SetTelemetryEnvironmentVariables           1 appels
         0 ms  BeforeClCompile                            1 appels
-        0 ms  AfterBuildGenerateSources                  1 appels
         0 ms  BuildCompileTraverse                       1 appels
         0 ms  BuildGenerateSources                       1 appels
-        0 ms  _Xsd                                       1 appels
-        0 ms  _Midl                                      1 appels
-        0 ms  MakeDirsForMidl                            1 appels
         0 ms  _BuildGenerateSourcesAction                1 appels
+        0 ms  AfterBuildGenerateSourcesEvent             1 appels
+        0 ms  _Midl                                      1 appels
         0 ms  AfterMidl                                  1 appels
-        1 ms  SetTelemetryEnvironmentVariables           1 appels
-        1 ms  SetCABuildNativeEnvironmentVariables       1 appels
-        1 ms  GetFrameworkPaths                          1 appels
-        1 ms  ComputeMIDLGeneratedCompileInputs          1 appels
-        1 ms  ResolveAssemblyReferences                  1 appels
-        1 ms  AssignProjectConfiguration                 1 appels
-        1 ms  FixupCLCompileOptions                      1 appels
-        1 ms  ComputeCustomBuildOutput                   1 appels
+        0 ms  AfterBuildGenerateSources                  1 appels
+        0 ms  MakeDirsForMidl                            1 appels
+        0 ms  _Xsd                                       1 appels
+        0 ms  CopyFileToFolders                          1 appels
+        0 ms  _PrepareForBuild                           1 appels
+        0 ms  ComputeCustomBuildOutput                   1 appels
+        0 ms  ComputeMIDLGeneratedCompileInputs          1 appels
+        0 ms  _RemoveNameMetadataFromProjectReferenceItems   1 appels
+        1 ms  InitializeBuildStatus                      1 appels
         1 ms  MakeDirsForLib                             1 appels
-        1 ms  RegisterOutput                             1 appels
-        1 ms  CopyFilesToOutputDirectory                 1 appels
-        1 ms  GetCopyToOutputDirectoryXamlAppDefs        2 appels
-        1 ms  ComputeReferenceCLInput                    1 appels
-        1 ms  GetTargetPathWithTargetPlatformMoniker     1 appels
-        1 ms  CopyFileToFolders                          1 appels
+        1 ms  ComputeCLCompileGeneratedSbrFiles          1 appels
         1 ms  ComputeCLOutputs                           1 appels
+        1 ms  ResolvedLinkLib                            1 appels
+        1 ms  GetReferenceAssemblyPaths                  1 appels
+        1 ms  FinalizeBuildStatus                        1 appels
         1 ms  _SplitProjectReferencesByFileExistence     1 appels
-        1 ms  SetBuildDefaultEnvironmentVariables        1 appels
-        1 ms  AssignTargetPaths                          2 appels
-        2 ms  FinalizeBuildStatus                        1 appels
-        2 ms  InitializeBuildStatus                      1 appels
-        2 ms  ResolvedLinkLib                            1 appels
+        1 ms  WarnCompileDuplicatedFilename              1 appels
+        1 ms  MakeDirsForBscMake                         1 appels
+        1 ms  ResolveAssemblyReferences                  1 appels
+        2 ms  PrepareForBuild                            1 appels
+        2 ms  GetNativeManifest                          1 appels
         2 ms  GetCopyToOutputDirectoryItems              2 appels
-        3 ms  PrepareForBuild                            1 appels
-        4 ms  ResolveProjectReferences                   1 appels
-       71 ms  CustomBuild                                1 appels
-      105 ms  Lib                                        1 appels
-     1569 ms  ClCompile                                  1 appels
+        3 ms  MakeDirsForCl                              1 appels
+       27 ms  ResolveProjectReferences                   1 appels
+       65 ms  CustomBuild                                1 appels
+       94 ms  Lib                                        1 appels
+     1370 ms  ClCompile                                  1 appels
