@@ -1,15 +1,15 @@
 Performing C++ SOURCE FILE Test has_std_11_flag failed with the following output:
 Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_890a5.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_1a8d0.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.4.0+e901037fe pour .NET Framework
 Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
 
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.24.28316 pour x64
   src.cxx
   Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D has_std_11_flag /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_890a5.dir\Debug\\" /Fd"cmTC_890a5.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue  -std=c++11 "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
-  clÿ: Ligne de commande warning D9002ÿ: option '-std=c++11' inconnue ignor‚e
-  cmTC_890a5.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_890a5.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D has_std_11_flag /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_1a8d0.dir\Debug\\" /Fd"cmTC_1a8d0.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue  -std=c++11 "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
+cl : ligne de commande warning D9002: option '-std=c++11' inconnue ignor‚e [C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\cmTC_1a8d0.vcxproj]
+  cmTC_1a8d0.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_1a8d0.exe
 
 
 Source file was:
@@ -17,58 +17,16 @@ int main() { return 0; }
 Performing C++ SOURCE FILE Test has_std_0x_flag failed with the following output:
 Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_9dad4.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_ecf44.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.4.0+e901037fe pour .NET Framework
 Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
 
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.24.28316 pour x64
   src.cxx
   Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D has_std_0x_flag /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_9dad4.dir\Debug\\" /Fd"cmTC_9dad4.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue  -std=c++0x "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
-  clÿ: Ligne de commande warning D9002ÿ: option '-std=c++0x' inconnue ignor‚e
-  cmTC_9dad4.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_9dad4.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D has_std_0x_flag /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_ecf44.dir\Debug\\" /Fd"cmTC_ecf44.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue  -std=c++0x "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
+cl : ligne de commande warning D9002: option '-std=c++0x' inconnue ignor‚e [C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\cmTC_ecf44.vcxproj]
+  cmTC_ecf44.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_ecf44.exe
 
 
 Source file was:
 int main() { return 0; }
-Determining if the include file pthread.h exists failed with the following output:
-Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
-
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_94e92.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
-Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
-  CheckIncludeFile.cxx
-  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_94e92.dir\Debug\\" /Fd"cmTC_94e92.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\CheckIncludeFile.cxx"
-C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\CheckIncludeFile.cxx(1,10): error C1083:  Impossible d'ouvrir le fichier includeÿ: 'pthread.h'ÿ: No such file or directory [C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\cmTC_94e92.vcxproj]
-
-
-
-Performing C++ SOURCE FILE Test HAVE_FNO_DELETE_NULL_POINTER_CHECKS failed with the following output:
-Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
-
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_5c00b.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
-Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
-  src.cxx
-  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D HAVE_FNO_DELETE_NULL_POINTER_CHECKS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_5c00b.dir\Debug\\" /Fd"cmTC_5c00b.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue  -fno-delete-null-pointer-checks "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
-  clÿ: Ligne de commande warning D9002ÿ: option '-fno-delete-null-pointer-checks' inconnue ignor‚e
-  cmTC_5c00b.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_5c00b.exe
-
-
-Source file was:
-int main() { return 0; }
-Looking for a CUDA compiler failed with the following output:
-CMake Error at C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeDetermineCompilerId.cmake:345 (message):
-  No CUDA toolset found.
-Call Stack (most recent call first):
-  C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeDetermineCompilerId.cmake:32 (CMAKE_DETERMINE_COMPILER_ID_BUILD)
-  C:/Program Files (x86)/CMake/share/cmake-3.15/Modules/CMakeDetermineCUDACompiler.cmake:72 (CMAKE_DETERMINE_COMPILER_ID)
-  CMakeLists.txt:2 (project)
-
-
--- Configuring incomplete, errors occurred!
-See also "C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/test/CMakeFiles/CheckCUDA/CMakeFiles/CMakeOutput.log".
-
