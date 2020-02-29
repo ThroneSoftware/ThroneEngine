@@ -51,15 +51,20 @@ namespace trs
 		}
 
 		template <typename FindFunc>
-		trs::SharedPtr<value_type> find(FindFunc func)
+		trs::SharedPtr<value_type> find(FindFunc func) const
 		{
-			auto find_locked = [func](trs::PtrOwner<value_type>& owner) {
+			auto find_locked = [func](const trs::PtrOwner<value_type>& owner) {
 				// TODO: #88 -> Make this thread safe
 				return func(*owner);
 			};
 
 			auto found = std::find_if(m_objects.begin(), m_objects.end(), find_locked);
-			return found != m_objects.end() ? *found : nullptr;
+			return found != m_objects.end() ? trs::SharedPtr<value_type>(*found) : trs::SharedPtr<value_type>(nullptr);
+		}
+
+		std::size_t size() const noexcept
+		{
+			return m_objects.size();
 		}
 
 	private:
