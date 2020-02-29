@@ -1,4 +1,4 @@
-The system is: Windows - 10.0.16299 - AMD64
+The system is: Windows - 10.0.18363 - AMD64
 Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
 Compiler:  
 Build flags: 
@@ -6,83 +6,83 @@ Id flags:
 
 The output was:
 0
-Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
+Microsoft (R) Build Engine version 16.4.0+e901037fe pour .NET Framework
 Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
 
-La g‚n‚ration a d‚marr‚ 2019-09-27 21:06:55.
-Projet "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\3.15.3\CompilerIdCXX\CompilerIdCXX.vcxproj" sur le noud 1 (cibles par d‚faut).
+La g‚n‚ration a d‚marr‚ 2020-02-29 11:07:21.
+Projet "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\3.16.2\CompilerIdCXX\CompilerIdCXX.vcxproj" sur le noud 1 (cibles par d‚faut).
 PrepareForBuild:
   Cr‚ation du r‚pertoire "Debug\".
   Cr‚ation du r‚pertoire "Debug\CompilerIdCXX.tlog\".
 InitializeBuildStatus:
   Cr‚ation de "Debug\CompilerIdCXX.tlog\unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
 ClCompile:
-  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc142.pdb" /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
+  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc142.pdb" /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
   CMakeCXXCompilerId.cpp
 Link:
-  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X64 Debug\CMakeCXXCompilerId.obj
-  CompilerIdCXX.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\3.15.3\CompilerIdCXX\.\CompilerIdCXX.exe
+  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X64 Debug\CMakeCXXCompilerId.obj
+  CompilerIdCXX.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\3.16.2\CompilerIdCXX\.\CompilerIdCXX.exe
 PostBuildEvent:
   for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
   :VCEnd
-  CMAKE_CXX_COMPILER=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\bin\Hostx64\x64\cl.exe
+  CMAKE_CXX_COMPILER=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\bin\Hostx64\x64\cl.exe
 FinalizeBuildStatus:
   Suppression du fichier "Debug\CompilerIdCXX.tlog\unsuccessfulbuild".
   Mise … jour de l'horodatage "Debug\CompilerIdCXX.tlog\CompilerIdCXX.lastbuildstate".
-G‚n‚ration du projet "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\3.15.3\CompilerIdCXX\CompilerIdCXX.vcxproj" termin‚e (cibles par d‚faut).
+G‚n‚ration du projet "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\3.16.2\CompilerIdCXX\CompilerIdCXX.vcxproj" termin‚e (cibles par d‚faut).
 
 La g‚n‚ration a r‚ussi.
     0 Avertissement(s)
     0 Erreur(s)
 
-Temps ‚coul‚ 00:00:00.65
+Temps ‚coul‚ 00:00:00.57
 
 
 Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
 
 Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
 
-The CXX compiler identification is MSVC, found in "C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/3.15.3/CompilerIdCXX/CompilerIdCXX.exe"
+The CXX compiler identification is MSVC, found in "C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/3.16.2/CompilerIdCXX/CompilerIdCXX.exe"
 
 Determining if the CXX compiler works passed with the following output:
 Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_beb45.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_242fd.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.4.0+e901037fe pour .NET Framework
 Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
 
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.24.28316 pour x64
   testCXXCompiler.cxx
   Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_beb45.dir\Debug\\" /Fd"cmTC_beb45.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
-  cmTC_beb45.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_beb45.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_242fd.dir\Debug\\" /Fd"cmTC_242fd.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+  cmTC_242fd.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_242fd.exe
 
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_f0752.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_0908b.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.4.0+e901037fe pour .NET Framework
 Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
 
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.24.28316 pour x64
   CMakeCXXCompilerABI.cpp
   Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_f0752.dir\Debug\\" /Fd"cmTC_f0752.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Program Files (x86)\CMake\share\cmake-3.15\Modules\CMakeCXXCompilerABI.cpp"
-  cmTC_f0752.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_f0752.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_0908b.dir\Debug\\" /Fd"cmTC_0908b.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Program Files\CMake\share\cmake-3.16\Modules\CMakeCXXCompilerABI.cpp"
+  cmTC_0908b.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_0908b.exe
 
 
 
 Performing C++ SOURCE FILE Test SUPPORTS_VARIADIC_TEMPLATES succeeded with the following output:
 Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_ff955.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_e03db.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.4.0+e901037fe pour .NET Framework
 Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
 
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.24.28316 pour x64
   src.cxx
   Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D SUPPORTS_VARIADIC_TEMPLATES /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_ff955.dir\Debug\\" /Fd"cmTC_ff955.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
-  cmTC_ff955.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_ff955.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D SUPPORTS_VARIADIC_TEMPLATES /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_e03db.dir\Debug\\" /Fd"cmTC_e03db.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
+  cmTC_e03db.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_e03db.exe
 
 
 Source file was:
@@ -93,14 +93,14 @@ Source file was:
 Performing C++ SOURCE FILE Test SUPPORTS_USER_DEFINED_LITERALS succeeded with the following output:
 Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_bee4e.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_9f562.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.4.0+e901037fe pour .NET Framework
 Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
 
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.24.28316 pour x64
   src.cxx
   Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D SUPPORTS_USER_DEFINED_LITERALS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_bee4e.dir\Debug\\" /Fd"cmTC_bee4e.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
-  cmTC_bee4e.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_bee4e.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D SUPPORTS_USER_DEFINED_LITERALS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_9f562.dir\Debug\\" /Fd"cmTC_9f562.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
+  cmTC_9f562.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_9f562.exe
 
 
 Source file was:
@@ -110,16 +110,16 @@ Source file was:
 Performing C++ SOURCE FILE Test FMT_HAS_VARIANT succeeded with the following output:
 Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_549d4.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_1d521.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.4.0+e901037fe pour .NET Framework
 Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
 
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.24.28316 pour x64
   src.cxx
   Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D FMT_HAS_VARIANT /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_549d4.dir\Debug\\" /Fd"cmTC_549d4.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue  -std=c++1z "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
-  clÿ: Ligne de commande warning D9002ÿ: option '-std=c++1z' inconnue ignor‚e
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D FMT_HAS_VARIANT /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_1d521.dir\Debug\\" /Fd"cmTC_1d521.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue  -std=c++1z "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\src.cxx"
+cl : ligne de commande warning D9002: option '-std=c++1z' inconnue ignor‚e [C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\cmTC_1d521.vcxproj]
   class template variant is only available with C++17 or later.
-  cmTC_549d4.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_549d4.exe
+  cmTC_1d521.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_1d521.exe
 
 
 Source file was:
@@ -129,16 +129,16 @@ Source file was:
 Determining if the open exist passed with the following output:
 Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_8ce75.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_b4874.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.4.0+e901037fe pour .NET Framework
 Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
 
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.24.28316 pour x64
   CheckSymbolExists.cxx
   Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_8ce75.dir\Debug\\" /Fd"cmTC_8ce75.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\CheckSymbolExists.cxx"
-C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\CheckSymbolExists.cxx(8,1): warning C4996:  'open': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _open. See online help for details. [C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\cmTC_8ce75.vcxproj]
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.16299.0\ucrt\corecrt_io.h(516): message :  voir la d‚claration de 'open' [C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\cmTC_8ce75.vcxproj]
-  cmTC_8ce75.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_8ce75.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_b4874.dir\Debug\\" /Fd"cmTC_b4874.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\CheckSymbolExists.cxx"
+C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\CheckSymbolExists.cxx(8,1): warning C4996: 'open': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _open. See online help for details. [C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\cmTC_b4874.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_io.h(516): message : voir la d‚claration de 'open' [C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\cmTC_b4874.vcxproj]
+  cmTC_b4874.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_b4874.exe
 
 
 File C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
@@ -155,18 +155,17 @@ int main(int argc, char** argv)
   return 0;
 #endif
 }
-
 Determining if the _strtod_l exist passed with the following output:
 Change Dir: C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_2748f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.2.37902+b5aaefc9f pour .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_982ae.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.4.0+e901037fe pour .NET Framework
 Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
 
-  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.22.27905 pour x64
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ19.24.28316 pour x64
   CheckSymbolExists.cxx
   Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
-  cl /c /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_2748f.dir\Debug\\" /Fd"cmTC_2748f.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\CheckSymbolExists.cxx"
-  cmTC_2748f.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_2748f.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_982ae.dir\Debug\\" /Fd"cmTC_982ae.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\CheckSymbolExists.cxx"
+  cmTC_982ae.vcxproj -> C:\Users\X-PC\Desktop\Throne\Vendors\Vendors\fmt\Build\CMakeFiles\CMakeTmp\Debug\cmTC_982ae.exe
 
 
 File C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
@@ -183,4 +182,3 @@ int main(int argc, char** argv)
   return 0;
 #endif
 }
-
