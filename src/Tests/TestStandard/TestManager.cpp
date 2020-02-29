@@ -44,6 +44,33 @@ namespace Tests
 					auto ptr = TestManagerPrivate::find(manager, value);
 					REQUIRE(ptr.getPtr() != nullptr);
 					REQUIRE(*ptr.getPtr() == value);
+					REQUIRE(manager.size() == 1);
+				}
+			}
+		}
+
+		GIVEN("A manager with multiple objects")
+		{
+			constexpr size_t size = 5;
+			auto manager = TestManagerPrivate::makeManager(size);
+			WHEN("Emplacing a new object")
+			{
+				constexpr int value = 10;
+				manager->emplace(value);
+				THEN("The object is emplaced")
+				{
+					auto ptr = TestManagerPrivate::find(*manager, value);
+					REQUIRE(ptr.getPtr() != nullptr);
+					REQUIRE(*ptr.getPtr() == value);
+				}
+				AND_THEN("Previously existing objects have not been corrupted")
+				{
+					REQUIRE(manager->size() == size + 1);
+					for (size_t i = 0; i < size; ++i)
+					{
+						auto ptr = TestManagerPrivate::find(*manager, i);
+						REQUIRE(ptr.getPtr() != nullptr);
+					}
 				}
 			}
 		}
@@ -70,7 +97,7 @@ namespace Tests
 
 		GIVEN("A manager with with many objects")
 		{
-			constexpr std::size_t size = 5;
+			constexpr size_t size = 5;
 			auto manager = TestManagerPrivate::makeManager(size);
 			AND_GIVEN("A SharedPtr of an object in the middle of the array")
 			{
@@ -88,7 +115,7 @@ namespace Tests
 				}
 			}
 
-			AND_GIVEN("A SharedPtr of an object in the beggining of the array")
+			AND_GIVEN("A SharedPtr of an object at the beggining of the array")
 			{
 				constexpr int value = 0;
 				auto ptr = TestManagerPrivate::find(*manager, value);
@@ -104,7 +131,7 @@ namespace Tests
 				}
 			}
 
-			AND_GIVEN("A SharedPtr of an object in the end of the array")
+			AND_GIVEN("A SharedPtr of an object at the end of the array")
 			{
 				constexpr int value = size - 1;
 				auto ptr = TestManagerPrivate::find(*manager, value);

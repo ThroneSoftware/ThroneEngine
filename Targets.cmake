@@ -71,7 +71,7 @@ function(setCompileOptions target_name)
         # Adds linker options to release mode
         target_link_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/LTCG:INCREMENTAL>")
 
-        else()
+    else()
         message(FATAL_ERROR "Unsupported compiler. Add the proper compile options to the specified compiler to activate it.\ 
 If you want or need to make it work quick and right now you can comment out the line outputting this message.\n")
     endif()

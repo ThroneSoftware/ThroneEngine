@@ -46,20 +46,20 @@ namespace trs
 		{
 			auto& ref = m_pool.emplace_back(std::forward<Args>(args)...);
 
-			auto ptrOwner = trs::makePtrOwnerWithNotifier<value_type, Notifier>(Notifier(*this), &ref);
+			auto ptrOwner = makePtrOwnerWithNotifier<value_type, Notifier>(Notifier(*this), &ref);
 			m_objects.emplace_back(std::move(ptrOwner));
 		}
 
 		template <typename FindFunc>
-		trs::SharedPtr<value_type> find(FindFunc func) const
+		SharedPtr<value_type> find(FindFunc func) const
 		{
-			auto find_locked = [func](const trs::PtrOwner<value_type>& owner) {
+			auto find_locked = [func](const PtrOwner<value_type>& owner) {
 				// TODO: #88 -> Make this thread safe
 				return func(*owner);
 			};
 
 			auto found = std::find_if(m_objects.begin(), m_objects.end(), find_locked);
-			return found != m_objects.end() ? trs::SharedPtr<value_type>(*found) : trs::SharedPtr<value_type>(nullptr);
+			return found != m_objects.end() ? SharedPtr<value_type>(*found) : SharedPtr<value_type>(nullptr);
 		}
 
 		std::size_t size() const noexcept
@@ -84,6 +84,8 @@ namespace trs
 				auto found = std::find_if(m_pool.begin(), m_pool.end(), [ptr](value_type& value) {
 					return &value == ptr;
 				});
+
+				assert(found != m_pool.end());
 
 				m_pool.erase(found);
 			}
