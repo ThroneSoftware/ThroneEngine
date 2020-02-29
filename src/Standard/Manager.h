@@ -58,6 +58,8 @@ namespace trs
 					return ptrOwner.getPtr() == ptr;
 				});
 
+				assert(found != m_objects.end());
+
 				m_objects.erase(found);
 			}
 
