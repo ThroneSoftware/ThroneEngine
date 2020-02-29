@@ -41,6 +41,7 @@ namespace Tests
 				{
 					THEN("The object is removed from the manager")
 					{
+						throw 1;
 					}
 				}
 			}

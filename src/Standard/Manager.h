@@ -89,19 +89,5 @@ namespace trs
 		// Temporary until we have a better solution, see issue #39.
 		// It should also be replaced by a new type. (for example class Pool)
 		std::list<value_type> m_pool;
-
-	public:
-		// Only used in unit tests
-#ifdef TEST_MANAGER
-		const std::vector<PtrOwner<value_type>>& getObjects()
-		{
-			return m_objects;
-		}
-
-		const std::list<value_type>& getPool()
-		{
-			return m_pool;
-		}
-#endif	// TEST_MANAGER
 	};
 }  // namespace trs
