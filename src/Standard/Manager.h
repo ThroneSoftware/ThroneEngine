@@ -50,6 +50,7 @@ namespace trs
 			m_objects.emplace_back(std::move(ptrOwner));
 		}
 
+	private:
 		void erase(value_type* ptr)
 		{
 			{
@@ -69,9 +70,22 @@ namespace trs
 			}
 		}
 
-	private:
 		std::vector<PtrOwner<value_type>> m_objects;
 
 		std::list<value_type> m_pool;  // temporary until we have a better solution, see issue #39
+
+	public:
+		// Only used in unit tests
+#ifdef TEST_MANAGER
+		const std::vector<PtrOwner<value_type>>& getObjects()
+		{
+			return m_objects;
+		}
+
+		const std::list<value_type>& getPool()
+		{
+			return m_pool;
+		}
+#endif	// TEST_MANAGER
 	};
 }  // namespace trs
