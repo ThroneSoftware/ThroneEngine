@@ -42,6 +42,12 @@ namespace trs
 				setWith(other);
 			}
 
+			BasePtr& operator=(std::nullptr_t) noexcept
+			{
+				reset();
+				return *this;
+			}
+
 			BasePtr& operator=(const BasePtr& other) noexcept
 			{
 				if(this != &other)
@@ -305,6 +311,7 @@ namespace trs
 		void reset() noexcept
 		{
 			m_base.decreaseRefCount();
+			m_base = nullptr;
 		}
 
 		pointer getPtr() const noexcept
