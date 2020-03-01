@@ -29,6 +29,7 @@ namespace trs::Private
 
 		void decreaseRefCount() noexcept
 		{
+			assert(m_count != 0);
 			if(--m_count == 0)
 			{
 				notify();

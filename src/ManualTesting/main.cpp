@@ -4,6 +4,7 @@
 
 #include <Core/Core.h>
 #include <Standard/CompressedPair.h>
+#include <Standard/Manager.h>
 #include <Standard/Pointers.h>
 
 #include <boost/algorithm/string.hpp>
@@ -18,6 +19,20 @@ string ExePath()
 	string::size_type pos = string(buffer).find_last_of("\\/");
 	return string(buffer).substr(0, pos);  //
 }
+
+struct TestStruct
+{
+	TestStruct() = default;
+
+	TestStruct(int a, int b)
+	  : m_a(a)
+	  , m_b(b)
+	{
+	}
+
+	int m_a = 0;
+	int m_b = 1;
+};
 
 int main()
 {
@@ -103,17 +118,30 @@ int main()
 		};
 
 		auto ptrOwner = trs::makePtrOwner<B>(10);
-        ptrOwner->m_a;
+		ptrOwner->m_a;
 	}
 
-    {
-        auto s1 = std::make_shared<int>(10);
-        auto s2 = s1;
-        s1 = std::move(s2);
-    }
+	{
+		auto s1 = std::make_shared<int>(10);
+		auto s2 = s1;
+		s1 = std::move(s2);
+	}
 
 	{
 		int* ptr = new int();
 		auto o1 = trs::makePtrOwner<int>(ptr);
+	}
+
+	{
+		trs::Manager<TestStruct> manager;
+
+		manager.emplace(10, 11);
+		manager.emplace(12, 13);
+		manager.emplace(14, 15);
+		manager.emplace(16, 17);
+		manager.emplace(18, 19);
+		manager.emplace(20, 21);
+
+		__nop();
 	}
 }

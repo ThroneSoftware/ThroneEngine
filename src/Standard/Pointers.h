@@ -31,7 +31,7 @@ namespace trs
 			{
 			}
 
-			BasePtr(Private::BaseResource<value_type>* resource) noexcept
+			explicit BasePtr(Private::BaseResource<value_type>* resource) noexcept
 			  : m_resource(resource)
 			  , m_ptr(resource->getPtr())
 			{
@@ -40,6 +40,12 @@ namespace trs
 			BasePtr(const BasePtr& other) noexcept
 			{
 				setWith(other);
+			}
+
+			BasePtr& operator=(std::nullptr_t) noexcept
+			{
+				reset();
+				return *this;
 			}
 
 			BasePtr& operator=(const BasePtr& other) noexcept
@@ -256,6 +262,11 @@ namespace trs
 		{
 		}
 
+		SharedPtr(std::nullptr_t) noexcept
+		  : SharedPtr<value_type>()
+		{
+		}
+
 		explicit SharedPtr(const PtrOwner<value_type>& ptrOwner) noexcept
 		  : m_base(ptrOwner.m_base)
 		{
@@ -294,7 +305,13 @@ namespace trs
 
 		~SharedPtr() noexcept
 		{
+			reset();
+		}
+
+		void reset() noexcept
+		{
 			m_base.decreaseRefCount();
+			m_base = nullptr;
 		}
 
 		pointer getPtr() const noexcept
