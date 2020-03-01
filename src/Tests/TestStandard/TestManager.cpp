@@ -132,21 +132,21 @@ namespace Tests
 				}
 			}
 
-			//AND_GIVEN("A SharedPtr of an object in the middle of the array")
-			//{
-			//	constexpr int value = size / 2;
-			//	auto ptr = TestManagerPrivate::find(*manager, value);
-			//	WHEN("The last SharedPtr is destroyed")
-			//	{
-			//		ptr.reset();
-			//		THEN("The object is removed from the manager")
-			//		{
-			//			auto actual = TestManagerPrivate::find(*manager, value);
-			//			REQUIRE(actual.getPtr() == nullptr);
-			//			REQUIRE(manager->size() == size - 1);
-			//		}
-			//	}
-			//}
+			AND_GIVEN("A SharedPtr of an object in the middle of the array")
+			{
+				constexpr int value = size / 2;
+				auto ptr = TestManagerPrivate::find(*manager, value);
+				WHEN("The last SharedPtr is destroyed")
+				{
+					ptr.reset();
+					THEN("The object is removed from the manager")
+					{
+						auto actual = TestManagerPrivate::find(*manager, value);
+						REQUIRE(actual.getPtr() == nullptr);
+						REQUIRE(manager->size() == size - 1);
+					}
+				}
+			}
 		}
 	}
 
