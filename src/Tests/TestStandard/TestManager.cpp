@@ -66,9 +66,9 @@ namespace Tests
 				AND_THEN("Previously existing objects have not been corrupted")
 				{
 					REQUIRE(manager->size() == size + 1);
-					for (size_t i = 0; i < size; ++i)
+					for(size_t i = 0; i < size; ++i)
 					{
-						auto ptr = TestManagerPrivate::find(*manager, i);
+						auto ptr = TestManagerPrivate::find(*manager, static_cast<int>(i));
 						REQUIRE(ptr.getPtr() != nullptr);
 					}
 				}
