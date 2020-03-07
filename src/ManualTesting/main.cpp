@@ -2,7 +2,6 @@
 
 #include <pch.h>
 
-#include <Core/Core.h>
 #include <Standard/CompressedPair.h>
 #include <Standard/Manager.h>
 #include <Standard/Pointers.h>
@@ -39,9 +38,6 @@ int main()
 	// test 9
 	std::cout << ExePath() << std::endl;
 	std::cout << "Throne!" << std::endl;
-	print(10);	//
-	print(11);
-	print(12);	//
 
 	glm::vec3 vec3;
 	vec3.x = 10;
