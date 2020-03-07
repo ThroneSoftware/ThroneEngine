@@ -29,14 +29,16 @@ namespace trc
 		removeChild(child->getId());
 	}
 
-	void Entity::removeChild(const std::string& id)
-	{
-		auto found = std::find_if(m_children.begin(), m_children.end(), [&id](const trs::SharedPtr<Entity>& child) {
-			return child->getId() == id;
-		});
+	// Should we implement the remove with a pointer instead?
 
-		assert(found != m_children.end());
+	//void Entity::removeChild(const std::string& id)
+	//{
+	//	auto found = std::find_if(m_children.begin(), m_children.end(), [&id](const trs::SharedPtr<Entity>& child) {
+	//		return child->getId() == id;
+	//	});
 
-		m_children.erase(found);
-	}
+	//	assert(found != m_children.end());
+
+	//	m_children.erase(found);
+	//}
 }  // namespace trc
