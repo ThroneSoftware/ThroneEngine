@@ -332,4 +332,12 @@ namespace trs
 	private:
 		PointersPrivate::BasePtr<value_type> m_base;
 	};
+
+
+	template <typename Type>
+	inline bool operator==(const trs::SharedPtr<Type>& ptr, std::nullptr_t)
+	{
+		return ptr.getPtr() == nullptr;
+	}
+
 }  // namespace trs
