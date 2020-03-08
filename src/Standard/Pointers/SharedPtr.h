@@ -29,6 +29,12 @@ namespace trs
 			m_base.increaseRefCount();
 		}
 
+		explicit SharedPtr(Private::BaseResource<value_type>* resource) noexcept
+		  : m_base(resource)
+		{
+			m_base.increaseRefCount();
+		}
+
 		SharedPtr(const SharedPtr& other) noexcept
 		  : m_base(other.m_base)
 		{

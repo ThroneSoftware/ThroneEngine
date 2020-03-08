@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Private/Resource.h"
+#include "EnableSharedFromThis.h"
 #include "PtrOwner.h"
 
 namespace trs
@@ -15,6 +16,15 @@ namespace trs
 			{
 			}
 		};
+
+		template <typename Type>
+		void setResource(Private::BaseResource<Type>* resource)
+		{
+			if constexpr(std::is_base_of_v<EnableSharedFromThis, Type>)
+			{
+				resource->getPtr()->setResource(resource);
+			}
+		}
 	}  // namespace PointersPrivate
 
 	template <typename Type>
@@ -22,6 +32,7 @@ namespace trs
 	{
 		auto* resource =
 			new Private::SeparatedResource<Type, PointersPrivate::DefaultNotifier<Type>>(PointersPrivate::DefaultNotifier<Type>(), ptr);
+		PointersPrivate::setResource(resource);
 		return PtrOwner<Type>(resource);
 	}
 
@@ -31,6 +42,7 @@ namespace trs
 		auto* resource =
 			new Private::CombinedResource<Type, PointersPrivate::DefaultNotifier<Type>>(PointersPrivate::DefaultNotifier<Type>(),
 																						std::forward<Args>(args)...);
+		PointersPrivate::setResource(resource);
 		return PtrOwner<Type>(resource);
 	}
 
@@ -38,6 +50,7 @@ namespace trs
 	PtrOwner<Type> makePtrOwnerWithNotifier(Notifier&& notifier, Type* ptr)
 	{
 		auto* resource = new Private::SeparatedResource<Type, Notifier>(std::forward<Notifier>(notifier), ptr);
+		PointersPrivate::setResource(resource);
 		return PtrOwner<Type>(resource);
 	}
 
@@ -45,6 +58,7 @@ namespace trs
 	PtrOwner<Type> makePtrOwnerWithNotifier(Notifier&& notifier, Args&&... args)
 	{
 		auto* resource = new Private::CombinedResource<Type, Notifier>(std::forward<Notifier>(notifier), std::forward<Args>(args)...);
+		PointersPrivate::setResource(resource);
 		return PtrOwner<Type>(resource);
 	}
 }  // namespace trs

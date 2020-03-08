@@ -4,6 +4,7 @@ target_sources(Standard PRIVATE
 	CompressedPair.h
 	Manager.h
 	Pointers/BasePtr.h
+	Pointers/EnableSharedFromThis.h
 	Pointers/MakeFunctions.h
 	Pointers/PtrOwner.h
 	Pointers/SharedPtr.h
