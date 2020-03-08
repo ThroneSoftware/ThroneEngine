@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BasePtr.h"
+#include "PtrOwner.h"
 
 namespace trs
 {

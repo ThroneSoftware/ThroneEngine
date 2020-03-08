@@ -20,9 +20,9 @@ namespace trs
 		template <typename Type>
 		void setResource(Private::BaseResource<Type>* resource)
 		{
-			if constexpr(std::is_base_of_v<EnableSharedFromThis, Type>)
+			if constexpr(std::is_base_of_v<EnableSharedFromThis<Type>, Type>)
 			{
-				resource->getPtr()->setResource(resource);
+				EnableSharedFromThisSetResourceAccessor<Type>().setResource(resource->getPtr(), resource);
 			}
 		}
 	}  // namespace PointersPrivate
