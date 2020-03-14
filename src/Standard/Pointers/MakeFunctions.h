@@ -22,7 +22,8 @@ namespace trs
 		{
 			if constexpr(std::is_base_of_v<EnableSharedFromThis<Type>, Type>)
 			{
-				EnableSharedFromThisSetResourceAccessor<Type>().setResource(resource->getPtr(), resource);
+				// Use c-style cast because c++ casts do not enable us to cast to a private base class.
+				((PointersPrivate::EnableSharedFromThisPrivate<Type>*)resource->getPtr())->setResource(resource);
 			}
 		}
 	}  // namespace PointersPrivate
