@@ -16,8 +16,8 @@ namespace trs
 		public:
 			EnableSharedFromThisPrivate() = default;
 
-			EnableSharedFromThisPrivate(const EnableSharedFromThisPrivate& other) = default;
-			EnableSharedFromThisPrivate& operator=(const EnableSharedFromThisPrivate& other) = default;
+			EnableSharedFromThisPrivate(const EnableSharedFromThisPrivate& other) = delete;
+			EnableSharedFromThisPrivate& operator=(const EnableSharedFromThisPrivate& other) = delete;
 
 			EnableSharedFromThisPrivate(EnableSharedFromThisPrivate&& other)
 			{
