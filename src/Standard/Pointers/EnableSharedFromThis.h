@@ -39,6 +39,7 @@ namespace trs
 
 			void setResource(Private::BaseResource<value_type>* resource)
 			{
+				assert(m_resource != nullptr);
 				m_resource = resource;
 			}
 
