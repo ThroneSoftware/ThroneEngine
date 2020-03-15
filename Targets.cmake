@@ -225,6 +225,7 @@ endfunction()
 function(setupTestProjects)
     addTestTarget(TestTestFramework)
     addTestTarget(TestStandard)
+    addTestTarget(TestCore)
 
     addRunTestsTarget()
 endfunction()

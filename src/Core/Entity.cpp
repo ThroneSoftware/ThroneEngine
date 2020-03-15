@@ -19,6 +19,10 @@ namespace trc
 			m_parent->removeChild(this);
 		}
 		m_parent = std::move(parent);
+		if(m_parent != nullptr)
+		{
+			m_parent->addChild(makeSharedFromThis());
+		}
 	}
 
 	void Entity::addChild(const trs::SharedPtr<Entity>& child)
@@ -29,16 +33,12 @@ namespace trc
 	void Entity::addChild(trs::SharedPtr<Entity>&& child)
 	{
 		assert(child != nullptr);
+		assert(child->m_parent.getPtr() != this);  // assert child is not already a child of this
 		child->setParent(makeSharedFromThis());
 		m_children.emplace_back(std::move(child));
 	}
 
 	void Entity::removeChild(const trs::SharedPtr<Entity>& child)
-	{
-		removeChild(trs::SharedPtr<Entity>(child));
-	}
-
-	void Entity::removeChild(trs::SharedPtr<Entity>&& child)
 	{
 		assert(child != nullptr);
 		removeChild(child.getPtr());

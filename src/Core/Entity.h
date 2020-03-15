@@ -20,7 +20,6 @@ namespace trc
 		void addChild(trs::SharedPtr<Entity>&& child);
 
 		void removeChild(const trs::SharedPtr<Entity>& child);
-		void removeChild(trs::SharedPtr<Entity>&& child);
 
 	private:
 		void removeChild(Entity* child);
