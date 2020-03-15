@@ -8,18 +8,23 @@ namespace trc
 {
 	class Component;
 
-	class Entity
+	class Entity : public trs::EnableSharedFromThis<Entity>
 	{
 	public:
-
 		const std::string& getId();
 
-		void setParent(trs::SharedPtr<Entity> parent);
-		void addChild(trs::SharedPtr<Entity> child);
-		void removeChild(trs::SharedPtr<Entity> child);
-		void removeChild(const std::string& id);
+		void setParent(const trs::SharedPtr<Entity>& parent);
+		void setParent(trs::SharedPtr<Entity>&& parent);
+
+		void addChild(const trs::SharedPtr<Entity>& child);
+		void addChild(trs::SharedPtr<Entity>&& child);
+
+		void removeChild(const trs::SharedPtr<Entity>& child);
+		void removeChild(trs::SharedPtr<Entity>&& child);
 
 	private:
+		void removeChild(Entity* child);
+
 		std::string m_id;
 
 		trs::SharedPtr<Entity> m_parent;
