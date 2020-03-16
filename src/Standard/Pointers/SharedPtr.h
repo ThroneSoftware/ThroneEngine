@@ -101,4 +101,10 @@ namespace trs
 	{
 		return ptr.getPtr() == nullptr;
 	}
+
+	template <typename Type>
+	inline bool operator==(const trs::SharedPtr<Type>& lhs, const trs::SharedPtr<Type>& rhs)
+	{
+		return lhs.getPtr() == rhs.getPtr();
+	}
 }  // namespace trs

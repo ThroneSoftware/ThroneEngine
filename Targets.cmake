@@ -225,7 +225,9 @@ endfunction()
 function(setupTestProjects)
     addTestTarget(TestTestFramework)
     addTestTarget(TestStandard)
+    
     addTestTarget(TestCore)
+    target_link_libraries(TestCore Core)
 
     addRunTestsTarget()
 endfunction()

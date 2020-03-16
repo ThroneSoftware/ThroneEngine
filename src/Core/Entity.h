@@ -21,6 +21,9 @@ namespace trc
 
 		void removeChild(const trs::SharedPtr<Entity>& child);
 
+		trs::SharedPtr<Entity> getParent() const;
+		const std::vector<trs::SharedPtr<Entity>>& getChildren() const;
+
 	private:
 		void removeChild(Entity* child);
 
