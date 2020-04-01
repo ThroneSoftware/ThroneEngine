@@ -13,8 +13,7 @@ namespace trc
 	public:
 		const std::string& getId();
 
-		void setParent(const trs::SharedPtr<Entity>& parent);
-		void setParent(trs::SharedPtr<Entity>&& parent);
+		void setParent(std::optional<std::reference_wrapper<Entity>> parent);
 
 		void addChild(const trs::SharedPtr<Entity>& child);
 		void addChild(trs::SharedPtr<Entity>&& child);
@@ -29,7 +28,7 @@ namespace trc
 
 		std::string m_id;
 
-		trs::SharedPtr<Entity> m_parent;
+		std::optional<std::reference_wrapper<Entity>> m_parent;
 		std::vector<trs::SharedPtr<Entity>> m_children;
 
 		std::vector<trs::SharedPtr<Component>> m_components;

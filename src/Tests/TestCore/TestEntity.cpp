@@ -50,10 +50,10 @@ namespace Tests
 		}
 		GIVEN("An entity with many children")
 		{
-			auto entity = trs::makePtrOwner<trc::Entity>();
 			auto childOwner1 = trs::makePtrOwner<trc::Entity>();
 			auto childOwner2 = trs::makePtrOwner<trc::Entity>();
 			auto childOwner3 = trs::makePtrOwner<trc::Entity>();
+			auto entity = trs::makePtrOwner<trc::Entity>();
 
 			auto childShared1 = trs::SharedPtr(childOwner1);
 			auto childShared2 = trs::SharedPtr(childOwner2);
@@ -101,13 +101,13 @@ namespace Tests
 	{
 		GIVEN("An entity")
 		{
-			auto parentOwner = trs::makePtrOwner<trc::Entity>();
 			auto entity = trs::makePtrOwner<trc::Entity>();
+			auto parentOwner = trs::makePtrOwner<trc::Entity>();
 
 			auto parentShared1 = trs::SharedPtr(parentOwner);
 			WHEN("When setting it's parent")
 			{
-				entity->setParent(parentShared1);
+				entity->setParent(*parentShared1);
 				THEN("The parent is set")
 				{
 					REQUIRE(entity->getParent() == parentShared1);

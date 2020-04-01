@@ -7,21 +7,16 @@ namespace trc
 		return m_id;
 	}
 
-	void Entity::setParent(const trs::SharedPtr<Entity>& parent)
+	void Entity::setParent(std::optional<std::reference_wrapper<Entity>> parent)
 	{
-		setParent(trs::SharedPtr<Entity>(parent));
-	}
-
-	void Entity::setParent(trs::SharedPtr<Entity>&& parent)
-	{
-		if(m_parent != nullptr)
+		if(m_parent.has_value())
 		{
-			m_parent->removeChild(this);
+			m_parent->get().removeChild(this);
 		}
-		m_parent = std::move(parent);
-		if(m_parent != nullptr)
+		m_parent = parent;
+		if(m_parent.has_value())
 		{
-			m_parent->m_children.emplace_back(makeSharedFromThis());
+			m_parent->get().m_children.emplace_back(makeSharedFromThis());
 		}
 	}
 
@@ -33,8 +28,8 @@ namespace trc
 	void Entity::addChild(trs::SharedPtr<Entity>&& child)
 	{
 		assert(child != nullptr);
-		assert(child->m_parent.getPtr() != this);  // assert child is not already a child of this
-		child->setParent(makeSharedFromThis());
+		assert(&child->m_parent->get() != this);  // assert child is not already a child of this
+		child->setParent(*this);
 	}
 
 	void Entity::removeChild(const trs::SharedPtr<Entity>& child)
@@ -45,7 +40,7 @@ namespace trc
 
 	trs::SharedPtr<Entity> Entity::getParent() const
 	{
-		return m_parent;
+		return m_parent->get().makeSharedFromThis();
 	}
 
 	const std::vector<trs::SharedPtr<Entity>>& Entity::getChildren() const
