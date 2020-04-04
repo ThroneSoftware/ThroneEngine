@@ -20,22 +20,16 @@ namespace trc
 		}
 	}
 
-	void Entity::addChild(const trs::SharedPtr<Entity>& child)
+	void Entity::addChild(Entity& child)
 	{
-		addChild(trs::SharedPtr<Entity>(child));
+		assert(&child.m_parent->get() != this);	 // assert child is not already a child of this
+		child.setParent(*this);
 	}
 
-	void Entity::addChild(trs::SharedPtr<Entity>&& child)
+	void Entity::removeChild(Entity& child)
 	{
-		assert(child != nullptr);
-		assert(&child->m_parent->get() != this);  // assert child is not already a child of this
-		child->setParent(*this);
-	}
-
-	void Entity::removeChild(const trs::SharedPtr<Entity>& child)
-	{
-		assert(child != nullptr);
-		removeChild(child.getPtr());
+		assert(&child.m_parent->get() == this);
+		child.setParent(std::nullopt);
 	}
 
 	trs::SharedPtr<Entity> Entity::getParent() const

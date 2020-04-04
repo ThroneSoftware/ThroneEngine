@@ -15,10 +15,9 @@ namespace trc
 
 		void setParent(std::optional<std::reference_wrapper<Entity>> parent);
 
-		void addChild(const trs::SharedPtr<Entity>& child);
-		void addChild(trs::SharedPtr<Entity>&& child);
+		void addChild(Entity& child);
 
-		void removeChild(const trs::SharedPtr<Entity>& child);
+		void removeChild(Entity& child);
 
 		trs::SharedPtr<Entity> getParent() const;
 		const std::vector<trs::SharedPtr<Entity>>& getChildren() const;
