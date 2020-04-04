@@ -22,7 +22,7 @@ namespace Tests
 				}
 				AND_THEN("The child's parent is set")
 				{
-					REQUIRE(child->getParent().getPtr() == entity.getPtr());
+					REQUIRE(child->getParent() == entity);
 				}
 			}
 		}
