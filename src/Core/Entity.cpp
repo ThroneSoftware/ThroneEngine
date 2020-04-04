@@ -22,19 +22,21 @@ namespace trc
 
 	void Entity::addChild(Entity& child)
 	{
-		assert(&child.m_parent->get() != this);	 // assert child is not already a child of this
+		// assert child is not already a child of this
+		assert(&child.m_parent->get() != this);
 		child.setParent(*this);
 	}
 
 	void Entity::removeChild(Entity& child)
 	{
+		// assert child is a child of this
 		assert(&child.m_parent->get() == this);
 		child.setParent(std::nullopt);
 	}
 
 	trs::SharedPtr<Entity> Entity::getParent() const
 	{
-		return m_parent->get().makeSharedFromThis();
+		return m_parent.has_value() ? m_parent->get().makeSharedFromThis() : nullptr;
 	}
 
 	const std::vector<trs::SharedPtr<Entity>>& Entity::getChildren() const
@@ -44,7 +46,7 @@ namespace trc
 
 	void Entity::removeChild(Entity* child)
 	{
-		auto found = std::find_if(m_children.begin(), m_children.end(), [&child](const trs::SharedPtr<Entity>& value) {
+		auto found = std::find_if(m_children.begin(), m_children.end(), [child](const trs::SharedPtr<Entity>& value) {
 			return value.getPtr() == child;
 		});
 

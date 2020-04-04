@@ -9,23 +9,21 @@ namespace Tests
 	{
 		GIVEN("An entity with no child")
 		{
+			auto child = trs::makePtrOwner<trc::Entity>();
 			auto entity = trs::makePtrOwner<trc::Entity>();
-			auto childOwner = trs::makePtrOwner<trc::Entity>();
 			WHEN("Adding a child")
 			{
-				auto childShared = trs::SharedPtr(childOwner);
-				entity->addChild(*childShared);
+				entity->addChild(*child);
 				THEN("The child is added")
 				{
 					const auto& children = entity->getChildren();
 					REQUIRE(children.size() == 1);
-					REQUIRE(children[0] == childShared);
+					REQUIRE(children[0] == child);
 				}
 				AND_THEN("The child's parent is set")
 				{
-					REQUIRE(childShared->getParent().getPtr() == entity.getPtr());
+					REQUIRE(child->getParent().getPtr() == entity.getPtr());
 				}
-				entity->removeChild(*childShared);
 			}
 		}
 	}
@@ -35,88 +33,143 @@ namespace Tests
 		GIVEN("An entity with one child")
 		{
 			auto entity = trs::makePtrOwner<trc::Entity>();
-			auto childOwner = trs::makePtrOwner<trc::Entity>();
-			auto childShared = trs::SharedPtr(childOwner);
-			entity->addChild(*childShared);
+			auto child = trs::makePtrOwner<trc::Entity>();
+
+			entity->addChild(*child);
 			WHEN("Removing the child")
 			{
-				entity->removeChild(*childShared);
+				entity->removeChild(*child);
 				THEN("The child is removed")
 				{
 					const auto& children = entity->getChildren();
 					REQUIRE(children.empty());
 				}
+				AND_THEN("The child's parent is removed")
+				{
+					REQUIRE(child->getParent() == nullptr);
+				}
 			}
 		}
 		GIVEN("An entity with many children")
 		{
-			auto childOwner1 = trs::makePtrOwner<trc::Entity>();
-			auto childOwner2 = trs::makePtrOwner<trc::Entity>();
-			auto childOwner3 = trs::makePtrOwner<trc::Entity>();
+			auto child1 = trs::makePtrOwner<trc::Entity>();
+			auto child2 = trs::makePtrOwner<trc::Entity>();
+			auto child3 = trs::makePtrOwner<trc::Entity>();
 			auto entity = trs::makePtrOwner<trc::Entity>();
 
-			auto childShared1 = trs::SharedPtr(childOwner1);
-			auto childShared2 = trs::SharedPtr(childOwner2);
-			auto childShared3 = trs::SharedPtr(childOwner3);
-			entity->addChild(*childShared1);
-			entity->addChild(*childShared2);
-			entity->addChild(*childShared3);
+			entity->addChild(*child1);
+			entity->addChild(*child2);
+			entity->addChild(*child3);
 			WHEN("Removing the first child")
 			{
-				entity->removeChild(*childShared1);
+				entity->removeChild(*child1);
 				THEN("The child is removed")
 				{
 					const auto& children = entity->getChildren();
 					REQUIRE(children.size() == 2);
-					REQUIRE(children[0] == childShared2);
-					REQUIRE(children[1] == childShared3);
+					REQUIRE(children[0] == child2);
+					REQUIRE(children[1] == child3);
+				}
+				AND_THEN("The child's parent is removed")
+				{
+					REQUIRE(child1->getParent() == nullptr);
 				}
 			}
 			WHEN("Removing the middle child")
 			{
-				entity->removeChild(*childShared2);
+				entity->removeChild(*child2);
 				THEN("The child is removed")
 				{
 					const auto& children = entity->getChildren();
 					REQUIRE(children.size() == 2);
-					REQUIRE(children[0] == childShared1);
-					REQUIRE(children[1] == childShared3);
+					REQUIRE(children[0] == child1);
+					REQUIRE(children[1] == child3);
+				}
+				AND_THEN("The child's parent is removed")
+				{
+					REQUIRE(child2->getParent() == nullptr);
 				}
 			}
 			WHEN("Removing the last child")
 			{
-				entity->removeChild(*childShared3);
+				entity->removeChild(*child3);
 				THEN("The child is removed")
 				{
 					const auto& children = entity->getChildren();
 					REQUIRE(children.size() == 2);
-					REQUIRE(children[0] == childShared1);
-					REQUIRE(children[1] == childShared2);
+					REQUIRE(children[0] == child1);
+					REQUIRE(children[1] == child2);
+				}
+				AND_THEN("The child's parent is removed")
+				{
+					REQUIRE(child3->getParent() == nullptr);
 				}
 			}
 		}
 	}
 
-	SCENARIO("SetParent", "Entity")
+	SCENARIO("TestSetParent", "Entity")
 	{
-		GIVEN("An entity")
+		GIVEN("An entity with no parent")
 		{
 			auto entity = trs::makePtrOwner<trc::Entity>();
-			auto parentOwner = trs::makePtrOwner<trc::Entity>();
+			auto parent = trs::makePtrOwner<trc::Entity>();
 
-			auto parentShared1 = trs::SharedPtr(parentOwner);
-			WHEN("When setting it's parent")
+			WHEN("Setting it's parent to an existing Entity")
 			{
-				entity->setParent(*parentShared1);
+				entity->setParent(*parent);
 				THEN("The parent is set")
 				{
-					REQUIRE(entity->getParent() == parentShared1);
+					REQUIRE(entity->getParent() == parent);
 				}
 				AND_THEN("The parent's child is added")
 				{
-					const auto& children = parentShared1->getChildren();
+					const auto& children = parent->getChildren();
 					REQUIRE(children.size() == 1);
-					REQUIRE(children[0].getPtr() == entity.getPtr());
+					REQUIRE(children[0] == entity);
+				}
+			}
+		}
+		GIVEN("An entity with a parent")
+		{
+			auto entity = trs::makePtrOwner<trc::Entity>();
+			auto parent = trs::makePtrOwner<trc::Entity>();
+
+			entity->setParent(*parent);
+
+			WHEN("Setting it's parent to a nullopt")
+			{
+				entity->setParent(std::nullopt);
+				THEN("The parent is removed")
+				{
+					REQUIRE(entity->getParent() == nullptr);
+				}
+				AND_THEN("The child is removed from its parent")
+				{
+					const auto& children = parent->getChildren();
+					REQUIRE(children.size() == 0);
+				}
+			}
+			WHEN("Setting it's parent to another Entity")
+			{
+				auto parent2 = trs::makePtrOwner<trc::Entity>();
+
+				entity->setParent(*parent2);
+
+				THEN("The parent is set")
+				{
+					REQUIRE(entity->getParent() == parent2);
+				}
+				AND_THEN("The parent's child is added")
+				{
+					const auto& children = parent2->getChildren();
+					REQUIRE(children.size() == 1);
+					REQUIRE(children[0] == entity);
+				}
+				AND_THEN("The child is removed from the old parent")
+				{
+					const auto& children = parent->getChildren();
+					REQUIRE(children.size() == 0);
 				}
 			}
 		}
