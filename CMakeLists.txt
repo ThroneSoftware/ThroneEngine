@@ -10,7 +10,7 @@ set(CMAKE_UNITY_BUILD_BATCH_SIZE 0)
 
 # Set the language standard version
 set(CMAKE_CXX_STANDARD_REQUIRED true)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 # Add a project and set it's language to c++
 # [Visual Studio] This will create the solution named ThroneEngine

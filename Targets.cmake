@@ -212,13 +212,22 @@ function(main)
     ## ManualTesting
     addExecutable(ManualTesting)
     target_link_libraries(ManualTesting Graphics Physics Networking Audio)
-
+   
     setupTestProjects()
+    
+    ## Benchmarks
+    addExecutable(Benchmarks)
+    target_link_libraries(Benchmarks Core)
+    target_include_directories(Benchmarks PRIVATE "${PROJECT_SOURCE_DIR}/Vendors/Vendors/nanobench")
+
 endfunction()
 
 function(setupTestProjects)
     addTestTarget(TestTestFramework)
     addTestTarget(TestStandard)
+    
+    addTestTarget(TestCore)
+    target_link_libraries(TestCore Core)
 
     addRunTestsTarget()
 endfunction()
