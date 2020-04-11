@@ -2,7 +2,7 @@
 1. Git
 2. Git lfs
 3. Cmake version 3.16 or higher
-4. A c++ build system supported by cmake (Only visual studio is supported currently)
+4. A c++ build system supported by cmake (Throne currently only support Visual Studio)
 
 # Commands
 All the commands should be executed in this order.
