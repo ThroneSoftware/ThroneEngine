@@ -3,4 +3,5 @@ target_sources(Core PRIVATE
 	Component.h
 	Entity.cpp
 	Entity.h
+	SharedComponent.h
 )
