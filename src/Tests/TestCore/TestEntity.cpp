@@ -22,6 +22,7 @@ namespace Tests
 				}
 				AND_THEN("The child's parent is set")
 				{
+					REQUIRE(child->getTopParent() == entity);
 					REQUIRE(child->getParent() == entity);
 				}
 			}
@@ -46,6 +47,7 @@ namespace Tests
 				}
 				AND_THEN("The child's parent is removed")
 				{
+					REQUIRE(child->getTopParent() == nullptr);
 					REQUIRE(child->getParent() == nullptr);
 				}
 			}
@@ -72,6 +74,7 @@ namespace Tests
 				}
 				AND_THEN("The child's parent is removed")
 				{
+					REQUIRE(child1->getTopParent() == nullptr);
 					REQUIRE(child1->getParent() == nullptr);
 				}
 			}
@@ -87,6 +90,7 @@ namespace Tests
 				}
 				AND_THEN("The child's parent is removed")
 				{
+					REQUIRE(child2->getTopParent() == nullptr);
 					REQUIRE(child2->getParent() == nullptr);
 				}
 			}
@@ -102,6 +106,7 @@ namespace Tests
 				}
 				AND_THEN("The child's parent is removed")
 				{
+					REQUIRE(child3->getTopParent() == nullptr);
 					REQUIRE(child3->getParent() == nullptr);
 				}
 			}
@@ -120,6 +125,7 @@ namespace Tests
 				entity->setParent(*parent);
 				THEN("The parent is set")
 				{
+					REQUIRE(entity->getTopParent() == parent);
 					REQUIRE(entity->getParent() == parent);
 				}
 				AND_THEN("The parent's child is added")
@@ -142,6 +148,7 @@ namespace Tests
 				entity->setParent(std::nullopt);
 				THEN("The parent is removed")
 				{
+					REQUIRE(entity->getTopParent() == nullptr);
 					REQUIRE(entity->getParent() == nullptr);
 				}
 				AND_THEN("The child is removed from its parent")
@@ -158,6 +165,7 @@ namespace Tests
 
 				THEN("The parent is set")
 				{
+					REQUIRE(entity->getTopParent() == parent2);
 					REQUIRE(entity->getParent() == parent2);
 				}
 				AND_THEN("The parent's child is added")
@@ -170,6 +178,31 @@ namespace Tests
 				{
 					const auto& children = parent->getChildren();
 					REQUIRE(children.size() == 0);
+				}
+			}
+		}
+	}
+
+	SCENARIO("TestTopParent", "Entity")
+	{
+		// Entity
+		// |
+		// --> Child1
+		//     |
+		//	   --> Child2 (topParent == Entity1)
+		GIVEN("An entity with a child1")
+		{
+			auto child2 = trs::makePtrOwner<trc::Entity>();
+			auto child1 = trs::makePtrOwner<trc::Entity>();
+			auto entity = trs::makePtrOwner<trc::Entity>();
+			entity->addChild(*child1);
+			WHEN("Adding a child2 to child1")
+			{
+				child1->addChild(*child2);
+				THEN("Child2 top parent is equal to entity1")
+				{
+					REQUIRE(child2->getTopParent() == entity);
+					REQUIRE(child2->getParent() == child1);
 				}
 			}
 		}

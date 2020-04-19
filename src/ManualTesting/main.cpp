@@ -140,4 +140,9 @@ int main()
 
 		__nop();
 	}
+
+	{
+		trs::SharedPtr<int> shared1;
+		auto shared2 = shared1;
+	}
 }
