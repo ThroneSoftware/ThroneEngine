@@ -81,5 +81,4 @@ namespace trc
 
 		m_children.erase(found);
 	}
-
 }  // namespace trc
