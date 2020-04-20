@@ -2,12 +2,15 @@
 
 #include <pch.h>
 
+#include <Core/Component.h>
 #include <Standard/CompressedPair.h>
 #include <Standard/Manager.h>
 #include <Standard/Pointers.h>
 
 #include <boost/algorithm/string.hpp>
 #include <windows.h>
+
+#include <typeinfo>
 
 //
 using namespace std;
@@ -31,6 +34,15 @@ struct TestStruct
 
 	int m_a = 0;
 	int m_b = 1;
+};
+
+class Health : public trc::Component
+{
+public:
+	Health()
+	  : Component(*this)
+	{
+	}
 };
 
 int main()
@@ -144,5 +156,12 @@ int main()
 	{
 		trs::SharedPtr<int> shared1;
 		auto shared2 = shared1;
+	}
+
+	{
+		sizeof(Health);
+
+		Health health;
+		__nop();
 	}
 }
