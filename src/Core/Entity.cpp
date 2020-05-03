@@ -4,7 +4,7 @@ namespace trc
 {
 	namespace EntityPrivate
 	{
-		Entity& choseTopParent(Entity& parent)
+		Entity& chooseTopParent(Entity& parent)
 		{
 			const auto& parentData = parent.m_parentData;
 			return parentData.has_value() ? parentData->m_topParent : parent;
@@ -31,7 +31,7 @@ namespace trc
 
 		if(parent.has_value())
 		{
-			m_parentData.emplace(EntityPrivate::choseTopParent(parent->get()), parent->get());
+			m_parentData.emplace(EntityPrivate::chooseTopParent(parent->get()), parent->get());
 			m_parentData->m_parent.m_children.emplace_back(makeSharedFromThis());
 			m_topParentChanged(m_parentData->m_topParent.makeSharedFromThis());
 		}
