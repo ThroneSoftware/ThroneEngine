@@ -99,8 +99,10 @@ namespace trs
 
 			void increaseRefCount() noexcept
 			{
-				assert(m_resource != nullptr);
-				m_resource->increaseRefCount();
+				if(m_resource != nullptr)
+				{
+					m_resource->increaseRefCount();
+				}
 			}
 
 			void destroy() noexcept

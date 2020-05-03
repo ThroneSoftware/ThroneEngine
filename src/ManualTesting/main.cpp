@@ -2,12 +2,16 @@
 
 #include <pch.h>
 
+#include <Core/Component.h>
+#include <Core/Entity.h>
 #include <Standard/CompressedPair.h>
 #include <Standard/Manager.h>
 #include <Standard/Pointers.h>
 
 #include <boost/algorithm/string.hpp>
 #include <windows.h>
+
+#include <typeinfo>
 
 //
 using namespace std;
@@ -31,6 +35,15 @@ struct TestStruct
 
 	int m_a = 0;
 	int m_b = 1;
+};
+
+class Health : public trc::Component
+{
+public:
+	Health(trc::Entity& entity)
+	  : Component(entity, *this)
+	{
+	}
 };
 
 int main()
@@ -138,6 +151,20 @@ int main()
 		manager.emplace(18, 19);
 		manager.emplace(20, 21);
 
+		__nop();
+	}
+
+	{
+		trs::SharedPtr<int> shared1;
+		auto shared2 = shared1;
+	}
+
+	{
+		sizeof(Health);
+
+		auto entity = trs::makePtrOwner<trc::Entity>();
+
+		Health health(*entity);
 		__nop();
 	}
 }
