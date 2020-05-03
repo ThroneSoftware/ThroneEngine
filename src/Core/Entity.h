@@ -13,12 +13,12 @@ namespace trc
 
 	namespace EntityPrivate
 	{
-		Entity& choseTopParent(Entity& parent);
+		Entity& chooseTopParent(Entity& parent);
 	}
 
 	class Entity : public trs::EnableSharedFromThis<Entity>
 	{
-		friend Entity& EntityPrivate::choseTopParent(Entity& parent);
+		friend Entity& EntityPrivate::chooseTopParent(Entity& parent);
 
 		struct Parent
 		{
