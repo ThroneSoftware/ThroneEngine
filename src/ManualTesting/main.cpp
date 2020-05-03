@@ -3,6 +3,7 @@
 #include <pch.h>
 
 #include <Core/Component.h>
+#include <Core/Entity.h>
 #include <Standard/CompressedPair.h>
 #include <Standard/Manager.h>
 #include <Standard/Pointers.h>
@@ -39,8 +40,8 @@ struct TestStruct
 class Health : public trc::Component
 {
 public:
-	Health()
-	  : Component(*this)
+	Health(trc::Entity& entity)
+	  : Component(entity, *this)
 	{
 	}
 };
@@ -161,7 +162,9 @@ int main()
 	{
 		sizeof(Health);
 
-		Health health;
+		auto entity = trs::makePtrOwner<trc::Entity>();
+
+		Health health(*entity);
 		__nop();
 	}
 }
