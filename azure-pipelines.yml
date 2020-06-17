@@ -6,7 +6,11 @@ jobs:
     vmImage: windows-2019
   steps:
     - checkout: self
-      lfs: true               
+      lfs: true     
+    - task: Cache@2
+      inputs:
+        key: 'c:\vcpkg'
+        path: 'c:\vcpkg'            
     - task: CmdLine@2
       inputs:
         script: 'call "cmake" -G "Visual Studio 16 2019" -S "." -B "Build/"'
