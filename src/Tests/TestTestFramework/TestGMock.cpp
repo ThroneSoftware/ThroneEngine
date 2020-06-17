@@ -1,4 +1,4 @@
-#include <gmock/gmock.h>
+#include <Tests/ProxyGmock.h>
 
 #include <catch.hpp>
 

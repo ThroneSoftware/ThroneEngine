@@ -29,6 +29,12 @@ function(configIncludeDirectories target_name)
     target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Vulkan/1.1.121.2/include")
 endfunction()
 
+function(configTestsIncludeDirectories target_name)
+    # Add an include directory to target
+    # Thoses are the includes with <>
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Utility")
+endfunction()
+
 function(linkCommonVendors target_name)
     target_link_libraries(${target_name} fmt::fmt)
     target_link_libraries(${target_name} Microsoft.GSL::GSL)
@@ -79,6 +85,7 @@ endfunction()
 
 function(configTestTarget target_name)
     configIncludeDirectories(${target_name})
+    configTestsIncludeDirectories(${target_name})
 
     linkCommonVendors(${target_name})
     linkTestVendors(${target_name})

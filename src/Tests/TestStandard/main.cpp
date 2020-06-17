@@ -2,7 +2,7 @@
 
 #include <pch.h>
 
-#include <gmock/gmock.h>
+#include <Tests/ProxyGmock.h>
 
 #include <Vendors/Utility/Tests/GMockCatchInterceptor.hpp>
 #include <Windows.h>

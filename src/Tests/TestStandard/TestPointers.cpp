@@ -3,7 +3,7 @@
 #include "MockNotifier.h"
 
 #include <Standard/Pointers.h>
-#include <gmock/gmock.h>
+#include <Tests/ProxyGmock.h>
 
 #include <catch.hpp>
 

@@ -1,7 +1,7 @@
 #include <pch.h>
 
 #include <Standard/CompressedPair.h>
-#include <gmock/gmock.h>
+#include <Tests/ProxyGmock.h>
 
 #include <catch.hpp>
 

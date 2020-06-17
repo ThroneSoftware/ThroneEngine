@@ -1,7 +1,7 @@
 #define TEST_MANAGER
 #include "Standard/Manager.h"
 
-#include <gmock/gmock.h>
+#include <Tests/ProxyGmock.h>
 
 #include <catch.hpp>
 
