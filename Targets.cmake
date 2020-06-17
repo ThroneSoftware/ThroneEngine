@@ -16,8 +16,7 @@ function(groupTargetSources target relative_source_path)
 endfunction()
 
 function(targetLinkLibraryFreetype target_name)
-    target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/freetype/freetype-2.10.1/Build/Debug/freetyped.lib")
-    target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/freetype/freetype-2.10.1/Build/Release/freetype.lib")
+    target_link_libraries(${target_name} freetype)
 endfunction()
 
 function(configIncludeDirectories target_name)
@@ -27,46 +26,29 @@ function(configIncludeDirectories target_name)
 
     target_include_directories(${target_name} PRIVATE "Vendors")
 
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Boost/boost_1_71_0/include")
-
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/glm/include")
-
     target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Vulkan/1.1.121.2/include")
-
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/gsl/include")
-
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/fmt/include")
 endfunction()
-
-function(configTestIncludeDirectories target_name)
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Googletest/googlemock/include/gmock")
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Googletest/googlemock/include")
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Googletest/googletest/include")
-
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Catch2/include")
-
-endfunction()
-
 
 function(linkCommonVendors target_name)
-    target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/fmt/Build/Debug/fmtd.lib")
-    target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/fmt/Build/Release/fmt.lib")
+    target_link_libraries(${target_name} fmt::fmt)
+    target_link_libraries(${target_name} Microsoft.GSL::GSL)
+    target_link_libraries(${target_name} glm)
 endfunction()
 
 function(linkTestVendors target_name)
-    target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Googletest/Build/lib/Debug/gmockd.lib")
-    target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Googletest/Build/lib/Release/gmock.lib")
-
-    target_link_libraries(${target_name} debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Googletest/Build/lib/Debug/gtestd.lib")
-    target_link_libraries(${target_name} optimized "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Googletest/Build/lib/Release/gtest.lib")
+    target_link_libraries(${target_name} GTest::gtest)
+    target_link_libraries(${target_name} GTest::gmock)
+    target_link_libraries(${target_name} Catch2::Catch2)
 endfunction()
 
 function(setCompileOptions target_name)
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
         target_compile_options(${target_name} PRIVATE "/permissive-" "/W4" "/WX") 
+        # Compile options only in debug mode
+        target_compile_options(${target_name} PRIVATE "$<$<CONFIG:DEBUG>:/MTd>") 
         # Compile options only in release mode
-        target_compile_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/Oi;/Ot;/GL>") 
+        target_compile_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/Oi;/Ot;/GL/MT>") 
         
         # Adds linker options to release mode
         target_link_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/LTCG:INCREMENTAL>")
@@ -97,7 +79,6 @@ endfunction()
 
 function(configTestTarget target_name)
     configIncludeDirectories(${target_name})
-    configTestIncludeDirectories(${target_name})
 
     linkCommonVendors(${target_name})
     linkTestVendors(${target_name})

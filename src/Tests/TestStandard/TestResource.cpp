@@ -1,9 +1,9 @@
 #include "MockNotifier.h"
 
 #include <Standard/Private/Resource.h>
+#include <gmock/gmock.h>
 
 #include <catch.hpp>
-#include <gmock.h>
 
 namespace Tests
 {

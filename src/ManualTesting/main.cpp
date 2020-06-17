@@ -94,8 +94,29 @@ int main()
 	//std::pair<int, double> pair2;
 
 	{
-		std::shared_ptr<int> ptr;
-		//std::make_shared<int>();
+		std::shared_ptr<int> ptr = std::make_shared<int>();
+	}
+
+	{
+		class Test
+		{
+		public:
+			Test()
+			{
+			}
+
+			~Test()
+			{
+				int a = 0;
+				(void)a;
+			}
+		};
+
+		std::weak_ptr<Test> wptr;
+		{
+			std::shared_ptr<Test> sptr = std::make_shared<Test>();
+			wptr = sptr;
+		}
 	}
 
 	{

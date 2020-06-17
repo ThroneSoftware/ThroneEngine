@@ -4,7 +4,7 @@
 
 #include <gmock/gmock.h>
 
-#include <GMockCatchInterceptor.hpp>
+#include <Vendors/Utility/Tests/GMockCatchInterceptor.hpp>
 #include <Windows.h>
 #include <catch.hpp>
 

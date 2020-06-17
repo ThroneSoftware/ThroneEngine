@@ -32,6 +32,7 @@
 
 # Build
 Build/
+.*/**
 
 # Local test data
 Testing/
@@ -50,4 +51,4 @@ Testing/
 
 # White list
 !Vendors/**
-!CMakeBuild/**
+!.github/**

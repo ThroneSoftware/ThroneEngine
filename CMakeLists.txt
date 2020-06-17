@@ -54,8 +54,11 @@ file(COPY "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/vld.ini"
      DESTINATION "${PROJECT_BINARY_DIR}")
 endif()
 
+include(${PROJECT_SOURCE_DIR}/CMakeScripts/SetupVcpkg.cmake)
+
 include(CTest)
 enable_testing()
-include(${PROJECT_SOURCE_DIR}/Vendors/Vendors/Catch2/Catch.cmake)
+include(${Catch2_DIR}/Catch.cmake)
+
 
 include(Targets.cmake)

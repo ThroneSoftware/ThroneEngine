@@ -1,3 +1,0 @@
-C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/fmt.dir
-C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/ALL_BUILD.dir
-C:/Users/X-PC/Desktop/Throne/Vendors/Vendors/fmt/Build/CMakeFiles/ZERO_CHECK.dir

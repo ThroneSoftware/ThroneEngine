@@ -1,5 +1,6 @@
+#include <gmock/gmock.h>
+
 #include <catch.hpp>
-#include <gmock.h>
 
 namespace Tests
 {
@@ -20,18 +21,18 @@ namespace Tests
 
 	TEST_CASE("Test gmock", "gmock")
 	{
-        MockBaseClass mockBaseClass;
+		MockBaseClass mockBaseClass;
 
 		SECTION("Test expect call")
 		{
-            EXPECT_CALL(mockBaseClass, func);
+			EXPECT_CALL(mockBaseClass, func);
 			mockBaseClass.func(true);
 		}
 
-        SECTION("Test argument")
-        {
+		SECTION("Test argument")
+		{
 			EXPECT_CALL(mockBaseClass, func(true));
 			mockBaseClass.func(true);
-        }
+		}
 	}
 }  // namespace Tests

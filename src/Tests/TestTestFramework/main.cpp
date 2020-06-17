@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <GMockCatchInterceptor.hpp>
+#include <Vendors/Utility/Tests/GMockCatchInterceptor.hpp>
 #include <catch.hpp>
 
 int main(int argc, char* argv[])

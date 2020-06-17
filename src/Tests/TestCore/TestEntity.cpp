@@ -1,7 +1,7 @@
 #include <Core/Entity.h>
+#include <gmock/gmock.h>
 
 #include <catch.hpp>
-#include <gmock.h>
 
 namespace Tests
 {
