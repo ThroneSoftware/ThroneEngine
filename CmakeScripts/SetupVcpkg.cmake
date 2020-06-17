@@ -17,7 +17,9 @@ function(install_and_find_non_generic_packages)
     vcpkg_install_packages(ms-gsl)
     find_package(Microsoft.GSL CONFIG REQUIRED)
 
-
+    # Stb
+    vcpkg_install_packages(Stb)
+    find_package(Stb REQUIRED)
 endfunction()
 
 function(install_and_find_components module packages components)
@@ -36,7 +38,7 @@ if(VCPKG_ROOT_FOLDER)
     include(${VCPKG_ROOT_FOLDER}/scripts/buildsystems/vcpkg.cmake)
     
     # vcpkg packages
-    set(vcpkg_package_dependencies Catch2;glm;GTest;fmt;Freetype;Stb)
+    set(vcpkg_package_dependencies Catch2;glm;GTest;fmt;Freetype)
     install_and_find_packages("${vcpkg_package_dependencies}")
 
     install_and_find_non_generic_packages()
