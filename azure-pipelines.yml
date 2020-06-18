@@ -9,8 +9,8 @@ jobs:
       lfs: true     
     - task: Cache@2
       inputs:
-        key: 'installed'
-        path: 'c:\vcpkg\'            
+        key: 'vcpkg cache' | "$(Agent.OS)"
+        path: 'c:\vcpkg\installed\'            
     - task: CmdLine@2
       inputs:
         script: 'call "cmake" -G "Visual Studio 16 2019" -S "." -B "Build/"'
