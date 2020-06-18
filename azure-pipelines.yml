@@ -9,8 +9,7 @@ jobs:
       lfs: true     
     - task: Cache@2
       inputs:
-        key: 'vcpkg cache' | 
-             "$(Agent.OS)"
+        key: 'vcpkg cache | "$(Agent.OS)"'
         path: 'c:\vcpkg\installed\'            
     - task: CmdLine@2
       inputs:
