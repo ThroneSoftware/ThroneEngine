@@ -1,8 +1,15 @@
 SET(VCPKG_ROOT_FOLDER "C:/vcpkg" CACHE FILEPATH "The filepath to the root folder of your vcpkg.")
 
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/requirements.txt)
+
+# function(vcpkg_install_packages)
+#     execute_process(
+#         COMMAND ${VCPKG_ROOT_FOLDER}/vcpkg install ${ARGN} --triplet ${VCPKG_TARGET_TRIPLET} --clean-after-build)
+# endfunction()
+
 function(vcpkg_install_packages)
     execute_process(
-        COMMAND ${VCPKG_ROOT_FOLDER}/vcpkg install ${ARGN} --triplet ${VCPKG_TARGET_TRIPLET} --clean-after-build)
+        COMMAND ${VCPKG_ROOT_FOLDER}/vcpkg install @${CMAKE_SOURCE_DIR}/requirements.txt --triplet ${VCPKG_TARGET_TRIPLET} --clean-after-build)
 endfunction()
 
 function(find_packages packages)
@@ -29,15 +36,16 @@ if(VCPKG_ROOT_FOLDER)
       
     include(${VCPKG_ROOT_FOLDER}/scripts/buildsystems/vcpkg.cmake)
     
-    set(vcpkg_package_dependencies Catch2;glm;GTest;fmt;Freetype;ms-gsl;Stb;boost-container;boost-signals2;boost-algorithm)
-    vcpkg_install_packages("${vcpkg_package_dependencies}")
+    # set(vcpkg_package_dependencies Catch2;glm;GTest;fmt;Freetype;ms-gsl;Stb;boost-container;boost-signals2;boost-algorithm)
+    # vcpkg_install_packages("${vcpkg_package_dependencies}")
+    vcpkg_install_packages()
 
     # vcpkg packages
     set(packages Catch2;glm;GTest;fmt;Freetype)
     find_packages("${packages}")
     find_non_generic_packages()
 
-    # Only libraries (header only should not be in there)
+    # Only libraries (header only libraries should not be in there)
     set(module_components container)
     find_components(Boost "${module_components}")
 endif()

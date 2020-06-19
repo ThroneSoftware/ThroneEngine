@@ -1,0 +1,10 @@
+Catch2
+glm
+GTest
+fmt
+Freetype
+ms-gsl
+Stb
+boost-container
+boost-signals2
+boost-algorithm
