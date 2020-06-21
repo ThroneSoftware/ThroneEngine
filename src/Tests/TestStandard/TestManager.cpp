@@ -1,8 +1,9 @@
 #define TEST_MANAGER
 #include "Standard/Manager.h"
 
+#include <Tests/ProxyGmock.h>
+
 #include <catch.hpp>
-#include <gmock.h>
 
 namespace Tests
 {

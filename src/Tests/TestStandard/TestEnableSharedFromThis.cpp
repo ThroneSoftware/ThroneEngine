@@ -1,7 +1,7 @@
 #include <Standard/Pointers.h>
+#include <Tests/ProxyGmock.h>
 
 #include <catch.hpp>
-#include <gmock.h>
 
 namespace Tests
 {

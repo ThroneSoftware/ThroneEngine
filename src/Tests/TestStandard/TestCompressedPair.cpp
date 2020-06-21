@@ -1,9 +1,9 @@
 #include <pch.h>
 
 #include <Standard/CompressedPair.h>
+#include <Tests/ProxyGmock.h>
 
 #include <catch.hpp>
-#include <gmock.h>
 
 namespace Tests
 {

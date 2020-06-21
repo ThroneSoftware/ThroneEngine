@@ -37,7 +37,7 @@ set_target_properties(GenerateFileList
 # not seem to be possible.
 add_custom_command(TARGET GenerateFileList 
 	POST_BUILD 
-	COMMAND ${PROJECT_SOURCE_DIR}/CMakeBuild/bin/cmake.exe --build . --target ZERO_CHECK
+	COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR} --target ZERO_CHECK
 )
 
 add_custom_target(BuildTests)
@@ -54,8 +54,11 @@ file(COPY "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/vld.ini"
      DESTINATION "${PROJECT_BINARY_DIR}")
 endif()
 
+include(${PROJECT_SOURCE_DIR}/CMakeScripts/SetupVcpkg.cmake)
+
 include(CTest)
 enable_testing()
-include(${PROJECT_SOURCE_DIR}/Vendors/Vendors/Catch2/Catch.cmake)
+include(${Catch2_DIR}/Catch.cmake)
+
 
 include(Targets.cmake)

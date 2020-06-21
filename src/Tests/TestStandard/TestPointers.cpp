@@ -3,9 +3,9 @@
 #include "MockNotifier.h"
 
 #include <Standard/Pointers.h>
+#include <Tests/ProxyGmock.h>
 
 #include <catch.hpp>
-#include <gmock.h>
 
 namespace Tests
 {
@@ -92,7 +92,7 @@ namespace Tests
 			WHEN("Moving PtrOwner with assignment operator")
 			{
 				auto owner2 = trs::makePtrOwner<int>(5);
-                owner2 = std::move(owner1);
+				owner2 = std::move(owner1);
 
 				THEN("PtrOwner is properly moved")
 				{
@@ -104,7 +104,7 @@ namespace Tests
 
 			WHEN("Moving PtrOwner into itself")
 			{
-                owner1 = std::move(owner1);
+				owner1 = std::move(owner1);
 				THEN("Nothing happens")
 				{
 					REQUIRE(owner1.getPtr() != nullptr);

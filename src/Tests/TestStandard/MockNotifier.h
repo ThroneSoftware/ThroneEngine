@@ -1,11 +1,11 @@
 #pragma once
 
-#include <gmock/gmock.h>
+#include <Tests/ProxyGmock.h>
 
 namespace Tests
 {
-    // The mock currently only supports Type=int
-    // To add more overloads, you must add more overloads for MOCK_METHOD(operatorProxy)
+	// The mock currently only supports Type=int
+	// To add more overloads, you must add more overloads for MOCK_METHOD(operatorProxy)
 	template <typename Type>
 	class MockNotifier
 	{

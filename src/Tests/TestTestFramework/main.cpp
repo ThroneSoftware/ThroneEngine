@@ -1,9 +1,9 @@
 #define CATCH_CONFIG_RUNNER
 
-#include <gmock/gmock.h>
+#include <Tests/ProxyGmock.h>
 #include <gtest/gtest.h>
 
-#include <GMockCatchInterceptor.hpp>
+#include <Vendors/Utility/Tests/GMockCatchInterceptor.hpp>
 #include <catch.hpp>
 
 int main(int argc, char* argv[])
