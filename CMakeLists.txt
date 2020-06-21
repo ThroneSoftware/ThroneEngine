@@ -37,7 +37,7 @@ set_target_properties(GenerateFileList
 # not seem to be possible.
 add_custom_command(TARGET GenerateFileList 
 	POST_BUILD 
-	COMMAND cmake.exe --build ${PROJECT_BINARY_DIR} --target ZERO_CHECK
+	COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR} --target ZERO_CHECK
 )
 
 add_custom_target(BuildTests)

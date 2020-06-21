@@ -2,11 +2,6 @@ SET(VCPKG_ROOT_FOLDER "C:/vcpkg" CACHE FILEPATH "The filepath to the root folder
 
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/requirements.txt)
 
-# function(vcpkg_install_packages)
-#     execute_process(
-#         COMMAND ${VCPKG_ROOT_FOLDER}/vcpkg install ${ARGN} --triplet ${VCPKG_TARGET_TRIPLET} --clean-after-build)
-# endfunction()
-
 function(vcpkg_install_packages)
     execute_process(
         COMMAND ${VCPKG_ROOT_FOLDER}/vcpkg install @${CMAKE_SOURCE_DIR}/requirements.txt --triplet ${VCPKG_TARGET_TRIPLET} --clean-after-build)
@@ -36,8 +31,6 @@ if(VCPKG_ROOT_FOLDER)
       
     include(${VCPKG_ROOT_FOLDER}/scripts/buildsystems/vcpkg.cmake)
     
-    # set(vcpkg_package_dependencies Catch2;glm;GTest;fmt;Freetype;ms-gsl;Stb;boost-container;boost-signals2;boost-algorithm)
-    # vcpkg_install_packages("${vcpkg_package_dependencies}")
     vcpkg_install_packages()
 
     # vcpkg packages
