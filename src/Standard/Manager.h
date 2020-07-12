@@ -33,7 +33,7 @@ namespace trs
 
 	public:
 		Manager()
-			: BaseManager(typeid(value_type))
+		  : BaseManager(typeid(value_type))
 		{
 		}
 
@@ -55,7 +55,7 @@ namespace trs
 		}
 
 		template <typename FindFunc>
-		SharedPtr<value_type> find(FindFunc func) const
+		SharedPtr<value_type> findIf(FindFunc func) const
 		{
 			auto find_locked = [func](const PtrOwner<value_type>& owner) {
 				// TODO: #88 -> Make this thread safe
@@ -69,6 +69,14 @@ namespace trs
 		std::size_t size() const noexcept
 		{
 			return m_objects.size();
+		}
+
+		template <typename Func>
+		void process(Func func)
+		{
+			std::for_each(m_objects.begin(), m_objects.end(), [func](const PtrOwner<value_type>& owner) {
+				func(*owner);
+			});
 		}
 
 	private:

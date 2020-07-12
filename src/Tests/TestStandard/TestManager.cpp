@@ -24,7 +24,7 @@ namespace Tests
 
 		trs::SharedPtr<int> find(const trs::Manager<int>& manager, int value)
 		{
-			return manager.find([value](int& managerValue) {
+			return manager.findIf([value](int& managerValue) {
 				return managerValue == value;
 			});
 		}
@@ -161,6 +161,54 @@ namespace Tests
 				THEN("The objectTypeIndex of BaseManager is set")
 				{
 					REQUIRE(manager.getObjectTypeIndex() == typeid(int));
+				}
+			}
+		}
+	}
+
+	SCENARIO("Process function")
+	{
+		class MockObject
+		{
+		public:
+			MockObject(std::size_t id)
+			  : m_id(id)
+			{
+			}
+
+			MOCK_METHOD0(func, void());
+
+			std::size_t m_id = 0;
+		};
+
+		GIVEN("A manager with objects")
+		{
+			trs::Manager<MockObject> manager;
+			std::vector<trs::SharedPtr<MockObject>> objectPtrs;
+
+			for(size_t i = 0; i < 3; ++i)
+			{
+				manager.emplace(i);
+				auto ptr = manager.findIf([i](const MockObject& value) {
+					return value.m_id == i;
+				});
+				objectPtrs.emplace_back(ptr);
+				EXPECT_CALL(*ptr, func()).Times(1);
+			}
+
+
+			WHEN("Calling process on the manager")
+			{
+				manager.process([](MockObject& value) {
+					value.func();
+				});
+
+				THEN("Every object's func is called")
+				{
+					for(auto& ptr: objectPtrs)
+					{
+						testing::Mock::VerifyAndClearExpectations(&*ptr);
+					}
 				}
 			}
 		}
