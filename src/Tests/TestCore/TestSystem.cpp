@@ -95,13 +95,6 @@ namespace Tests
 			trs::Manager<ComponentWithoutEvents> manager;
 			trc::System<ComponentWithoutEvents> system(manager);
 
-			std::vector<trs::SharedPtr<ComponentWithoutEvents>> objectPtrs;
-
-			for(size_t i = 0; i < 3; ++i)
-			{
-				manager.emplace();
-			}
-
 			WHEN("Calling the update function")
 			{
 				system.update();
