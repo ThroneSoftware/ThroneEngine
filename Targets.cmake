@@ -199,7 +199,7 @@ function(main)
 
     ## ManualTesting
     addExecutable(ManualTesting)
-    target_link_libraries(ManualTesting Graphics Physics Networking Audio)
+    target_link_libraries(ManualTesting Standard Core Graphics Physics Networking Audio)
    
     setupTestProjects()
     
@@ -213,6 +213,7 @@ endfunction()
 function(setupTestProjects)
     addTestTarget(TestTestFramework)
     addTestTarget(TestStandard)
+    target_link_libraries(TestStandard Standard)
     
     addTestTarget(TestCore)
     target_link_libraries(TestCore Core)
