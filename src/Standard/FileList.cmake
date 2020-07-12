@@ -1,6 +1,8 @@
 target_sources(Standard PRIVATE 
 	Algorithm.h
 	Aliases.h
+	BaseManager.cpp
+	BaseManager.h
 	CompressedPair.h
 	Manager.h
 	Pointers/BasePtr.h

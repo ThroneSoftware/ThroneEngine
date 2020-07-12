@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BaseManager.h"
 #include "Pointers.h"
 
 #include <vector>
@@ -7,7 +8,7 @@
 namespace trs
 {
 	template <typename ObjectType>
-	class Manager
+	class Manager : public BaseManager
 	{
 	public:
 		using value_type = ObjectType;
@@ -31,7 +32,10 @@ namespace trs
 		};
 
 	public:
-		Manager() = default;
+		Manager()
+			: BaseManager(typeid(value_type))
+		{
+		}
 
 		Manager(const Manager& other) = delete;
 		Manager& operator=(const Manager& other) = delete;
@@ -39,7 +43,7 @@ namespace trs
 		Manager(Manager&& other) = delete;
 		Manager& operator=(Manager&& other) = delete;
 
-		~Manager() = default;
+		~Manager() override = default;
 
 		template <typename... Args>
 		void emplace(Args&&... args)

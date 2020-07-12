@@ -1,4 +1,3 @@
-#define TEST_MANAGER
 #include "Standard/Manager.h"
 
 #include <Tests/ProxyGmock.h>
@@ -146,6 +145,22 @@ namespace Tests
 						REQUIRE(actual.getPtr() == nullptr);
 						REQUIRE(manager->size() == size - 1);
 					}
+				}
+			}
+		}
+	}
+
+	SCENARIO("Object type_index")
+	{
+		GIVEN("An int Manager")
+		{
+			trs::Manager<int> manager;
+			WHEN("Setting the objectTypeIndex of BaseManager")
+			{
+				// Done by the Manager's constructor.
+				THEN("The objectTypeIndex of BaseManager is set")
+				{
+					REQUIRE(manager.getObjectTypeIndex() == typeid(int));
 				}
 			}
 		}
