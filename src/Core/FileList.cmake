@@ -3,6 +3,8 @@ target_sources(Core PRIVATE
 	Component.h
 	Entity.cpp
 	Entity.h
+	ISystem.h
 	SharedComponent.cpp
 	SharedComponent.h
+	System.h
 )

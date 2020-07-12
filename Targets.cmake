@@ -179,7 +179,7 @@ function(main)
 
     ## Core
     addStaticLibrary(Core)
-    target_link_libraries(Core Utilities)
+    target_link_libraries(Core Standard Utilities)
 
     ## Graphics
     addStaticLibrary(Graphics)
