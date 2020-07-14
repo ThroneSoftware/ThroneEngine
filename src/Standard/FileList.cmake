@@ -4,7 +4,9 @@ target_sources(Standard PRIVATE
 	BaseManager.cpp
 	BaseManager.h
 	CompressedPair.h
+	IManagerFactory.h
 	Manager.h
+	ManagerFactory.h
 	Pointers/BasePtr.h
 	Pointers/Comparisons.h
 	Pointers/EnableSharedFromThis.h
