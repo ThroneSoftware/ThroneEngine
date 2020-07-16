@@ -6,6 +6,8 @@ target_sources(Core PRIVATE
 	Entity.cpp
 	Entity.h
 	ISystem.h
+	ManagerList.cpp
+	ManagerList.h
 	SharedComponent.cpp
 	SharedComponent.h
 	System.h
