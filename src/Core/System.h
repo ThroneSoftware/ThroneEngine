@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ISystem.h"
 
 #include <Standard/Manager.h>

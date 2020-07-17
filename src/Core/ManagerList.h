@@ -8,6 +8,15 @@
 
 namespace trc
 {
+	namespace ManagerListPrivate
+	{
+		template <typename T>
+		concept HasGetComponentTypeTrait = requires()
+		{
+			T::getComponentTypeTrait();
+		};
+	}  // namespace ManagerListPrivate
+
 	class ComponentTypeTrait;
 
 	class ManagerList
@@ -16,7 +25,7 @@ namespace trc
 		const std::vector<std::reference_wrapper<const ComponentTypeTrait>>& getComponentTypeTraits();
 
 		template <typename ComponentType>
-		trs::Manager<ComponentType>& findManager()
+		trs::Manager<ComponentType>& findManager() requires ManagerListPrivate::HasGetComponentTypeTrait<ComponentType>
 		{
 			auto found = std::find_if(m_managers.begin(), m_managers.end(), [](const std::unique_ptr<trs::BaseManager>& manager) {
 				return manager->getObjectTypeIndex() == typeid(ComponentType);
