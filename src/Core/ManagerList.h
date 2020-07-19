@@ -6,6 +6,12 @@
 
 #include <memory>
 
+namespace Tests
+{
+	// For unit tests purposes
+	class TestManagerList;
+}
+
 namespace trc
 {
 	namespace ManagerListPrivate
@@ -21,6 +27,9 @@ namespace trc
 
 	class ManagerList
 	{
+		// For unit tests purposes
+		friend class Tests::TestManagerList;
+
 	public:
 		const std::vector<std::reference_wrapper<const ComponentTypeTrait>>& getComponentTypeTraits();
 
