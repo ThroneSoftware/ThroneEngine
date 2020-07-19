@@ -50,7 +50,7 @@ namespace Tests
 		}
 	}
 
-	SCENARIO("Test get component traits")
+	SCENARIO("Test get component type traits")
 	{
 		GIVEN("A ManagerList with managers")
 		{

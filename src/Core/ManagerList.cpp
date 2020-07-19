@@ -2,7 +2,7 @@
 
 namespace trc
 {
-	const std::vector<std::reference_wrapper<const ComponentTypeTrait>>& ManagerList::getComponentTypeTraits()
+	const std::vector<std::reference_wrapper<const ComponentTypeTrait>>& ManagerList::getComponentTypeTraits() const
 	{
 		return m_componentTypeTraits;
 	}

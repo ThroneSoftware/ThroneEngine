@@ -3,13 +3,13 @@
 namespace trc
 {
 	ComponentTypeTrait::ComponentTypeTrait(std::type_index typeIndex,
-		Dependencies&& m_dependencies,
-		std::unique_ptr<trs::IManagerFactory> managerFactory,
-		std::unique_ptr<ISystemFactory> systemFactory)
-		: m_typeIndex(typeIndex)
-		, m_dependencies(std::move(m_dependencies))
-		, m_managerFactory(std::move(managerFactory))
-		, m_systemFactory(std::move(systemFactory))
+										   Dependencies&& m_dependencies,
+										   std::unique_ptr<trs::IManagerFactory> managerFactory,
+										   std::unique_ptr<ISystemFactory> systemFactory)
+	  : m_typeIndex(typeIndex)
+	  , m_dependencies(std::move(m_dependencies))
+	  , m_managerFactory(std::move(managerFactory))
+	  , m_systemFactory(std::move(systemFactory))
 	{
 	}
 
@@ -32,4 +32,4 @@ namespace trc
 	{
 		return m_systemFactory->make(managerList);
 	}
-}
+}  // namespace trc

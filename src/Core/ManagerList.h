@@ -10,7 +10,7 @@ namespace Tests
 {
 	// For unit tests purposes
 	class TestManagerList;
-}
+}  // namespace Tests
 
 namespace trc
 {
@@ -31,7 +31,7 @@ namespace trc
 		friend class Tests::TestManagerList;
 
 	public:
-		const std::vector<std::reference_wrapper<const ComponentTypeTrait>>& getComponentTypeTraits();
+		const std::vector<std::reference_wrapper<const ComponentTypeTrait>>& getComponentTypeTraits() const;
 
 		template <typename ComponentType>
 		trs::Manager<ComponentType>& findManager() requires ManagerListPrivate::HasGetComponentTypeTrait<ComponentType>
