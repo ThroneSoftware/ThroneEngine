@@ -8,7 +8,7 @@
 
 namespace trc
 {
-	class Component;
+	class BaseComponent;
 	class Entity;
 
 	namespace EntityPrivate
@@ -57,6 +57,6 @@ namespace trc
 		boost::signals2::signal<void(trs::SharedPtr<Entity>)> m_topParentChanged;
 		std::vector<trs::SharedPtr<Entity>> m_children;
 
-		std::vector<trs::SharedPtr<Component>> m_components;
+		std::vector<trs::SharedPtr<BaseComponent>> m_components;
 	};
 }  // namespace trc

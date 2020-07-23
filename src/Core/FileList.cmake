@@ -1,5 +1,6 @@
 target_sources(Core PRIVATE 
-	Component.cpp
+	BaseComponent.cpp
+	BaseComponent.h
 	Component.h
 	ComponentTypeTraits/ComponentTypeTrait.cpp
 	ComponentTypeTraits/ComponentTypeTrait.h

@@ -5,7 +5,7 @@
 
 namespace trc
 {
-	SharedComponent::SharedComponent(trs::SharedPtr<Entity> topParent, trs::SharedPtr<Component> component)
+	SharedComponent::SharedComponent(trs::SharedPtr<Entity> topParent, trs::SharedPtr<BaseComponent> component)
 	  : m_topParent(std::move(topParent))
 	  , m_component(std::move(component))
 	{

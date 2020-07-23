@@ -8,12 +8,12 @@
 namespace trc
 {
 	class Entity;
-	class Component;
+	class BaseComponent;
 
 	class SharedComponent
 	{
 	public:
-		SharedComponent(trs::SharedPtr<Entity> topParent, trs::SharedPtr<Component> component);
+		SharedComponent(trs::SharedPtr<Entity> topParent, trs::SharedPtr<BaseComponent> component);
 
 		SharedComponent(const SharedComponent& other);
 		SharedComponent& operator=(const SharedComponent& other);
@@ -27,7 +27,7 @@ namespace trc
 		void connect();
 
 		trs::SharedPtr<Entity> m_topParent;
-		trs::SharedPtr<Component> m_component;
+		trs::SharedPtr<BaseComponent> m_component;
 
 		boost::signals2::scoped_connection m_topParentChangedSignalConnection;
 	};
