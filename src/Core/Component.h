@@ -13,6 +13,8 @@ namespace trc
 	template <typename ComponentType, typename DependenciesTypeListT = DependenciesTypeList<>>
 	class Component : public BaseComponent
 	{
+		// Components are not virtual, even though they should be derived from.
+		// Components are guaranteed to be destroyed with their full type so the derived class destructor will be called.
 	public:
 		Component(Entity& entity)
 		  : BaseComponent(entity)
