@@ -1,0 +1,2 @@
+// Since version 3.18, cmake is now unable to generate the pch if there is no cpp in the target.
+// This is not very satisfying, but we need to have this file here to ensure that the pch project is built.

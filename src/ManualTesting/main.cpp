@@ -37,11 +37,11 @@ struct TestStruct
 	int m_b = 1;
 };
 
-class Health : public trc::Component
+class Health : public trc::Component<Health>
 {
 public:
 	Health(trc::Entity& entity)
-	  : Component(entity, *this)
+	  : Component(entity)
 	{
 	}
 };

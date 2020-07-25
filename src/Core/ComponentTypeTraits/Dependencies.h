@@ -5,6 +5,16 @@
 
 namespace trc
 {
+	template <typename... Args>
+	class DependenciesTypeList
+	{
+	public:
+		static std::vector<std::type_index> getTypeIndices()
+		{
+			return {typeid(Args)...};
+		}
+	};
+
 	class Dependencies
 	{
 	public:
