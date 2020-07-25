@@ -160,6 +160,7 @@ function(addPchProj)
 
     setCompileOptions(Pch)
 
+    set_target_properties(Pch PROPERTIES LANGUAGE CXX)
     set_target_properties(Pch PROPERTIES LINKER_LANGUAGE CXX)
 
     target_include_directories(Pch PRIVATE "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/include")
