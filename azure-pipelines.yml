@@ -16,7 +16,7 @@ jobs:
         script: 'call "cmake" -G "Visual Studio 16 2019" -S "." -B "Build/"'
     - task: CmdLine@2
       inputs:
-        script: 'call "cmake" --build "Build/"" --target ALL_BUILD -j'
+        script: 'call "cmake" --build "Build/"" --target ALL_BUILD -j --verbose'
     - task: CmdLine@2
       inputs:
         script: 'call "cmake" --build "Build/"" --target BuildTests -j'
