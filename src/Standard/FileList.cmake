@@ -15,4 +15,6 @@ target_sources(Standard PRIVATE
 	Pointers/SharedPtr.h
 	Pointers.h
 	Private/Resource.h
+	Private/TaskFence.h
+	Task.h
 )
