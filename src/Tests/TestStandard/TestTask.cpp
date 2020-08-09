@@ -12,16 +12,16 @@ namespace Tests
 	public:
 		int operator++()
 		{
-			int c = counter;
-			REQUIRE(c == 0);
-			return ++counter;
+			int c = ++counter;
+			REQUIRE(c == 1);
+			return c;
 		}
 
 		int operator--()
 		{
-			int c = counter;
-			REQUIRE(c == 1);
-			return --counter;
+			int c = --counter;
+			REQUIRE(c == 0);
+			return c;
 		}
 
 	private:
@@ -32,15 +32,15 @@ namespace Tests
 	{
 		GIVEN("Multiple tasks with dependencies on each other")
 		{
-			std::unique_ptr<trs::Task<int>> task1 = std::make_unique<trs::Task<int>>(std::make_unique<int>(1));
+			trs::Task<int> task1 = trs::Task<int>(std::make_unique<int>(1));
 
-			auto depTask2 = std::vector({std::ref(*task1)});
-			std::unique_ptr<trs::Task<int>> task2 = std::make_unique<trs::Task<int>>(std::make_unique<int>(2), depTask2);
+			auto depTask2 = std::vector({std::ref(task1)});
+			trs::Task<int> task2 = trs::Task<int>(std::make_unique<int>(2), depTask2);
 
-			auto depTask3 = std::vector({std::ref(*task2)});
-			std::unique_ptr<trs::Task<int>> task3 = std::make_unique<trs::Task<int>>(std::make_unique<int>(3), depTask3);
+			auto depTask3 = std::vector({std::ref(task2)});
+			trs::Task<int> task3 = trs::Task<int>(std::make_unique<int>(3), depTask3);
 
-			std::list<trs::Task<int>*> tasks = {&*task1, &*task2, &*task3};
+			std::list<trs::Task<int>*> tasks = {&task1, &task2, &task3};
 
 			Counter counter;
 

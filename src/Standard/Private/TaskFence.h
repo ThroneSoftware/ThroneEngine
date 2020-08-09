@@ -24,9 +24,7 @@ namespace trs::Private
 			for(auto& dependency: dependencies)
 			{
 				m_finishedSignalsConnections.emplace_back(dependency.get().connectToFinishedSignal([this]() {
-					// Keep a temporary val so we don't have to do another atomic operation.
-					// It's also "safer" because notify_one is never going to be called two times.
-					// If we did m_current == 0, it would be possible for two threads to enter the if.
+					// keep a temporary val so we can release the lock asap and before notify.
 					int val = 0;
 					{
 						std::scoped_lock lock(m_mut);
@@ -75,7 +73,7 @@ namespace trs::Private
 		mutable std::mutex m_mut;
 		mutable std::condition_variable m_cv;
 		const int m_expected = 0;
-		std::atomic_int m_current = 0;
+		int m_current = 0;
 
 		std::vector<boost::signals2::scoped_connection> m_finishedSignalsConnections;
 	};
