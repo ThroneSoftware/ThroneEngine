@@ -7,4 +7,6 @@ target_sources(TestStandard PRIVATE
 	TestManagerFactory.cpp
 	TestPointers.cpp
 	TestResource.cpp
+	TestTask.cpp
+	TestTaskFence.cpp
 )
