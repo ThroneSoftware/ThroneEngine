@@ -15,11 +15,8 @@ namespace trs
 		using value_type = T;
 
 	public:
-		Task(std::type_index componentTypeIndex,
-			 std::unique_ptr<value_type> value,
-			 const std::vector<std::reference_wrapper<Task<value_type>>>& dependencies = {})
-		  : m_componentTypeIndex(componentTypeIndex)
-		  , m_value(std::move(value))
+		Task(std::unique_ptr<value_type> value, const std::vector<std::reference_wrapper<Task<value_type>>>& dependencies = {})
+		  : m_value(std::move(value))
 		  , m_fence(dependencies)
 		{
 		}
@@ -43,31 +40,25 @@ namespace trs
 		}
 
 		template <typename Func>
-		boost::signals2::connection connectToFinishedSignal(Func&& func)
+		boost::signals2::connection
+			connectToFinishedSignal(Func&& func, boost::signals2::connect_position position = boost::signals2::connect_position::at_back)
 		{
-			return m_finishedSignal.connect(std::forward<Func>(func));
+			return m_finishedSignal.connect(std::forward<Func>(func), position);
 		}
 
-		void reset()
+		void reset() noexcept
 		{
 			m_fence.reset();
 		}
 
-		std::type_index getComponentTypeIndex() const
-		{
-			return m_componentTypeIndex;
-		}
-
-		int getDependencyCount() const
+		int getDependencyCount() const noexcept
 		{
 			return m_fence.getDependencyCount();
 		}
 
 	private:
-		Private::TaskFence<Task<value_type>> m_fence;
+		Private::TaskFence m_fence;
 		std::unique_ptr<value_type> m_value;
 		boost::signals2::signal<void()> m_finishedSignal;
-
-		std::type_index m_componentTypeIndex;
 	};
 }  // namespace trs

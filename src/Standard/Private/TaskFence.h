@@ -10,32 +10,31 @@
 
 namespace trs::Private
 {
-	template <typename T>
-	concept HasFinishedSignal = requires(T t)
-	{
-		t.connectToFinishedSignal(std::function<void()>());
-	};
-
-	// clang-format off
-	template <typename T> requires HasFinishedSignal<T>
 	class TaskFence
-	// clang-format on
 	{
 	public:
-		using value_type = T;
+		TaskFence() = default;
 
-	public:
-		TaskFence(const std::vector<std::reference_wrapper<value_type>>& dependencies = {})
+		template <typename T>
+		TaskFence(const std::vector<std::reference_wrapper<T>>& dependencies)
 		  : m_expected(gsl::narrow<int>(dependencies.size()))
 		  , m_current(gsl::narrow<int>(dependencies.size()))
 		{
-			m_finishedSignalsConnections.resize(gsl::narrow<int>(dependencies.size()));
+			m_finishedSignalsConnections.reserve(gsl::narrow<int>(dependencies.size()));
 			for(auto& dependency: dependencies)
 			{
 				m_finishedSignalsConnections.emplace_back(dependency.get().connectToFinishedSignal([this]() {
-					assert(m_current > 0);
+					// Keep a temporary val so we don't have to do another atomic operation.
+					// It's also "safer" because notify_one is never going to be called two times.
+					// If we did m_current == 0, it would be possible for two threads to enter the if.
+					int val = 0;
+					{
+						std::scoped_lock lock(m_mut);
+						assert(m_current > 0);
+						val = --m_current;
+					}
 
-					if(--m_current == 0)
+					if(val == 0)
 					{
 						m_cv.notify_one();
 					}
@@ -57,7 +56,6 @@ namespace trs::Private
 			{
 				std::unique_lock lock(m_mut);
 				m_cv.wait(lock, [this]() {
-					assert(m_current >= 0);
 					return m_current == 0;
 				});
 			}
@@ -68,7 +66,7 @@ namespace trs::Private
 			m_current = m_expected;
 		}
 
-		int getDependencyCount() const
+		int getDependencyCount() const noexcept
 		{
 			return m_expected;
 		}

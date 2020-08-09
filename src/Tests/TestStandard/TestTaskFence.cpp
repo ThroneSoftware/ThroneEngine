@@ -34,7 +34,7 @@ namespace Tests
 			MockTask task2;
 			MockTask task3;
 
-			trs::Private::TaskFence<MockTask> fence(std::vector{ std::ref(task1), std::ref(task2), std::ref(task3) });
+			trs::Private::TaskFence fence(std::vector{ std::ref(task1), std::ref(task2), std::ref(task3) });
 			WHEN("Waiting on the fence")
 			{
 				auto fut = std::async(std::launch::async, [&fence]() {
@@ -43,11 +43,11 @@ namespace Tests
 
 				THEN("Every dependencies needs to finish before the fence finish waiting")
 				{
-					REQUIRE(fut.wait_for(std::chrono::seconds(0)) == std::future_status::timeout);
+					REQUIRE(fut.wait_for(std::chrono::milliseconds(100)) == std::future_status::timeout);
 					task1.finish();
-					REQUIRE(fut.wait_for(std::chrono::seconds(0)) == std::future_status::timeout);
+					REQUIRE(fut.wait_for(std::chrono::milliseconds(100)) == std::future_status::timeout);
 					task2.finish();
-					REQUIRE(fut.wait_for(std::chrono::seconds(0)) == std::future_status::timeout);
+					REQUIRE(fut.wait_for(std::chrono::milliseconds(100)) == std::future_status::timeout);
 					task3.finish();
 
 					REQUIRE(fut.wait_for(std::chrono::seconds(30)) == std::future_status::ready);
@@ -57,7 +57,7 @@ namespace Tests
 
 		GIVEN("A TaskFence with no dependencies")
 		{
-			trs::Private::TaskFence<MockTask> fence;
+			trs::Private::TaskFence fence;
 			WHEN("Waiting on the fence")
 			{
 				auto fut = std::async(std::launch::async, [&fence]() {
