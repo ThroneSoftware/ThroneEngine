@@ -18,6 +18,7 @@ namespace trc
 
 	public:
 		EventProcessor(std::list<trs::Task<ISystem>>&& tasks);
+		EventProcessor(ManagerList& managerList);
 
 		void loop();
 

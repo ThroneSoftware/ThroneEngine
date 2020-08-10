@@ -6,6 +6,13 @@ namespace trc
 {
 	namespace EventProcessorPrivate
 	{
+		// declaration because of the circular dependency between addTask and getTaskDependencies
+		trs::Task<ISystem>& addTask(std::list<trs::Task<ISystem>>& tasks,
+									std::map<std::type_index, trs::Task<ISystem>&>& tasksTypes,
+									const ComponentTypeTrait& componentTypeTrait,
+									ManagerList& managerList);
+
+
 		std::optional<std::reference_wrapper<trs::Task<ISystem>>> findTask(std::map<std::type_index, trs::Task<ISystem>&>& tasksTypes,
 																		   std::type_index typeIndex)
 		{
@@ -84,6 +91,11 @@ namespace trc
 		m_taskList.sort([](const trs::Task<ISystem>& t1, const trs::Task<ISystem>& t2) {
 			return t1.getDependencyCount() < t2.getDependencyCount();
 		});
+	}
+
+	EventProcessor::EventProcessor(ManagerList& managerList)
+	  : EventProcessor(makeTaskList(managerList))
+	{
 	}
 
 	void EventProcessor::loop()
