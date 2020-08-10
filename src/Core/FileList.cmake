@@ -8,6 +8,8 @@ target_sources(Core PRIVATE
 	ComponentTypeTraits/Dependencies.h
 	Entity.cpp
 	Entity.h
+	EventProcessor.cpp
+	EventProcessor.h
 	ISystem.h
 	ISystemFactory.h
 	ManagerList.cpp

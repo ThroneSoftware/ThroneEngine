@@ -31,7 +31,9 @@ namespace trc
 		friend class Tests::TestManagerList;
 
 	public:
+		std::optional<std::reference_wrapper<const ComponentTypeTrait>> getComponentTypeTrait(std::type_index componentTypeIndex);
 		const std::vector<std::reference_wrapper<const ComponentTypeTrait>>& getComponentTypeTraits() const;
+
 
 		template <typename ComponentType>
 		trs::Manager<ComponentType>& findManager() requires ManagerListPrivate::HasGetComponentTypeTrait<ComponentType>
