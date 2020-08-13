@@ -16,11 +16,7 @@ namespace trc
 		std::optional<std::reference_wrapper<trs::Task<ISystem>>> findTask(std::map<std::type_index, trs::Task<ISystem>&>& tasksTypes,
 																		   std::type_index typeIndex)
 		{
-			auto found = std::find_if(tasksTypes.begin(),
-									  tasksTypes.end(),
-									  [typeIndex](const std::pair<std::type_index, trs::Task<ISystem>&>& values) {
-										  return values.first == typeIndex;
-									  });
+			auto found = tasksTypes.find(typeIndex);
 			return found != tasksTypes.end() ? std::optional(std::ref(found->second)) : std::nullopt;
 		}
 

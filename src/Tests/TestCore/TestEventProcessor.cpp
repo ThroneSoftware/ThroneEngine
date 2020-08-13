@@ -9,10 +9,6 @@
 
 namespace Tests
 {
-	// Test all tasks are there
-	// Test tasks have correct dependencies
-	// Test with different order in ManagerList (dependency is not the first one in the list)
-
 	template <typename ComponentType, typename DependenciesTypeListT = trc::DependenciesTypeList<>>
 	class C : public trc::Component<ComponentType, DependenciesTypeListT>
 	{
