@@ -1,5 +1,5 @@
 #include <Standard/Task.h>
-#include <Tests/ProxyGmock.h>
+#include <Tests/TestsUtilities/Utilities.h>
 
 #include <catch.hpp>
 
@@ -7,27 +7,6 @@
 
 namespace Tests
 {
-	class Counter
-	{
-	public:
-		int operator++()
-		{
-			int c = ++counter;
-			REQUIRE(c == 1);
-			return c;
-		}
-
-		int operator--()
-		{
-			int c = --counter;
-			REQUIRE(c == 0);
-			return c;
-		}
-
-	private:
-		std::atomic_int counter = 0;
-	};
-
 	SCENARIO("Test process")
 	{
 		GIVEN("Multiple tasks with dependencies on each other")
@@ -42,7 +21,7 @@ namespace Tests
 
 			std::list<trs::Task<int>*> tasks = {&task1, &task2, &task3};
 
-			Counter counter;
+			UniqueCounter counter;
 
 			for(auto& task: tasks)
 			{
@@ -66,7 +45,7 @@ namespace Tests
 
 				THEN("Only one task is processed at a time")
 				{
-					// The "Then" is in class Counter
+					// The "Then" is in class UniqueCounter
 				}
 				AND_THEN("The tasks were processed the correct order")
 				{

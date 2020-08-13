@@ -140,6 +140,15 @@ function(addTestTarget target_name)
     configTargetToUsePch(${target_name})
 endfunction()
 
+function(addTestLibrary target_name)
+    add_library(${target_name})
+
+    configTestTarget(${target_name})
+
+    configTargetToUsePch(${target_name})
+endfunction()
+
+
 function(addRunTestsTarget)
     add_executable(RunTests "")
 
@@ -211,12 +220,14 @@ function(main)
 endfunction()
 
 function(setupTestProjects)
+    addTestLibrary(TestsUtilities)
+
     addTestTarget(TestTestFramework)
     addTestTarget(TestStandard)
-    target_link_libraries(TestStandard Standard)
+    target_link_libraries(TestStandard Standard TestsUtilities)
     
     addTestTarget(TestCore)
-    target_link_libraries(TestCore Core)
+    target_link_libraries(TestCore Core TestsUtilities)
 
     addRunTestsTarget()
 endfunction()
