@@ -14,6 +14,9 @@ namespace trc
 	class EventProcessor
 	{
 	public:
+		static std::list<trs::Task<ISystem>> makeTaskList(ManagerList& managerList,
+														  std::map<std::type_index, trs::Task<ISystem>&>& tasksTypes);
+
 		static std::list<trs::Task<ISystem>> makeTaskList(ManagerList& managerList);
 
 	public:

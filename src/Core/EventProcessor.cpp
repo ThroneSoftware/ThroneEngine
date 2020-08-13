@@ -74,15 +74,21 @@ namespace trc
 		}
 	}  // namespace EventProcessorPrivate
 
-	/*static*/ std::list<trs::Task<ISystem>> EventProcessor::makeTaskList(ManagerList& managerList)
+	/*static*/ std::list<trs::Task<ISystem>> EventProcessor::makeTaskList(ManagerList& managerList,
+																		  std::map<std::type_index, trs::Task<ISystem>&>& tasksTypes)
 	{
 		std::list<trs::Task<ISystem>> tasks;
-		std::map<std::type_index, trs::Task<ISystem>&> tasksTypes;
 		for(const auto& componentTrait: managerList.getComponentTypeTraits())
 		{
 			EventProcessorPrivate::addTask(tasks, tasksTypes, componentTrait, managerList);
 		}
 		return tasks;
+	}
+
+	std::list<trs::Task<ISystem>> EventProcessor::makeTaskList(ManagerList& managerList)
+	{
+		std::map<std::type_index, trs::Task<ISystem>&> tasksTypes;
+		return makeTaskList(managerList, tasksTypes);
 	}
 
 	EventProcessor::EventProcessor(std::list<trs::Task<ISystem>>&& tasks)
