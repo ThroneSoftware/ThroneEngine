@@ -54,7 +54,7 @@ function(setCompileOptions target_name)
         # Compile options only in debug mode
         target_compile_options(${target_name} PRIVATE "$<$<CONFIG:DEBUG>:/MTd>") 
         # Compile options only in release mode
-        target_compile_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/Oi;/Ot;/GL/MT>") 
+        target_compile_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/Oi;/Ot;/GL;/MT>") 
         
         # Adds linker options to release mode
         target_link_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/LTCG:INCREMENTAL>")
