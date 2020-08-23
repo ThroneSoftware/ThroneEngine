@@ -12,8 +12,6 @@ namespace trs
 
 	public:
 		using value_type = Type;
-		using pointer = value_type*;
-		using reference = value_type&;
 
 	public:
 		PtrOwner(Private::BaseResource<value_type>* resource) noexcept
@@ -42,17 +40,17 @@ namespace trs
 			m_base.destroy();
 		}
 
-		pointer getPtr() const noexcept
+		value_type* getPtr() const noexcept
 		{
 			return m_base.getPtr();
 		}
 
-		pointer operator->() const noexcept
+		value_type* operator->() const noexcept
 		{
 			return m_base.getPtr();
 		}
 
-		reference operator*() const noexcept
+		value_type& operator*() const noexcept
 		{
 			return *m_base.getPtr();
 		}

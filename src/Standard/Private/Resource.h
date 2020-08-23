@@ -11,7 +11,6 @@ namespace trs::Private
 	{
 	public:
 		using value_type = Type;
-		using pointer = value_type*;
 
 	public:
 		BaseResource() noexcept = default;
@@ -41,7 +40,7 @@ namespace trs::Private
 			++m_count;
 		}
 
-		virtual pointer getPtr() noexcept = 0;
+		virtual value_type* getPtr() noexcept = 0;
 
 		virtual void notify() noexcept = 0;
 
@@ -54,7 +53,6 @@ namespace trs::Private
 	{
 	public:
 		using value_type = Type;
-		using pointer = value_type*;
 
 	public:
 		template <typename Notifier, typename... Args>
@@ -66,7 +64,7 @@ namespace trs::Private
 		{
 		}
 
-		pointer getPtr() noexcept override
+		value_type* getPtr() noexcept override
 		{
 			return get();
 		}
@@ -77,7 +75,7 @@ namespace trs::Private
 		}
 
 	private:
-		pointer get() noexcept
+		value_type* get() noexcept
 		{
 			return &m_value.first();
 		}
@@ -90,7 +88,6 @@ namespace trs::Private
 	{
 	public:
 		using value_type = Type;
-		using pointer = value_type*;
 
 	public:
 		template <typename Notifier>
@@ -100,7 +97,7 @@ namespace trs::Private
 		{
 		}
 
-		pointer getPtr() noexcept override
+		value_type* getPtr() noexcept override
 		{
 			return get();
 		}
@@ -111,7 +108,7 @@ namespace trs::Private
 		}
 
 	private:
-		pointer get() noexcept
+		value_type* get() noexcept
 		{
 			return m_value.first();
 		}

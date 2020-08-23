@@ -10,8 +10,6 @@ namespace trs
 	{
 	public:
 		using value_type = Type;
-		using pointer = value_type*;
-		using reference = value_type&;
 
 	public:
 		SharedPtr() noexcept
@@ -77,17 +75,17 @@ namespace trs
 			m_base = nullptr;
 		}
 
-		pointer getPtr() const noexcept
+		value_type* getPtr() const noexcept
 		{
 			return m_base.getPtr();
 		}
 
-		pointer operator->() const noexcept
+		value_type* operator->() const noexcept
 		{
 			return m_base.getPtr();
 		}
 
-		reference operator*() const noexcept
+		value_type& operator*() const noexcept
 		{
 			return *m_base.getPtr();
 		}

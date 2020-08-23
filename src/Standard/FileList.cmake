@@ -13,6 +13,7 @@ target_sources(Standard PRIVATE
 	Pointers/MakeFunctions.h
 	Pointers/PtrOwner.h
 	Pointers/SharedPtr.h
+	Pointers/WeakPtr.h
 	Pointers.h
 	Private/Resource.h
 	Private/TaskFence.h

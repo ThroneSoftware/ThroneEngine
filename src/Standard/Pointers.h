@@ -5,3 +5,4 @@
 #include "Pointers/MakeFunctions.h"
 #include "Pointers/PtrOwner.h"
 #include "Pointers/SharedPtr.h"
+#include "Pointers/WeakPtr.h"
