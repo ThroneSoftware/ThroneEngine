@@ -8,6 +8,9 @@ namespace trs
 	template <typename Type>
 	class SharedPtr final
 	{
+		template <typename Type>
+		friend class WeakPtr;
+
 	public:
 		using value_type = Type;
 

@@ -12,36 +12,44 @@ namespace trs
 		using value_type = Type;
 
 	public:
-		WeakPtr(std::nullptr_t ptr = nullptr) noexcept
-		  : m_base(ptr)
+		WeakPtr(std::nullptr_t = nullptr) noexcept = default;
+
+		WeakPtr(const PtrOwner<value_type>& ptrOwner) noexcept
+		  : m_base(ptrOwner.m_base)
 		{
+			m_base.increaseWRefCount();
 		}
 
-		WeakPtr(const PtrOwner<value_type>& owner) noexcept
+		WeakPtr(const SharedPtr<value_type>& sharedPtr) noexcept
+		  : m_base(sharedPtr.m_base)
 		{
-			// todo
-		}
-
-		WeakPtr(const SharedPtr<value_type>& shared) noexcept
-		{
-			// todo
+			m_base.increaseWRefCount();
 		}
 
 		WeakPtr(const WeakPtr& other) noexcept = default;
 		WeakPtr& operator=(const WeakPtr& other) noexcept
 		{
-			// todo
+			if(this != &other)
+			{
+				m_base.decreaseWRefCount();
+				m_base = other.m_base;
+				m_base.increaseWRefCount();
+			}
 		}
 
 		WeakPtr(WeakPtr&& other) noexcept = default;
 		WeakPtr& operator=(WeakPtr&& other) noexcept
 		{
-			// todo
+			if(this != &other)
+			{
+				m_base.decreaseWRefCount();
+				m_base = std::move(other.m_base);
+			}
 		}
 
 		~WeakPtr() noexcept
 		{
-			// todo
+			m_base.decreaseWRefCount();
 		}
 
 		value_type* getPtr() const noexcept

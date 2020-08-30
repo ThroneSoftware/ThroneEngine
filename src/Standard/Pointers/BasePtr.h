@@ -89,6 +89,14 @@ namespace trs
 				return *getPtr();
 			}
 
+			void increaseRefCount() noexcept
+			{
+				if (m_resource != nullptr)
+				{
+					m_resource->increaseRefCount();
+				}
+			}
+
 			void decreaseRefCount() noexcept
 			{
 				if(m_resource != nullptr)
@@ -97,11 +105,19 @@ namespace trs
 				}
 			}
 
-			void increaseRefCount() noexcept
+			void increaseWRefCount() noexcept
 			{
-				if(m_resource != nullptr)
+				if (m_resource != nullptr)
 				{
-					m_resource->increaseRefCount();
+					m_resource->increaseWRefCount();
+				}
+			}
+
+			void decreaseWRefCount() noexcept
+			{
+				if (m_resource != nullptr)
+				{
+					m_resource->decreaseWRefCount();
 				}
 			}
 
@@ -109,8 +125,9 @@ namespace trs
 			{
 				if(m_resource != nullptr)
 				{
+					// should not delete resource, just delete the ptr
+					// the resource should delete itself when no weak references remains
 					delete m_resource;
-					reset();
 				}
 			}
 

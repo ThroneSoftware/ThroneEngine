@@ -31,6 +31,7 @@ namespace trs
 	template <typename Type>
 	PtrOwner<Type> makePtrOwner(Type* ptr)
 	{
+		// todo, the ptr will leak with DefaultNotifier.
 		auto* resource =
 			new Private::SeparatedResource<Type, PointersPrivate::DefaultNotifier<Type>>(PointersPrivate::DefaultNotifier<Type>(), ptr);
 		PointersPrivate::setResource(resource);

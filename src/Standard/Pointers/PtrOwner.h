@@ -10,6 +10,9 @@ namespace trs
 		template <typename Type>
 		friend class SharedPtr;
 
+		template <typename Type>
+		friend class WeakPtr;
+
 	public:
 		using value_type = Type;
 
@@ -17,6 +20,7 @@ namespace trs
 		PtrOwner(Private::BaseResource<value_type>* resource) noexcept
 		  : m_base(resource)
 		{
+			m_base.increaseRefCount();
 		}
 
 		PtrOwner(const PtrOwner& other) = delete;
@@ -29,6 +33,7 @@ namespace trs
 			// Also, the base cannot be set so it does not need to be destroyed.
 			if(this != &other)
 			{
+				m_base.decreaseRefCount();
 				m_base.destroy();
 				m_base = std::move(other.m_base);
 			}
@@ -37,6 +42,7 @@ namespace trs
 
 		~PtrOwner() noexcept
 		{
+			m_base.decreaseRefCount();
 			m_base.destroy();
 		}
 

@@ -26,6 +26,11 @@ namespace trs::Private
 			assert(m_count == 0 && "Error, deleting a BaseResource while the reference count is higher than 0.");
 		}
 
+		void increaseRefCount() noexcept
+		{
+			++m_count;
+		}
+
 		void decreaseRefCount() noexcept
 		{
 			assert(m_count != 0);
@@ -35,9 +40,18 @@ namespace trs::Private
 			}
 		}
 
-		void increaseRefCount() noexcept
+
+		void increaseWRefCount() noexcept
 		{
-			++m_count;
+			m_wcount++;
+		}
+
+		void decreaseWRefCount() noexcept
+		{
+			if (--m_wcount == 0)
+			{
+				// todo
+			}
 		}
 
 		virtual value_type* getPtr() noexcept = 0;
@@ -46,6 +60,7 @@ namespace trs::Private
 
 	private:
 		std::atomic<uint32_t> m_count = 0;
+		std::atomic<uint32_t> m_wcount = 0;
 	};
 
 	template <typename Type, typename Notifier>
