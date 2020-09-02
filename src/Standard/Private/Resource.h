@@ -4,6 +4,8 @@
 
 #include "Standard/CompressedPair.h"
 
+#include <Utilities/Utility.h>
+
 namespace trs::Private
 {
 	template <typename Type>
@@ -26,12 +28,17 @@ namespace trs::Private
 			assert(m_count == 0 && "Error, deleting a BaseResource while the reference count is higher than 0.");
 		}
 
-		void increaseRefCount() noexcept
+		void incrementRefCount() noexcept
 		{
 			++m_count;
 		}
 
-		void decreaseRefCount() noexcept
+		bool incrementRefCountIfNotZero() noexcept
+		{
+			return tru::incrementNotEqual<0>(m_count);
+		}
+
+		void decrementRefCount() noexcept
 		{
 			assert(m_count != 0);
 			if(--m_count == 0)
@@ -40,15 +47,14 @@ namespace trs::Private
 			}
 		}
 
-
-		void increaseWRefCount() noexcept
+		void incrementWRefCount() noexcept
 		{
 			m_wcount++;
 		}
 
-		void decreaseWRefCount() noexcept
+		void decrementWRefCount() noexcept
 		{
-			if (--m_wcount == 0)
+			if(--m_wcount == 0)
 			{
 				// todo
 			}

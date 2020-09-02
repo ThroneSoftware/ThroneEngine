@@ -28,11 +28,11 @@ namespace Tests
 			{
 				EXPECT_CALL(mock, operatorProxy(resource->getPtr()));
 
-				resource->increaseRefCount();
-				resource->increaseRefCount();
+				resource->incrementRefCount();
+				resource->incrementRefCount();
 
-				resource->decreaseRefCount();
-				resource->decreaseRefCount();
+				resource->decrementRefCount();
+				resource->decrementRefCount();
 
 				THEN("Notifier is called")
 				{
@@ -53,11 +53,11 @@ namespace Tests
 			{
 				EXPECT_CALL(mock, operatorProxy(resource->getPtr()));
 
-				resource->increaseRefCount();
-				resource->increaseRefCount();
+				resource->incrementRefCount();
+				resource->incrementRefCount();
 
-				resource->decreaseRefCount();
-				resource->decreaseRefCount();
+				resource->decrementRefCount();
+				resource->decrementRefCount();
 
 				THEN("Notifier is called")
 				{

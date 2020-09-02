@@ -16,7 +16,7 @@ namespace tru
 	/// Apply a function on an atomic if the predicate returns true.
 	/// </summary>
 	template <typename Func, typename Predicate, typename AtomicType>
-	bool applyIf(AtomicType& atomic, Func func, Predicate pred)
+	bool applyIf(AtomicType& atomic, Func func, Predicate pred) noexcept
 	{
 		auto tempVal = atomic.load();
 		while(pred(tempVal))
@@ -30,7 +30,7 @@ namespace tru
 	}
 
 	template <auto comparedValue, typename AtomicType>
-	bool incrementNotEqual(AtomicType& atomic)
+	bool incrementNotEqual(AtomicType& atomic) noexcept
 	{
 		return applyIf(
 			atomic,

@@ -18,14 +18,9 @@ namespace trs
 			using reference = value_type&;
 
 		public:
-			BasePtr() noexcept
+			BasePtr(std::nullptr_t = nullptr) noexcept
 			  : m_resource(nullptr)
 			  , m_ptr(nullptr)
-			{
-			}
-
-			BasePtr(std::nullptr_t) noexcept
-			  : BasePtr<value_type>()
 			{
 			}
 
@@ -89,35 +84,44 @@ namespace trs
 				return *getPtr();
 			}
 
-			void increaseRefCount() noexcept
-			{
-				if (m_resource != nullptr)
-				{
-					m_resource->increaseRefCount();
-				}
-			}
-
-			void decreaseRefCount() noexcept
+			void incrementRefCount() noexcept
 			{
 				if(m_resource != nullptr)
 				{
-					m_resource->decreaseRefCount();
+					m_resource->incrementRefCount();
 				}
 			}
 
-			void increaseWRefCount() noexcept
+			bool incrementRefCountIfNotZero() noexcept
 			{
-				if (m_resource != nullptr)
+				if(m_resource != nullptr)
 				{
-					m_resource->increaseWRefCount();
+					return m_resource->incrementRefCountIfNotZero();
+				}
+				return false;
+			}
+
+			void decrementRefCount() noexcept
+			{
+				if(m_resource != nullptr)
+				{
+					m_resource->decrementRefCount();
 				}
 			}
 
-			void decreaseWRefCount() noexcept
+			void incrementWRefCount() noexcept
 			{
-				if (m_resource != nullptr)
+				if(m_resource != nullptr)
 				{
-					m_resource->decreaseWRefCount();
+					m_resource->incrementWRefCount();
+				}
+			}
+
+			void decrementWRefCount() noexcept
+			{
+				if(m_resource != nullptr)
+				{
+					m_resource->decrementWRefCount();
 				}
 			}
 

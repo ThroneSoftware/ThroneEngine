@@ -12,18 +12,20 @@ namespace trs
 		using value_type = Type;
 
 	public:
-		WeakPtr(std::nullptr_t = nullptr) noexcept = default;
+		WeakPtr(std::nullptr_t = nullptr) noexcept
+		{
+		}
 
 		WeakPtr(const PtrOwner<value_type>& ptrOwner) noexcept
 		  : m_base(ptrOwner.m_base)
 		{
-			m_base.increaseWRefCount();
+			m_base.incrementWRefCount();
 		}
 
 		WeakPtr(const SharedPtr<value_type>& sharedPtr) noexcept
 		  : m_base(sharedPtr.m_base)
 		{
-			m_base.increaseWRefCount();
+			m_base.incrementWRefCount();
 		}
 
 		WeakPtr(const WeakPtr& other) noexcept = default;
@@ -31,9 +33,9 @@ namespace trs
 		{
 			if(this != &other)
 			{
-				m_base.decreaseWRefCount();
+				m_base.decrementWRefCount();
 				m_base = other.m_base;
-				m_base.increaseWRefCount();
+				m_base.incrementWRefCount();
 			}
 		}
 
@@ -42,14 +44,14 @@ namespace trs
 		{
 			if(this != &other)
 			{
-				m_base.decreaseWRefCount();
+				m_base.decrementWRefCount();
 				m_base = std::move(other.m_base);
 			}
 		}
 
 		~WeakPtr() noexcept
 		{
-			m_base.decreaseWRefCount();
+			m_base.decrementWRefCount();
 		}
 
 		value_type* getPtr() const noexcept
@@ -69,7 +71,14 @@ namespace trs
 
 		SharedPtr<value_type> lock() noexcept
 		{
-			// todo
+			if(m_base.incrementRefCountIfNotZero())
+			{
+				return SharedPtr(m_base.m_resource);
+			}
+			else
+			{
+				return nullptr;
+			}
 		}
 
 	private:
