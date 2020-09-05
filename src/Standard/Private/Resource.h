@@ -41,7 +41,7 @@ namespace trs::Private
 		void decrementRefCount() noexcept
 		{
 			assert(m_count != 0);
-			if(--m_count == 0)
+			if(--m_count == 1)
 			{
 				notify();
 			}
@@ -49,14 +49,34 @@ namespace trs::Private
 
 		void incrementWRefCount() noexcept
 		{
-			m_wcount++;
+			++m_wcount;
 		}
 
-		void decrementWRefCount() noexcept
+		bool tryDestroy() noexcept
 		{
-			if(--m_wcount == 0)
+			if(tru::decrementEqual<1>(m_count))
 			{
-				// todo
+				// todo delete object
+				tryDestroyCtrlBlock();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		void tryDestroyCtrlBlock() noexcept
+		{
+			auto wcount = --m_wcount;
+			if(wcount == 0)
+			{
+				// If --m_wcount returns 0 and m_count is 0
+				// then it is impossible to have another reference since m_count == 0 is a final state.
+				if(m_count == 0)
+				{
+					delete this;
+				}
 			}
 		}
 
@@ -65,7 +85,9 @@ namespace trs::Private
 		virtual void notify() noexcept = 0;
 
 	private:
+		// todo
 		std::atomic<uint32_t> m_count = 0;
+		// todo
 		std::atomic<uint32_t> m_wcount = 0;
 	};
 

@@ -41,4 +41,17 @@ namespace tru
 				return value != comparedValue;
 			});
 	}
+
+	template <auto comparedValue, typename AtomicType>
+	bool decrementEqual(AtomicType& atomic) noexcept
+	{
+		return applyIf(
+			atomic,
+			[](auto value) {
+				return value - 1;
+			},
+			[](auto value) {
+				return value == comparedValue;
+			});
+	}
 }  // namespace tru

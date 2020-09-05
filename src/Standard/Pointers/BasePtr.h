@@ -125,14 +125,20 @@ namespace trs
 				}
 			}
 
-			void destroy() noexcept
+			bool destroy() noexcept
 			{
 				if(m_resource != nullptr)
 				{
-					// should not delete resource, just delete the ptr
+					// todo
+
+					// should not delete resource, just delete the object
 					// the resource should delete itself when no weak references remains
-					delete m_resource;
+					
+					//delete m_resource;
+
+					return m_resource->tryDestroy();
 				}
+				return true;
 			}
 
 		private:

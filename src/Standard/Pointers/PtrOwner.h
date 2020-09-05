@@ -21,6 +21,7 @@ namespace trs
 		  : m_base(resource)
 		{
 			m_base.incrementRefCount();
+			m_base.incrementWRefCount();
 		}
 
 		PtrOwner(const PtrOwner& other) = delete;
@@ -34,7 +35,7 @@ namespace trs
 			if(this != &other)
 			{
 				m_base.decrementRefCount();
-				m_base.destroy();
+				assert(m_base.destroy());
 				m_base = std::move(other.m_base);
 			}
 			return *this;
@@ -43,7 +44,7 @@ namespace trs
 		~PtrOwner() noexcept
 		{
 			m_base.decrementRefCount();
-			m_base.destroy();
+			assert(m_base.destroy());
 		}
 
 		value_type* getPtr() const noexcept
