@@ -7,6 +7,12 @@
 
 namespace Tests
 {
+	// todo, improve the Resource tests a bit
+
+	// test destruction (the delete this)
+	// tryDestroy
+	// tryDestroyCtrlBlock
+
 	SCENARIO("Resource construction", "Resource")
 	{
 		MockNotifier<int> mock;

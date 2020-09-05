@@ -75,6 +75,7 @@ namespace trs::Private
 				// then it is impossible to have another reference since m_count == 0 is a final state.
 				if(m_count == 0)
 				{
+					// Resources must always be allocated on the heap.
 					delete this;
 				}
 			}
@@ -93,7 +94,7 @@ namespace trs::Private
 		std::atomic<uint32_t> m_count = 0;
 
 		// The PtrOwner and every WeakPtr increment m_wcount by 1.
-		// It is possible for m_wcount to be >=1 even if the PtrOwner is destroyed.
+		// It is possible for m_wcount to be >=1 even if the PtrOwner and the object are destroyed.
 		// Possible values
 		// 0  : Final state. The object is destroyed and the control block will be destroyed.
 		// >=1: The PtrOwner or WeakPtrs still exist.
