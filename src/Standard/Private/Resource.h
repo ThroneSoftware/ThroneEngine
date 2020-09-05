@@ -85,9 +85,18 @@ namespace trs::Private
 		virtual void notify() noexcept = 0;
 
 	private:
-		// todo
+		// The PtrOwner and every SharedPtr increment m_count by 1.
+		// Possible values
+		// 0  : Final state. It means that the object was destroyed.
+		// 1  : Only the PtrOwner exists.
+		// >1 : The PtrOwner exists and there is SharedPtrs.
 		std::atomic<uint32_t> m_count = 0;
-		// todo
+
+		// The PtrOwner and every WeakPtr increment m_wcount by 1.
+		// It is possible for m_wcount to be >=1 even if the PtrOwner is destroyed.
+		// Possible values
+		// 0  : Final state. The object is destroyed and the control block will be destroyed.
+		// >=1: The PtrOwner or WeakPtrs still exist.
 		std::atomic<uint32_t> m_wcount = 0;
 	};
 
