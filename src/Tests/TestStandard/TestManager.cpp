@@ -95,6 +95,7 @@ namespace Tests
 			}
 		}
 
+		// todo, test dtor actually called.
 		GIVEN("A manager with with many objects")
 		{
 			constexpr size_t size = 5;

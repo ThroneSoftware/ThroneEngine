@@ -60,12 +60,22 @@ namespace trs
 			return *m_base.getPtr();
 		}
 
+		bool tryDestroy()
+		{
+			bool destroyed = m_base.tryDestroy();
+			if (destroyed)
+			{
+				m_base = nullptr;
+			}
+			return destroyed;
+		}
+
 	private:
 		void destroy()
 		{
-			bool destroyed = m_base.destroy();
+			// Keep the call out of the assert or else it will be optimized in release builds.
+			bool destroyed = tryDestroy();
 			assert(destroyed);
-			m_base = nullptr;
 		}
 
 		PointersPrivate::BasePtr<value_type> m_base;
