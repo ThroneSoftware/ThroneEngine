@@ -82,32 +82,26 @@ namespace trs
 	private:
 		void erase(value_type* ptr)
 		{
-			bool destroyed = false;
+			auto ownerFound = std::find_if(m_objects.begin(), m_objects.end(), [ptr](PtrOwner<value_type>& ptrOwner) {
+				return ptrOwner.getPtr() == ptr;
+			});
 
-			{
-				auto found = std::find_if(m_objects.begin(), m_objects.end(), [ptr](PtrOwner<value_type>& ptrOwner) {
-					return ptrOwner.getPtr() == ptr;
-				});
+			assert(ownerFound != m_objects.end());
 
-				assert(found != m_objects.end());
-
-				destroyed = found->tryDestroy();
-
-				if(destroyed)
-				{
-					m_objects.erase(found);
-				}
-			}
+			bool destroyed = ownerFound->tryDestroy();
 
 			if(destroyed)
 			{
-				auto found = std::find_if(m_pool.begin(), m_pool.end(), [ptr](value_type& value) {
+				m_objects.erase(ownerFound);
+
+				auto poolFound = std::find_if(m_pool.begin(), m_pool.end(), [ptr](value_type& value) {
 					return &value == ptr;
 				});
 
-				assert(found != m_pool.end());
+				assert(poolFound != m_pool.end());
 
-				m_pool.erase(found);
+				m_pool.erase(poolFound);
+				m_pool.erase(poolFound);
 			}
 		}
 
