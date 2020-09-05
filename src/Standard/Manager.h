@@ -89,6 +89,8 @@ namespace trs
 
 				assert(found != m_objects.end());
 
+				// todo, tryDestroy
+
 				m_objects.erase(found);
 			}
 

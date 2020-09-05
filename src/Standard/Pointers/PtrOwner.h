@@ -34,8 +34,7 @@ namespace trs
 			// Also, the base cannot be set so it does not need to be destroyed.
 			if(this != &other)
 			{
-				m_base.decrementRefCount();
-				assert(m_base.destroy());
+				destroy();
 				m_base = std::move(other.m_base);
 			}
 			return *this;
@@ -43,8 +42,7 @@ namespace trs
 
 		~PtrOwner() noexcept
 		{
-			m_base.decrementRefCount();
-			assert(m_base.destroy());
+			destroy();
 		}
 
 		value_type* getPtr() const noexcept
@@ -63,6 +61,13 @@ namespace trs
 		}
 
 	private:
+		void destroy()
+		{
+			bool destroyed = m_base.destroy();
+			assert(destroyed);
+			m_base = nullptr;
+		}
+
 		PointersPrivate::BasePtr<value_type> m_base;
 	};
 }  // namespace trs
