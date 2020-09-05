@@ -101,7 +101,6 @@ namespace trs
 				assert(poolFound != m_pool.end());
 
 				m_pool.erase(poolFound);
-				m_pool.erase(poolFound);
 			}
 		}
 
