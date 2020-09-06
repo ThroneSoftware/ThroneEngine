@@ -57,8 +57,7 @@ namespace trs
 	public:
 		SharedPtr<value_type> makeSharedFromThis()
 		{
-			assert(PointersPrivate::EnableSharedFromThisPrivate<Type>::m_resource != nullptr);
-			return SharedPtr(PointersPrivate::EnableSharedFromThisPrivate<Type>::m_resource);
+			return SharedPtr(gsl::not_null(PointersPrivate::EnableSharedFromThisPrivate<Type>::m_resource));
 		}
 	};
 }  // namespace trs

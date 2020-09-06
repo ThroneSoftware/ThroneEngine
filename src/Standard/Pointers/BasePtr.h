@@ -26,7 +26,7 @@ namespace trs
 			{
 			}
 
-			explicit BasePtr(gsl::not_null<Private::BaseResource<value_type>>* resource) noexcept
+			explicit BasePtr(gsl::not_null<Private::BaseResource<value_type>*> resource) noexcept
 			  : m_resource(resource)
 			  , m_ptr(resource->getPtr())
 			{

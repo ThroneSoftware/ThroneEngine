@@ -35,7 +35,7 @@ namespace trs
 		auto* resource =
 			new Private::SeparatedResource<Type, PointersPrivate::DefaultNotifier<Type>>(PointersPrivate::DefaultNotifier<Type>(), ptr);
 		PointersPrivate::setResource(resource);
-		return PtrOwner<Type>(resource);
+		return PtrOwner<Type>(gsl::not_null(resource));
 	}
 
 	template <typename Type, typename... Args>
@@ -45,7 +45,7 @@ namespace trs
 			new Private::CombinedResource<Type, PointersPrivate::DefaultNotifier<Type>>(PointersPrivate::DefaultNotifier<Type>(),
 																						std::forward<Args>(args)...);
 		PointersPrivate::setResource(resource);
-		return PtrOwner<Type>(resource);
+		return PtrOwner<Type>(gsl::not_null(resource));
 	}
 
 	template <typename Type, typename Notifier>
@@ -53,7 +53,7 @@ namespace trs
 	{
 		auto* resource = new Private::SeparatedResource<Type, Notifier>(std::forward<Notifier>(notifier), ptr);
 		PointersPrivate::setResource(resource);
-		return PtrOwner<Type>(resource);
+		return PtrOwner<Type>(gsl::not_null(resource));
 	}
 
 	template <typename Type, typename Notifier, typename... Args>
@@ -61,6 +61,6 @@ namespace trs
 	{
 		auto* resource = new Private::CombinedResource<Type, Notifier>(std::forward<Notifier>(notifier), std::forward<Args>(args)...);
 		PointersPrivate::setResource(resource);
-		return PtrOwner<Type>(resource);
+		return PtrOwner<Type>(gsl::not_null(resource));
 	}
 }  // namespace trs

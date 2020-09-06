@@ -17,7 +17,7 @@ namespace trs
 		using value_type = Type;
 
 	public:
-		PtrOwner(gsl::not_null<Private::BaseResource<value_type>>* resource) noexcept
+		PtrOwner(gsl::not_null<Private::BaseResource<value_type>*> resource) noexcept
 		  : m_base(resource)
 		{
 			m_base.incrementRefCount();

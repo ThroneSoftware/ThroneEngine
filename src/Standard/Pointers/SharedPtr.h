@@ -25,7 +25,7 @@ namespace trs
 			m_base.incrementRefCount();
 		}
 
-		explicit SharedPtr(gsl::not_null<Private::BaseResource<value_type>>* resource) noexcept
+		explicit SharedPtr(gsl::not_null<Private::BaseResource<value_type>*> resource) noexcept
 		  : m_base(resource)
 		{
 			m_base.incrementRefCount();
