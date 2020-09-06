@@ -16,8 +16,6 @@ namespace trs
 
 		public:
 			using value_type = Type;
-			using pointer = value_type*;
-			using reference = value_type&;
 
 		public:
 			BasePtr(std::nullptr_t = nullptr) noexcept
@@ -71,17 +69,17 @@ namespace trs
 				reset();
 			}
 
-			pointer getPtr() const noexcept
+			value_type* getPtr() const noexcept
 			{
 				return m_ptr;
 			}
 
-			pointer operator->() const noexcept
+			value_type* operator->() const noexcept
 			{
 				return getPtr();
 			}
 
-			reference operator*() const noexcept
+			value_type& operator*() const noexcept
 			{
 				return *getPtr();
 			}
@@ -119,11 +117,11 @@ namespace trs
 				}
 			}
 
-			void decrementWRefCount() noexcept
+			void tryDestroyCtrlBlock() noexcept
 			{
 				if(m_resource != nullptr)
 				{
-					m_resource->decrementWRefCount();
+					m_resource->tryDestroyCtrlBlock();
 				}
 			}
 
@@ -156,7 +154,7 @@ namespace trs
 			}
 
 			Private::BaseResource<value_type>* m_resource;
-			pointer m_ptr;
+			value_type* m_ptr;
 		};
 
 		template <typename Type>

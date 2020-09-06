@@ -33,7 +33,7 @@ namespace trs
 		{
 			if(this != &other)
 			{
-				m_base.decrementWRefCount();
+				m_base.tryDestroyCtrlBlock();
 				m_base = other.m_base;
 				m_base.incrementWRefCount();
 			}
@@ -44,14 +44,14 @@ namespace trs
 		{
 			if(this != &other)
 			{
-				m_base.decrementWRefCount();
+				m_base.tryDestroyCtrlBlock();
 				m_base = std::move(other.m_base);
 			}
 		}
 
 		~WeakPtr() noexcept
 		{
-			m_base.decrementWRefCount();
+			m_base.tryDestroyCtrlBlock();
 		}
 
 		value_type* getPtr() const noexcept
