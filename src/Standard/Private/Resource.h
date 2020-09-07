@@ -154,7 +154,7 @@ namespace trs::Private
 		using value_type = Type;
 
 	public:
-		template <typename Notifier>
+		template <typename Notifier, typename Deleter>
 		SeparatedResource(Notifier&& notifier, Deleter&& deleter, value_type* ptr)
 		  : BaseResource<value_type>()
 		  , m_notifier(std::forward<Notifier>(notifier))

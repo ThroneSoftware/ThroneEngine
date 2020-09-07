@@ -41,12 +41,10 @@ namespace trs
 	template <typename Type>
 	PtrOwner<Type> makePtrOwner(Type* ptr)
 	{
-		// todo, the ptr will leak with DefaultNotifier.
-		auto* resource =
-			new Private::SeparatedResource<Type, PointersPrivate::DefaultNotifier<Type>, PointersPrivate::DefaultDeleter<Type>>(
-				PointersPrivate::DefaultNotifier<Type>(),
-				PointersPrivate::DefaultDeleter<Type>(),
-				ptr);
+		using Notifier = PointersPrivate::DefaultNotifier<Type>;
+		using Deleter = PointersPrivate::DefaultDeleter<Type>;
+
+		auto* resource = new Private::SeparatedResource<Type, Notifier, Deleter>(Notifier(), Deleter(), ptr);
 		PointersPrivate::setResource(resource);
 		return PtrOwner<Type>(resource);
 	}
@@ -54,9 +52,9 @@ namespace trs
 	template <typename Type, typename... Args>
 	PtrOwner<Type> makePtrOwner(Args&&... args)
 	{
-		auto* resource =
-			new Private::CombinedResource<Type, PointersPrivate::DefaultNotifier<Type>>(PointersPrivate::DefaultNotifier<Type>(),
-																						std::forward<Args>(args)...);
+		using Notifier = PointersPrivate::DefaultNotifier<Type>;
+
+		auto* resource = new Private::CombinedResource<Type, Notifier>(Notifier(), std::forward<Args>(args)...);
 		PointersPrivate::setResource(resource);
 		return PtrOwner<Type>(resource);
 	}
