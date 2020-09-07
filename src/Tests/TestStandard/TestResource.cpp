@@ -7,6 +7,10 @@
 
 namespace Tests
 {
+	namespace TestResourcePrivate
+	{
+	}
+
 	// todo, improve the Resource tests a bit
 
 	// test destruction (the delete this)
@@ -53,7 +57,18 @@ namespace Tests
 			MockNotifier<int> mock;
 			ProxyNotifier<int> notifier(mock);
 			int* ptr = new int(10);
-			trs::Private::BaseResource<int>* resource = new trs::Private::SeparatedResource<int, ProxyNotifier<int>>(notifier, ptr);
+
+			class Deleter
+			{
+			public:
+				void operator()(int* ptr)
+				{
+					delete ptr;
+				}
+			};
+
+			trs::Private::BaseResource<int>* resource =
+				new trs::Private::SeparatedResource<int, ProxyNotifier<int>, Deleter>(notifier, Deleter(), ptr);
 
 			WHEN("Increasing then decreasing count")
 			{

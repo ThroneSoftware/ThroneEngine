@@ -2,8 +2,6 @@
 
 #include <pch.h>
 
-#include "Standard/CompressedPair.h"
-
 #include <Utilities/Utility.h>
 
 namespace trs::Private
@@ -56,7 +54,7 @@ namespace trs::Private
 		{
 			if(tru::decrementEqual<1>(m_count))
 			{
-				// todo delete object
+				destroy();
 				tryDestroyCtrlBlock();
 				return true;
 			}
@@ -83,11 +81,16 @@ namespace trs::Private
 
 		virtual value_type* getPtr() noexcept = 0;
 
+	protected:
+		/// Notfied is called when m_count goes down to 1 (the last SharedPtr is destroyed).
 		virtual void notify() noexcept = 0;
+
+		/// Destroy is used to destroy the object. It is called when m_count == 0.
+		virtual void destroy() noexcept = 0;
 
 	private:
 		// The PtrOwner and every SharedPtr increment m_count by 1.
-		// Possible values
+		// Possible values:
 		// 0  : Final state. It means that the object was destroyed.
 		// 1  : Only the PtrOwner exists.
 		// >1 : The PtrOwner exists and there is SharedPtrs.
@@ -95,7 +98,7 @@ namespace trs::Private
 
 		// The PtrOwner and every WeakPtr increment m_wcount by 1.
 		// It is possible for m_wcount to be >=1 even if the PtrOwner and the object are destroyed.
-		// Possible values
+		// Possible values:
 		// 0  : Final state. The object is destroyed and the control block will be destroyed.
 		// >=1: The PtrOwner or WeakPtrs still exist.
 		std::atomic<uint32_t> m_wcount = 0;
@@ -111,32 +114,40 @@ namespace trs::Private
 		template <typename Notifier, typename... Args>
 		CombinedResource(Notifier&& notifier, Args&&... args)
 		  : BaseResource<value_type>()
-		  , m_value(std::piecewise_construct_t(),
-					std::forward_as_tuple(std::forward<Args>(args)...),
-					std::forward_as_tuple(std::forward<Notifier>(notifier)))
+		  , m_notifier(std::forward<Notifier>(notifier))
+		{
+			new(&m_value) value_type(std::forward<Args>(args)...);
+		}
+
+		~CombinedResource() noexcept override
 		{
 		}
 
 		value_type* getPtr() noexcept override
 		{
-			return get();
+			return &m_value;
 		}
 
 		void notify() noexcept override
 		{
-			m_value.second()(get());
+			m_notifier(&m_value);
+		}
+
+		void destroy() noexcept override
+		{
+			m_value.~value_type();
 		}
 
 	private:
-		value_type* get() noexcept
+		union
 		{
-			return &m_value.first();
-		}
-
-		CompressedPair<value_type, Notifier> m_value;
+			value_type m_value;
+		};
+		// todo c++20, use no_unique_address
+		Notifier m_notifier;
 	};
 
-	template <typename Type, typename Notifier>
+	template <typename Type, typename Notifier, typename Deleter>
 	class SeparatedResource : public BaseResource<Type>
 	{
 	public:
@@ -144,28 +155,33 @@ namespace trs::Private
 
 	public:
 		template <typename Notifier>
-		SeparatedResource(Notifier&& notifier, value_type* value)
+		SeparatedResource(Notifier&& notifier, Deleter&& deleter, value_type* ptr)
 		  : BaseResource<value_type>()
-		  , m_value(std::piecewise_construct_t(), std::forward_as_tuple(value), std::forward_as_tuple(std::forward<Notifier>(notifier)))
+		  , m_notifier(std::forward<Notifier>(notifier))
+		  , m_deleter(std::forward<Deleter>(deleter))
+		  , m_ptr(ptr)
 		{
 		}
 
 		value_type* getPtr() noexcept override
 		{
-			return get();
+			return m_ptr;
 		}
 
 		void notify() noexcept override
 		{
-			m_value.second()(get());
+			m_notifier(m_ptr);
+		}
+
+		void destroy() noexcept override
+		{
+			m_deleter(m_ptr);
 		}
 
 	private:
-		value_type* get() noexcept
-		{
-			return m_value.first();
-		}
-
-		CompressedPair<value_type*, Notifier> m_value;
+		value_type* m_ptr;
+		// todo c++20, use no_unique_address
+		Notifier m_notifier;
+		Deleter m_deleter;
 	};
 }  // namespace trs::Private
