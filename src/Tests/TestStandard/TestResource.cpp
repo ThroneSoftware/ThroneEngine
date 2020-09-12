@@ -16,6 +16,7 @@ namespace Tests
 	// test destruction (the delete this)
 	// tryDestroy
 	// tryDestroyCtrlBlock
+	// deleter
 
 	SCENARIO("Resource construction", "Resource")
 	{
