@@ -13,4 +13,6 @@ int main()
 {
 	executeTest("TestTestFramework.exe");
 	executeTest("TestStandard.exe");
+	executeTest("TestCore.exe");
+	executeTest("TestUtilities.exe");
 }

@@ -12,8 +12,6 @@ namespace tru
 		return static_cast<DstType>(src);
 	}
 
-	// todo, tests applyIf
-
 	/// <summary>
 	/// Apply a function on an atomic if the predicate returns true.
 	/// </summary>

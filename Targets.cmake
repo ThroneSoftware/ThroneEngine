@@ -229,6 +229,9 @@ function(setupTestProjects)
     addTestTarget(TestCore)
     target_link_libraries(TestCore Core TestsUtilities)
 
+    addTestTarget(TestUtilities)
+    target_link_libraries(TestUtilities TestsUtilities)
+
     addRunTestsTarget()
 endfunction()
 
