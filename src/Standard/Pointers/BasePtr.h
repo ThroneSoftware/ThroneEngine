@@ -6,6 +6,9 @@
 
 namespace trs
 {
+	template <typename Type>
+	class WeakPtr;
+
 	namespace PointersPrivate
 	{
 		template <typename Type>
@@ -13,6 +16,9 @@ namespace trs
 		{
 			template <typename Type>
 			friend bool operator==(const BasePtr<Type>& left, const BasePtr<Type>& right);
+
+			template <typename Type>
+			friend class WeakPtr;
 
 		public:
 			using value_type = Type;

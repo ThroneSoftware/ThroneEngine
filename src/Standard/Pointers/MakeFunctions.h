@@ -44,7 +44,9 @@ namespace trs
 		using Notifier = PointersPrivate::DefaultNotifier<Type>;
 		using Deleter = PointersPrivate::DefaultDeleter<Type>;
 
-		auto* resource = new Private::SeparatedResource<Type, Notifier, Deleter>(Notifier(), Deleter(), ptr);
+		using Resource = Private::SeparatedResource<Type, Notifier, Deleter>;
+
+		auto* resource = new Resource(Notifier(), Deleter(), ptr);
 		PointersPrivate::setResource(resource);
 		return PtrOwner<Type>(resource);
 	}
@@ -54,7 +56,9 @@ namespace trs
 	{
 		using Notifier = PointersPrivate::DefaultNotifier<Type>;
 
-		auto* resource = new Private::CombinedResource<Type, Notifier>(Notifier(), std::forward<Args>(args)...);
+		using Resource = Private::CombinedResource<Type, Notifier>;
+
+		auto* resource = new Resource(Notifier(), std::forward<Args>(args)...);
 		PointersPrivate::setResource(resource);
 		return PtrOwner<Type>(resource);
 	}
@@ -62,8 +66,9 @@ namespace trs
 	template <typename Type, typename Notifier, typename Deleter>
 	PtrOwner<Type> makePtrOwnerWithNotifier(Notifier&& notifier, Deleter&& deleter, Type* ptr)
 	{
-		auto* resource =
-			new Private::SeparatedResource<Type, Notifier, Deleter>(std::forward<Notifier>(notifier), std::forward<Deleter>(deleter), ptr);
+		using Resource = Private::SeparatedResource<Type, Notifier, Deleter>;
+
+		auto* resource = new Resource(std::forward<Notifier>(notifier), std::forward<Deleter>(deleter), ptr);
 		PointersPrivate::setResource(resource);
 		return PtrOwner<Type>(resource);
 	}
@@ -71,7 +76,9 @@ namespace trs
 	template <typename Type, typename Notifier, typename... Args>
 	PtrOwner<Type> makePtrOwnerWithNotifier(Notifier&& notifier, Args&&... args)
 	{
-		auto* resource = new Private::CombinedResource<Type, Notifier>(std::forward<Notifier>(notifier), std::forward<Args>(args)...);
+		using Resource = Private::CombinedResource<Type, Notifier>;
+
+		auto* resource = new Resource(std::forward<Notifier>(notifier), std::forward<Args>(args)...);
 		PointersPrivate::setResource(resource);
 		return PtrOwner<Type>(resource);
 	}

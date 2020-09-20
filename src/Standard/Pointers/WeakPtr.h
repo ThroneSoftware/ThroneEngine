@@ -37,6 +37,7 @@ namespace trs
 				m_base = other.m_base;
 				m_base.incrementWRefCount();
 			}
+			return *this;
 		}
 
 		WeakPtr(WeakPtr&& other) noexcept = default;
@@ -47,6 +48,7 @@ namespace trs
 				m_base.tryDestroyCtrlBlock();
 				m_base = std::move(other.m_base);
 			}
+			return *this;
 		}
 
 		~WeakPtr() noexcept
@@ -54,26 +56,11 @@ namespace trs
 			m_base.tryDestroyCtrlBlock();
 		}
 
-		value_type* getPtr() const noexcept
-		{
-			return m_base.getPtr();
-		}
-
-		value_type* operator->() const noexcept
-		{
-			return m_base.getPtr();
-		}
-
-		value_type& operator*() const noexcept
-		{
-			return *m_base.getPtr();
-		}
-
 		SharedPtr<value_type> lock() noexcept
 		{
 			if(m_base.incrementRefCountIfNotZero())
 			{
-				return SharedPtr(m_base.m_resource);
+				return SharedPtr(gsl::not_null(m_base.m_resource), SharedPtr<value_type>::TagCtorFromWeak());
 			}
 			else
 			{

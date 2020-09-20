@@ -11,6 +11,10 @@ namespace trs
 		template <typename Type>
 		friend class WeakPtr;
 
+		struct TagCtorFromWeak
+		{
+		};
+
 	public:
 		using value_type = Type;
 
@@ -29,6 +33,11 @@ namespace trs
 		  : m_base(resource)
 		{
 			m_base.incrementRefCount();
+		}
+
+		explicit SharedPtr(gsl::not_null<Private::BaseResource<value_type>*> resource, TagCtorFromWeak) noexcept
+			: m_base(resource)
+		{
 		}
 
 		SharedPtr(const SharedPtr& other) noexcept

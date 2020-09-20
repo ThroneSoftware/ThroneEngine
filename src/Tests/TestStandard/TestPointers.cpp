@@ -158,9 +158,55 @@ namespace Tests
 				}
 			}
 		}
+
+		GIVEN("A WeakPtr")
+		{
+			auto owner = trs::makePtrOwner<int>(10);
+			auto weakPtr = trs::WeakPtr(owner);
+
+			WHEN("Moving WeakPtr")
+			{
+				auto weakPtr2 = std::move(weakPtr);
+				THEN("WeakPtr is moved")
+				{
+					REQUIRE(weakPtr2.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr2.lock() == 10);
+
+					REQUIRE(weakPtr.lock().getPtr() == nullptr);
+
+					REQUIRE(owner.getPtr() != nullptr);
+					REQUIRE(*owner == 10);
+				}
+			}
+
+			WHEN("Moving WeakPtr with assignment operator")
+			{
+				auto owner2 = trs::makePtrOwner<int>(5);
+				auto weakPtr2 = trs::WeakPtr(owner2);
+
+				weakPtr2 = std::move(weakPtr);
+				THEN("WeakPtr is moved")
+				{
+					REQUIRE(weakPtr.lock().getPtr() == nullptr);
+
+					REQUIRE(weakPtr2.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr2.lock() == 10);
+				}
+			}
+
+			WHEN("Moving WeakPtr into itself")
+			{
+				weakPtr = std::move(weakPtr);
+				THEN("Nothing happens")
+				{
+					REQUIRE(weakPtr.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr.lock() == 10);
+				}
+			}
+		}
 	}
 
-	SCENARIO("Test the copies of SharedPtr", "Pointers")
+	SCENARIO("Test the copies of SharedPtr and WeakPtr", "Pointers")
 	{
 		GIVEN("A SharedPtr")
 		{
@@ -210,6 +256,55 @@ namespace Tests
 				}
 			}
 		}
+
+		GIVEN("A WeakPtr")
+		{
+			auto owner = trs::makePtrOwner<int>(10);
+			auto weakPtr = trs::WeakPtr(owner);
+
+			WHEN("Copying WeakPtr")
+			{
+				auto weakPtr2 = weakPtr;
+				THEN("WeakPtr is copied and unchanged")
+				{
+					REQUIRE(weakPtr.lock().getPtr() == weakPtr2.lock().getPtr());
+
+					REQUIRE(weakPtr.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr.lock() == 10);
+
+					REQUIRE(weakPtr2.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr2.lock() == 10);
+				}
+			}
+
+			WHEN("Copying WeakPtr with assignment operator")
+			{
+				auto owner2 = trs::makePtrOwner<int>(5);
+				auto weakPtr2 = trs::WeakPtr(owner2);
+
+				weakPtr2 = weakPtr;
+				THEN("WeakPtr is copied and unchanged")
+				{
+					REQUIRE(weakPtr.lock().getPtr() == weakPtr2.lock().getPtr());
+
+					REQUIRE(weakPtr.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr.lock() == 10);
+
+					REQUIRE(weakPtr2.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr2.lock() == 10);
+				}
+			}
+
+			WHEN("Copying WeakPtr into itself")
+			{
+				weakPtr = weakPtr;
+				THEN("Nothing happens")
+				{
+					REQUIRE(weakPtr.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr.lock() == 10);
+				}
+			}
+		}
 	}
 
 
@@ -234,6 +329,48 @@ namespace Tests
 				THEN("Notifier is called")
 				{
 					testing::Mock::VerifyAndClearExpectations(&mock);
+				}
+			}
+		}
+	}
+
+	// Test1 : WeakPtr on a PtrOwner that still exists. Lock before destroying the owner
+	// Test2 : Lock after destroying the owner.
+	SCENARIO("Test WeakPtr::lock")
+	{
+		GIVEN("A WeakPtr that points to a ptr that is still valid")
+		{
+			auto owner = trs::makePtrOwner<int>(10);
+			auto weakPtr = trs::WeakPtr(owner);
+
+			WHEN("Locking the WeakPtr")
+			{
+				auto sharedPtr = weakPtr.lock();
+
+				THEN("The SharedPtr is valid")
+				{
+					REQUIRE(sharedPtr.getPtr() == owner.getPtr());
+					REQUIRE(*sharedPtr == *owner);
+				}
+			}
+		}
+
+		GIVEN("A WeakPtr that points to a ptr that is no longer valid")
+		{
+			trs::WeakPtr<int> weakPtr;
+
+			{
+				auto owner = trs::makePtrOwner<int>(10);
+				weakPtr = owner;
+			}
+
+			WHEN("Locking the WeakPtr")
+			{
+				auto sharedPtr = weakPtr.lock();
+
+				THEN("The sharedPtr is null")
+				{
+					REQUIRE(sharedPtr.getPtr() == nullptr);
 				}
 			}
 		}
