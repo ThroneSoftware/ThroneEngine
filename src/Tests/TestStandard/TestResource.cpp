@@ -9,13 +9,27 @@ namespace Tests
 {
 	namespace TestResourcePrivate
 	{
-	}
+		template <typename T>
+		class MockResource : public trs::Private::BaseResource<T>
+		{
+		public:
+			~MockResource() override
+			{
+				dtor();
+			}
+
+			MOCK_METHOD(T*, getPtr, (), (override, noexcept));
+			MOCK_METHOD(void, notify, (), (override, noexcept));
+			MOCK_METHOD(void, destroy, (), (override, noexcept));
+
+			MOCK_METHOD0(dtor, void());
+		};
+
+	}  // namespace TestResourcePrivate
 
 	// todo, improve the Resource tests a bit
 
-	// test destruction (the delete this)
 	// tryDestroy
-	// tryDestroyCtrlBlock
 	// deleter
 
 	SCENARIO("Resource construction", "Resource")
@@ -87,6 +101,69 @@ namespace Tests
 				}
 			}
 			delete resource;
+		}
+	}
+
+	SCENARIO("Test tryDestroyCtrlBlock")
+	{
+		GIVEN("A Resource")
+		{
+			TestResourcePrivate::MockResource<int>* resource = new TestResourcePrivate::MockResource<int>();
+
+			bool dtorCalled = false;
+
+			EXPECT_CALL(*resource, dtor()).Times(testing::Exactly(1)).WillRepeatedly([&dtorCalled]() {
+				dtorCalled = true;
+			});
+
+			AND_GIVEN("1 weak ref")
+			{
+				resource->incrementWRefCount();
+
+				WHEN("calling tryDestroyCtrlBlock")
+				{
+					resource->tryDestroyCtrlBlock();
+
+					THEN("Resource is destroyed")
+					{
+						REQUIRE(dtorCalled == true);
+					}
+				}
+			}
+
+			AND_GIVEN("2 weak ref")
+			{
+				resource->incrementWRefCount();
+				resource->incrementWRefCount();
+
+				WHEN("calling tryDestroyCtrlBlock")
+				{
+					resource->tryDestroyCtrlBlock();
+
+					THEN("Resource is not destroyed")
+					{
+						REQUIRE(dtorCalled == false);
+						delete resource;
+					}
+				}
+			}
+
+			AND_GIVEN("1 weak ref and 1 strong ref")
+			{
+				resource->incrementRefCount();
+				resource->incrementWRefCount();
+
+				WHEN("calling tryDestroyCtrlBlock")
+				{
+					resource->tryDestroyCtrlBlock();
+
+					THEN("Resource is not destroyed")
+					{
+						REQUIRE(dtorCalled == false);
+						delete resource;
+					}
+				}
+			}
 		}
 	}
 }  // namespace Tests
