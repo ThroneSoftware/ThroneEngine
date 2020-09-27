@@ -1,4 +1,5 @@
 #include "MockNotifier.h"
+#include "MockResource.h"
 
 #include <Standard/Private/Resource.h>
 #include <Tests/ProxyGmock.h>
@@ -7,26 +8,6 @@
 
 namespace Tests
 {
-	namespace TestResourcePrivate
-	{
-		template <typename T>
-		class MockResource : public trs::Private::BaseResource<T>
-		{
-		public:
-			~MockResource() override
-			{
-				dtor();
-			}
-
-			MOCK_METHOD(T*, getPtr, (), (override, noexcept));
-			MOCK_METHOD(void, notify, (), (override, noexcept));
-			MOCK_METHOD(void, destroy, (), (override, noexcept));
-
-			MOCK_METHOD0(dtor, void());
-		};
-
-	}  // namespace TestResourcePrivate
-
 	// todo, improve the Resource tests a bit
 
 	// tryDestroy
@@ -108,11 +89,11 @@ namespace Tests
 	{
 		GIVEN("A Resource")
 		{
-			TestResourcePrivate::MockResource<int>* resource = new TestResourcePrivate::MockResource<int>();
+			MockResource<int>* resource = new MockResource<int>();
 
 			bool dtorCalled = false;
 
-			EXPECT_CALL(*resource, dtor()).Times(testing::Exactly(1)).WillRepeatedly([&dtorCalled]() {
+			EXPECT_CALL(*resource, dtor()).Times(1).WillRepeatedly([&dtorCalled]() {
 				dtorCalled = true;
 			});
 
@@ -143,7 +124,9 @@ namespace Tests
 					THEN("Resource is not destroyed")
 					{
 						REQUIRE(dtorCalled == false);
-						delete resource;
+
+						// cleanup
+						resource->tryDestroyCtrlBlock();
 					}
 				}
 			}
@@ -160,7 +143,11 @@ namespace Tests
 					THEN("Resource is not destroyed")
 					{
 						REQUIRE(dtorCalled == false);
-						delete resource;
+
+						// cleanup
+						resource->decrementRefCount();
+						resource->incrementWRefCount();
+						resource->tryDestroyCtrlBlock();
 					}
 				}
 			}

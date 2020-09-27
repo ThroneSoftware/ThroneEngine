@@ -60,7 +60,7 @@ namespace trs
 			return *m_base.getPtr();
 		}
 
-		bool tryDestroy()
+		bool tryDestroy() noexcept
 		{
 			bool destroyed = m_base.tryDestroy();
 			if(destroyed)
@@ -71,7 +71,7 @@ namespace trs
 		}
 
 	private:
-		void destroy()
+		void destroy() noexcept
 		{
 			// Keep the call out of the assert or else it will be optimized in release builds.
 			bool destroyed = tryDestroy();

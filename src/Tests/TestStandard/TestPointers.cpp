@@ -1,6 +1,7 @@
 #include <pch.h>
 
 #include "MockNotifier.h"
+#include "MockResource.h"
 
 #include <Standard/Pointers.h>
 #include <Tests/ProxyGmock.h>
@@ -334,8 +335,6 @@ namespace Tests
 		}
 	}
 
-	// Test1 : WeakPtr on a PtrOwner that still exists. Lock before destroying the owner
-	// Test2 : Lock after destroying the owner.
 	SCENARIO("Test WeakPtr::lock")
 	{
 		GIVEN("A WeakPtr that points to a ptr that is still valid")
@@ -371,6 +370,75 @@ namespace Tests
 				THEN("The sharedPtr is null")
 				{
 					REQUIRE(sharedPtr.getPtr() == nullptr);
+				}
+			}
+		}
+	}
+
+	SCENARIO("Test resource destruction")
+	{
+		GIVEN("A Resource")
+		{
+			auto uptr = std::make_unique<int>(10);
+			auto ptr = uptr.get();
+
+			MockResource<int>* resource = new MockResource<int>();
+			ON_CALL(*resource, getPtr()).WillByDefault(testing::Return(ptr));
+
+			bool dtorCalled = false;
+
+			EXPECT_CALL(*resource, dtor()).Times(testing::AtMost(1)).WillRepeatedly([&dtorCalled]() {
+				dtorCalled = true;
+			});
+
+			AND_GIVEN("A PtrOwner that uses the resource")
+			{
+				auto owner = trs::PtrOwner<int>(resource);
+
+				WHEN("calling tryDestroy")
+				{
+					EXPECT_CALL(*resource, destroy()).Times(1);
+					owner.tryDestroy();
+
+					THEN("Resource's dtor is called")
+					{
+						REQUIRE(dtorCalled == true);
+					}
+				}
+
+				AND_GIVEN("A SharedPtr that uses to the owner")
+				{
+					auto shared = trs::SharedPtr(owner);
+
+					WHEN("calling tryDestroy")
+					{
+						EXPECT_CALL(*resource, destroy()).Times(0);
+						owner.tryDestroy();
+
+						THEN("Resource's dtor is not called")
+						{
+							REQUIRE(dtorCalled == false);
+
+							// cleanup
+							testing::Mock::VerifyAndClearExpectations(resource);
+						}
+					}
+				}
+
+				AND_GIVEN("A WeakPtr that uses the owner")
+				{
+					auto weak = trs::WeakPtr(owner);
+
+					WHEN("calling tryDestroy")
+					{
+						EXPECT_CALL(*resource, destroy()).Times(1);
+						owner.tryDestroy();
+
+						THEN("Resource's dtor is not called")
+						{
+							REQUIRE(dtorCalled == false);
+						}
+					}
 				}
 			}
 		}

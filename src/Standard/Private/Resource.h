@@ -23,7 +23,7 @@ namespace trs::Private
 
 		virtual ~BaseResource() noexcept
 		{
-			assert(m_count == 0 && "Error, deleting a BaseResource while the reference count is higher than 0.");
+			assert((m_count == 0 && m_wcount == 0) && "Error, deleting a BaseResource while the reference count is higher than 0.");
 		}
 
 		void incrementRefCount() noexcept
