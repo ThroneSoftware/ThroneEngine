@@ -8,11 +8,6 @@
 
 namespace Tests
 {
-	// todo, improve the Resource tests a bit
-
-	// tryDestroy
-	// deleter
-
 	SCENARIO("Resource construction", "Resource")
 	{
 		MockNotifier<int> mock;
@@ -82,6 +77,66 @@ namespace Tests
 				}
 			}
 			delete resource;
+		}
+	}
+
+	SCENARIO("Test tryDestroy and the deleter")
+	{
+		GIVEN("A Resource")
+		{
+			MockResource<int>* resource = new MockResource<int>();
+
+			AND_GIVEN("1 strong ref and 1 weak ref")
+			{
+				resource->incrementRefCount();
+				resource->incrementWRefCount();
+
+				bool dtorCalled = false;
+
+				EXPECT_CALL(*resource, dtor()).Times(1).WillRepeatedly([&dtorCalled]() {
+					dtorCalled = true;
+				});
+
+				EXPECT_CALL(*resource, destroy()).Times(1);
+
+				WHEN("calling tryDestroy")
+				{
+					bool destroyed = resource->tryDestroy();
+
+					THEN("The resource is destroyed")
+					{
+						REQUIRE(destroyed == true);
+						REQUIRE(dtorCalled == true);
+					}
+				}
+			}
+
+			AND_GIVEN("2 strong ref")
+			{
+				resource->incrementRefCount();
+				resource->incrementRefCount();
+				resource->incrementWRefCount();
+
+				EXPECT_CALL(*resource, dtor()).Times(0);
+
+				EXPECT_CALL(*resource, destroy()).Times(0);
+
+				WHEN("calling tryDestroy")
+				{
+					bool destroyed = resource->tryDestroy();
+
+					THEN("The resource is not destroyed")
+					{
+						REQUIRE(destroyed == false);
+
+						testing::Mock::VerifyAndClearExpectations(resource);
+
+						// cleanup
+						resource->decrementRefCount();
+						resource->tryDestroy();	
+					}
+				}
+			}
 		}
 	}
 
