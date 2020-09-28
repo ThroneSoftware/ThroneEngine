@@ -30,7 +30,7 @@ __declspec(noinline) int benchTrsSharedPtrRef(trs::SharedPtr<int>& val)
 	return *val;
 }
 
-int main()
+void benchmarkSharedPtr()
 {
 	nanobench::Config config;
 	config.minEpochIterations(100000);
@@ -84,6 +84,24 @@ int main()
 				 })
 			.doNotOptimizeAway();
 	}
+}
+
+void benchmarkWeakPtrLock()
+{
+	nanobench::Config config;
+	config.minEpochIterations(10000);
+
+	auto owner = trs::makePtrOwner<int>(10);
+	trs::WeakPtr<int> weak = owner;
+
+	config.run("Lock", [&weak]() {
+		volatile auto shared = weak.lock();
+	});
+}
+
+int main()
+{
+	benchmarkWeakPtrLock();
 
 	return 0;
 }
