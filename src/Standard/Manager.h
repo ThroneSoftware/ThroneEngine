@@ -62,6 +62,9 @@ namespace trs
 
 		~Manager() override
 		{
+			// Order of destruction is important.
+			// It is expected that after m_objects.clear() -> m_pool.size() equals 0
+			// because when pointers are destroyed they will call Manager::eraseFromPool 
 			m_objects.clear();
 			m_pool.clear();
 		}
@@ -103,29 +106,29 @@ namespace trs
 	private:
 		void erase(value_type* ptr)
 		{
-			auto ownerFound = std::find_if(m_objects.begin(), m_objects.end(), [ptr](PtrOwner<value_type>& ptrOwner) {
+			auto found = std::find_if(m_objects.begin(), m_objects.end(), [ptr](PtrOwner<value_type>& ptrOwner) {
 				return ptrOwner.getPtr() == ptr;
 			});
 
-			assert(ownerFound != m_objects.end());
+			assert(found != m_objects.end());
 
-			bool destroyed = ownerFound->tryDestroy();
+			bool destroyed = found->tryDestroy();
 
 			if(destroyed)
 			{
-				m_objects.erase(ownerFound);
+				m_objects.erase(found);
 			}
 		}
 
 		void eraseFromPool(value_type* ptr)
 		{
-			auto poolFound = std::find_if(m_pool.begin(), m_pool.end(), [ptr](value_type& value) {
+			auto found = std::find_if(m_pool.begin(), m_pool.end(), [ptr](value_type& value) {
 				return &value == ptr;
 			});
 
-			assert(poolFound != m_pool.end());
+			assert(found != m_pool.end());
 
-			m_pool.erase(poolFound);
+			m_pool.erase(found);
 		}
 
 		std::vector<PtrOwner<value_type>> m_objects;
