@@ -1,3 +1,5 @@
+#pragma once
+
 #include "SharedPtr.h"
 #include "WeakPtr.h"
 

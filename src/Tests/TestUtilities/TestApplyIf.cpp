@@ -119,7 +119,7 @@ namespace Tests
 			{
 				bool result = tru::incrementNotEqual<0>(atomic);
 
-				THEN("incrementNotEqual returns true is equal to 0")
+				THEN("incrementNotEqual returns true and the atomic is equal to 0")
 				{
 					REQUIRE(result == true);
 					REQUIRE(atomic == 0);
@@ -144,20 +144,15 @@ namespace Tests
 					REQUIRE(atomic == 0);
 				}
 			}
-		}
 
-		GIVEN("An atomic equal to 1")
-		{
-			std::atomic<int> atomic = 1;
-
-			WHEN("decrementEqual 1")
+			WHEN("decrementEqual 0")
 			{
 				bool result = tru::decrementEqual<1>(atomic);
 
-				THEN("incrementNotEqual returns true and the atomic is equal to 0")
+				THEN("incrementNotEqual returns true and the atomic is equal to -1")
 				{
 					REQUIRE(result == true);
-					REQUIRE(atomic == 0);
+					REQUIRE(atomic == -1);
 				}
 			}
 		}
