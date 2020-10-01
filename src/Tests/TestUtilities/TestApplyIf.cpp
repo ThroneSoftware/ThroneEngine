@@ -147,7 +147,7 @@ namespace Tests
 
 			WHEN("decrementEqual 0")
 			{
-				bool result = tru::decrementEqual<1>(atomic);
+				bool result = tru::decrementEqual<0>(atomic);
 
 				THEN("incrementNotEqual returns true and the atomic is equal to -1")
 				{
