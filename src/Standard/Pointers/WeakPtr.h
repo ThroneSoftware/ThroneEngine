@@ -1,13 +1,18 @@
 #pragma once
 
 #include "PtrOwner.h"
-#include "SharedPtr.h"
 
 namespace trs
 {
 	template <typename Type>
+	class SharedPtr;
+
+	template <typename Type>
 	class WeakPtr final
 	{
+		template <typename Type>
+		friend class SharedPtr;
+
 	public:
 		using value_type = Type;
 
@@ -22,11 +27,7 @@ namespace trs
 			m_base.incrementWRefCount();
 		}
 
-		WeakPtr(const SharedPtr<value_type>& sharedPtr) noexcept
-		  : m_base(sharedPtr.m_base)
-		{
-			m_base.incrementWRefCount();
-		}
+		WeakPtr(const SharedPtr<value_type>& sharedPtr) noexcept;
 
 		WeakPtr(const WeakPtr& other) noexcept = default;
 		WeakPtr& operator=(const WeakPtr& other) noexcept
@@ -56,17 +57,7 @@ namespace trs
 			m_base.tryDestroyCtrlBlock();
 		}
 
-		SharedPtr<value_type> lock() noexcept
-		{
-			if(m_base.incrementRefCountIfNotZero())
-			{
-				return SharedPtr(gsl::not_null(m_base.m_resource), SharedPtr<value_type>::TagCtorFromWeak());
-			}
-			else
-			{
-				return nullptr;
-			}
-		}
+		SharedPtr<value_type> lock() noexcept;
 
 	private:
 		PointersPrivate::BasePtr<value_type> m_base;

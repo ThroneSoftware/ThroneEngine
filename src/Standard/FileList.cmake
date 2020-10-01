@@ -14,6 +14,7 @@ target_sources(Standard PRIVATE
 	Pointers/PtrOwner.h
 	Pointers/SharedPtr.h
 	Pointers/WeakPtr.h
+	Pointers/WeakPtr.hpp
 	Pointers.h
 	Private/Resource.h
 	Private/TaskFence.h

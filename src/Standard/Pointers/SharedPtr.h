@@ -2,21 +2,18 @@
 
 #include "BasePtr.h"
 #include "PtrOwner.h"
+#include "WeakPtr.h"
 
 namespace trs
 {
 	template <typename Type>
 	class SharedPtr final
 	{
-		template <typename Type>
-		friend class WeakPtr;
-
-		struct TagCtorFromWeak
-		{
-		};
-
 	public:
 		using value_type = Type;
+
+		template <typename Type>
+		friend class WeakPtr;
 
 	public:
 		SharedPtr(std::nullptr_t = nullptr) noexcept
@@ -35,8 +32,8 @@ namespace trs
 			m_base.incrementRefCount();
 		}
 
-		explicit SharedPtr(gsl::not_null<Private::BaseResource<value_type>*> resource, TagCtorFromWeak) noexcept
-			: m_base(resource)
+		explicit SharedPtr(WeakPtr<value_type>& weak)
+		  : m_base(constructFromWeak(weak))
 		{
 		}
 
@@ -97,6 +94,18 @@ namespace trs
 		}
 
 	private:
+		PointersPrivate::BasePtr<value_type> constructFromWeak(WeakPtr<value_type>& weak)
+		{
+			if(weak.m_base.incrementRefCountIfNotZero())
+			{
+				return weak.m_base;
+			}
+			else
+			{
+				return nullptr;
+			}
+		}
+
 		PointersPrivate::BasePtr<value_type> m_base;
 	};
 }  // namespace trs
