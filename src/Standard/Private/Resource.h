@@ -66,8 +66,7 @@ namespace trs::Private
 
 		void tryDestroyCtrlBlock() noexcept
 		{
-			auto wcount = --m_wcount;
-			if(wcount == 0)
+			if(--m_wcount == 0)
 			{
 				// If --m_wcount returns 0 and m_count is 0
 				// then it is impossible to have another reference since m_count == 0 is a final state.
@@ -121,6 +120,8 @@ namespace trs::Private
 
 		~CombinedResource() noexcept override
 		{
+			// no-op destructor required because of the union.
+			// destruction of the union member is done by CombinedResource::destroy
 		}
 
 		value_type* getPtr() noexcept override
@@ -139,6 +140,7 @@ namespace trs::Private
 		}
 
 	private:
+		// The union allow us to have unitialized memory to use placement new.
 		union
 		{
 			value_type m_value;

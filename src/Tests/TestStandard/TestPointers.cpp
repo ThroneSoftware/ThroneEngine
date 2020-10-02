@@ -73,7 +73,7 @@ namespace Tests
 		}
 	}
 
-	SCENARIO("Test the move of PtrOwner and SharedPtr")
+	SCENARIO("Test the move of PtrOwner, SharedPtr and WeakPtr")
 	{
 		GIVEN("A PtrOwner")
 		{
@@ -356,12 +356,10 @@ namespace Tests
 
 		GIVEN("A WeakPtr that points to a ptr that is no longer valid")
 		{
-			trs::WeakPtr<int> weakPtr;
-
-			{
-				auto owner = trs::makePtrOwner<int>(10);
-				weakPtr = owner;
-			}
+			auto owner = trs::makePtrOwner<int>(10);
+			auto weakPtr = trs::WeakPtr(owner);;
+			
+			owner.tryDestroy();
 
 			WHEN("Locking the WeakPtr")
 			{
@@ -406,7 +404,7 @@ namespace Tests
 					}
 				}
 
-				AND_GIVEN("A SharedPtr that uses to the owner")
+				AND_GIVEN("A SharedPtr that uses the owner")
 				{
 					auto shared = trs::SharedPtr(owner);
 

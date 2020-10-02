@@ -80,56 +80,44 @@ namespace Tests
 	{
 		GIVEN("A manager with one object")
 		{
-			class MockProxy
-			{
-			public:
-				MOCK_METHOD0(func, void());
-			};
-
 			class MockObject
 			{
 			public:
-				MockObject(std::size_t id, MockProxy& proxy)
+				MockObject(std::size_t id)
 				  : m_id(id)
-				  , m_proxy(proxy)
 				{
 				}
 
 				~MockObject()
 				{
-					m_proxy.func();
+					dtor();
 				}
 
 
 				std::size_t m_id;
 
-				MockProxy& m_proxy;
+				MOCK_METHOD0(dtor, void());
 			};
 
-			MockProxy mock;
-
 			auto manager = std::make_unique<trs::Manager<MockObject>>();
-			manager->emplace(0, mock);
+			manager->emplace(0);
 
-			EXPECT_CALL(mock, func()).Times(1);
+			auto find = [](MockObject& obj) {
+				return obj.m_id == 0;
+			};
+
+			auto ptr = manager->findIf(find);
+
+			EXPECT_CALL(*ptr, dtor()).Times(1);
 
 			WHEN("The last SharedPtr to the object is destroyed")
 			{
-				auto find = [](MockObject& obj) {
-					return obj.m_id == 0;
-				};
-
-				auto ptr = manager->findIf(find);
 				ptr.reset();
 				THEN("The object is removed from the manager")
 				{
 					auto actual = manager->findIf(find);
 					REQUIRE(actual.getPtr() == nullptr);
 					REQUIRE(manager->size() == 0);
-				}
-				AND_THEN("The destructor of the object is called")
-				{
-					testing::Mock::VerifyAndClearExpectations(&mock);
 				}
 			}
 		}
