@@ -80,15 +80,42 @@ namespace Tests
 	{
 		GIVEN("A manager with one object")
 		{
-			auto manager = TestManagerPrivate::makeManager(1);
+			class MockObject
+			{
+			public:
+				MockObject(std::size_t id)
+				  : m_id(id)
+				{
+				}
+
+				~MockObject()
+				{
+					dtor();
+				}
+
+
+				std::size_t m_id;
+
+				MOCK_METHOD0(dtor, void());
+			};
+
+			auto manager = std::make_unique<trs::Manager<MockObject>>();
+			manager->emplace(0);
+
+			auto find = [](MockObject& obj) {
+				return obj.m_id == 0;
+			};
+
+			auto ptr = manager->findIf(find);
+
+			EXPECT_CALL(*ptr, dtor()).Times(1);
+
 			WHEN("The last SharedPtr to the object is destroyed")
 			{
-				constexpr int value = 0;
-				auto ptr = TestManagerPrivate::find(*manager, value);
 				ptr.reset();
 				THEN("The object is removed from the manager")
 				{
-					auto actual = TestManagerPrivate::find(*manager, value);
+					auto actual = manager->findIf(find);
 					REQUIRE(actual.getPtr() == nullptr);
 					REQUIRE(manager->size() == 0);
 				}

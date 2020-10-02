@@ -2,6 +2,7 @@
 
 #include "BasePtr.h"
 #include "PtrOwner.h"
+#include "WeakPtr.h"
 
 namespace trs
 {
@@ -10,45 +11,45 @@ namespace trs
 	{
 	public:
 		using value_type = Type;
-		using pointer = value_type*;
-		using reference = value_type&;
+
+		template <typename Type>
+		friend class WeakPtr;
 
 	public:
-		SharedPtr() noexcept
-		  : m_base(nullptr)
-		{
-		}
-
-		SharedPtr(std::nullptr_t) noexcept
-		  : SharedPtr<value_type>()
+		SharedPtr(std::nullptr_t = nullptr) noexcept
 		{
 		}
 
 		explicit SharedPtr(const PtrOwner<value_type>& ptrOwner) noexcept
 		  : m_base(ptrOwner.m_base)
 		{
-			m_base.increaseRefCount();
+			m_base.incrementRefCount();
 		}
 
-		explicit SharedPtr(Private::BaseResource<value_type>* resource) noexcept
+		explicit SharedPtr(gsl::not_null<Private::BaseResource<value_type>*> resource) noexcept
 		  : m_base(resource)
 		{
-			m_base.increaseRefCount();
+			m_base.incrementRefCount();
+		}
+
+		explicit SharedPtr(WeakPtr<value_type>& weak)
+		  : m_base(constructFromWeak(weak))
+		{
 		}
 
 		SharedPtr(const SharedPtr& other) noexcept
 		  : m_base(other.m_base)
 		{
-			m_base.increaseRefCount();
+			m_base.incrementRefCount();
 		}
 
 		SharedPtr& operator=(const SharedPtr& other) noexcept
 		{
 			if(this != &other)
 			{
-				m_base.decreaseRefCount();
+				m_base.decrementRefCount();
 				m_base = other.m_base;
-				m_base.increaseRefCount();
+				m_base.incrementRefCount();
 			}
 			return *this;
 		}
@@ -60,7 +61,7 @@ namespace trs
 			// Also, the base cannot be set so its ref count does not need to be decreased.
 			if(this != &other)
 			{
-				m_base.decreaseRefCount();
+				m_base.decrementRefCount();
 				m_base = std::move(other.m_base);
 			}
 			return *this;
@@ -73,26 +74,38 @@ namespace trs
 
 		void reset() noexcept
 		{
-			m_base.decreaseRefCount();
+			m_base.decrementRefCount();
 			m_base = nullptr;
 		}
 
-		pointer getPtr() const noexcept
+		value_type* getPtr() const noexcept
 		{
 			return m_base.getPtr();
 		}
 
-		pointer operator->() const noexcept
+		value_type* operator->() const noexcept
 		{
 			return m_base.getPtr();
 		}
 
-		reference operator*() const noexcept
+		value_type& operator*() const noexcept
 		{
 			return *m_base.getPtr();
 		}
 
 	private:
+		PointersPrivate::BasePtr<value_type> constructFromWeak(WeakPtr<value_type>& weak)
+		{
+			if(weak.m_base.incrementRefCountIfNotZero())
+			{
+				return weak.m_base;
+			}
+			else
+			{
+				return nullptr;
+			}
+		}
+
 		PointersPrivate::BasePtr<value_type> m_base;
 	};
 }  // namespace trs

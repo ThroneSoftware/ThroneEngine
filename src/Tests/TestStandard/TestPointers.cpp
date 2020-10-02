@@ -1,6 +1,7 @@
 #include <pch.h>
 
 #include "MockNotifier.h"
+#include "MockResource.h"
 
 #include <Standard/Pointers.h>
 #include <Tests/ProxyGmock.h>
@@ -72,7 +73,7 @@ namespace Tests
 		}
 	}
 
-	SCENARIO("Test the move of PtrOwner and SharedPtr")
+	SCENARIO("Test the move of PtrOwner, SharedPtr and WeakPtr")
 	{
 		GIVEN("A PtrOwner")
 		{
@@ -158,9 +159,55 @@ namespace Tests
 				}
 			}
 		}
+
+		GIVEN("A WeakPtr")
+		{
+			auto owner = trs::makePtrOwner<int>(10);
+			auto weakPtr = trs::WeakPtr(owner);
+
+			WHEN("Moving WeakPtr")
+			{
+				auto weakPtr2 = std::move(weakPtr);
+				THEN("WeakPtr is moved")
+				{
+					REQUIRE(weakPtr2.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr2.lock() == 10);
+
+					REQUIRE(weakPtr.lock().getPtr() == nullptr);
+
+					REQUIRE(owner.getPtr() != nullptr);
+					REQUIRE(*owner == 10);
+				}
+			}
+
+			WHEN("Moving WeakPtr with assignment operator")
+			{
+				auto owner2 = trs::makePtrOwner<int>(5);
+				auto weakPtr2 = trs::WeakPtr(owner2);
+
+				weakPtr2 = std::move(weakPtr);
+				THEN("WeakPtr is moved")
+				{
+					REQUIRE(weakPtr.lock().getPtr() == nullptr);
+
+					REQUIRE(weakPtr2.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr2.lock() == 10);
+				}
+			}
+
+			WHEN("Moving WeakPtr into itself")
+			{
+				weakPtr = std::move(weakPtr);
+				THEN("Nothing happens")
+				{
+					REQUIRE(weakPtr.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr.lock() == 10);
+				}
+			}
+		}
 	}
 
-	SCENARIO("Test the copies of SharedPtr", "Pointers")
+	SCENARIO("Test the copies of SharedPtr and WeakPtr", "Pointers")
 	{
 		GIVEN("A SharedPtr")
 		{
@@ -210,6 +257,55 @@ namespace Tests
 				}
 			}
 		}
+
+		GIVEN("A WeakPtr")
+		{
+			auto owner = trs::makePtrOwner<int>(10);
+			auto weakPtr = trs::WeakPtr(owner);
+
+			WHEN("Copying WeakPtr")
+			{
+				auto weakPtr2 = weakPtr;
+				THEN("WeakPtr is copied and unchanged")
+				{
+					REQUIRE(weakPtr.lock().getPtr() == weakPtr2.lock().getPtr());
+
+					REQUIRE(weakPtr.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr.lock() == 10);
+
+					REQUIRE(weakPtr2.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr2.lock() == 10);
+				}
+			}
+
+			WHEN("Copying WeakPtr with assignment operator")
+			{
+				auto owner2 = trs::makePtrOwner<int>(5);
+				auto weakPtr2 = trs::WeakPtr(owner2);
+
+				weakPtr2 = weakPtr;
+				THEN("WeakPtr is copied and unchanged")
+				{
+					REQUIRE(weakPtr.lock().getPtr() == weakPtr2.lock().getPtr());
+
+					REQUIRE(weakPtr.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr.lock() == 10);
+
+					REQUIRE(weakPtr2.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr2.lock() == 10);
+				}
+			}
+
+			WHEN("Copying WeakPtr into itself")
+			{
+				weakPtr = weakPtr;
+				THEN("Nothing happens")
+				{
+					REQUIRE(weakPtr.lock().getPtr() != nullptr);
+					REQUIRE(*weakPtr.lock() == 10);
+				}
+			}
+		}
 	}
 
 
@@ -234,6 +330,113 @@ namespace Tests
 				THEN("Notifier is called")
 				{
 					testing::Mock::VerifyAndClearExpectations(&mock);
+				}
+			}
+		}
+	}
+
+	SCENARIO("Test WeakPtr::lock")
+	{
+		GIVEN("A WeakPtr that points to a ptr that is still valid")
+		{
+			auto owner = trs::makePtrOwner<int>(10);
+			auto weakPtr = trs::WeakPtr(owner);
+
+			WHEN("Locking the WeakPtr")
+			{
+				auto sharedPtr = weakPtr.lock();
+
+				THEN("The SharedPtr is valid")
+				{
+					REQUIRE(sharedPtr.getPtr() == owner.getPtr());
+					REQUIRE(*sharedPtr == *owner);
+				}
+			}
+		}
+
+		GIVEN("A WeakPtr that points to a ptr that is no longer valid")
+		{
+			auto owner = trs::makePtrOwner<int>(10);
+			auto weakPtr = trs::WeakPtr(owner);;
+			
+			owner.tryDestroy();
+
+			WHEN("Locking the WeakPtr")
+			{
+				auto sharedPtr = weakPtr.lock();
+
+				THEN("The sharedPtr is null")
+				{
+					REQUIRE(sharedPtr.getPtr() == nullptr);
+				}
+			}
+		}
+	}
+
+	SCENARIO("Test resource destruction")
+	{
+		GIVEN("A Resource")
+		{
+			auto uptr = std::make_unique<int>(10);
+			auto ptr = uptr.get();
+
+			MockResource<int>* resource = new MockResource<int>();
+			ON_CALL(*resource, getPtr()).WillByDefault(testing::Return(ptr));
+
+			bool dtorCalled = false;
+
+			EXPECT_CALL(*resource, dtor()).Times(testing::AtMost(1)).WillRepeatedly([&dtorCalled]() {
+				dtorCalled = true;
+			});
+
+			AND_GIVEN("A PtrOwner that uses the resource")
+			{
+				auto owner = trs::PtrOwner<int>(resource);
+
+				WHEN("calling tryDestroy")
+				{
+					EXPECT_CALL(*resource, destroy()).Times(1);
+					owner.tryDestroy();
+
+					THEN("Resource's dtor is called")
+					{
+						REQUIRE(dtorCalled == true);
+					}
+				}
+
+				AND_GIVEN("A SharedPtr that uses the owner")
+				{
+					auto shared = trs::SharedPtr(owner);
+
+					WHEN("calling tryDestroy")
+					{
+						EXPECT_CALL(*resource, destroy()).Times(0);
+						owner.tryDestroy();
+
+						THEN("Resource's dtor is not called")
+						{
+							REQUIRE(dtorCalled == false);
+
+							// cleanup
+							testing::Mock::VerifyAndClearExpectations(resource);
+						}
+					}
+				}
+
+				AND_GIVEN("A WeakPtr that uses the owner")
+				{
+					auto weak = trs::WeakPtr(owner);
+
+					WHEN("calling tryDestroy")
+					{
+						EXPECT_CALL(*resource, destroy()).Times(1);
+						owner.tryDestroy();
+
+						THEN("Resource's dtor is not called")
+						{
+							REQUIRE(dtorCalled == false);
+						}
+					}
 				}
 			}
 		}

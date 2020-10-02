@@ -31,6 +31,23 @@ namespace trs
 			Manager& m_manager;
 		};
 
+		class Deleter
+		{
+		public:
+			Deleter(Manager& manager)
+			  : m_manager(manager)
+			{
+			}
+
+			void operator()(value_type* ptr)
+			{
+				m_manager.eraseFromPool(ptr);
+			}
+
+		private:
+			Manager& m_manager;
+		};
+
 	public:
 		Manager()
 		  : BaseManager(typeid(value_type))
@@ -43,14 +60,21 @@ namespace trs
 		Manager(Manager&& other) = delete;
 		Manager& operator=(Manager&& other) = delete;
 
-		~Manager() override = default;
+		~Manager() override
+		{
+			// Order of destruction is important.
+			// It is expected that after m_objects.clear() -> m_pool.size() equals 0
+			// because when pointers are destroyed they will call Manager::eraseFromPool 
+			m_objects.clear();
+			m_pool.clear();
+		}
 
 		template <typename... Args>
 		void emplace(Args&&... args)
 		{
 			auto& ref = m_pool.emplace_back(std::forward<Args>(args)...);
 
-			auto ptrOwner = makePtrOwnerWithNotifier<value_type, Notifier>(Notifier(*this), &ref);
+			auto ptrOwner = makePtrOwnerWithNotifier<value_type, Notifier, Deleter>(Notifier(*this), Deleter(*this), &ref);
 			m_objects.emplace_back(std::move(ptrOwner));
 		}
 
@@ -82,25 +106,29 @@ namespace trs
 	private:
 		void erase(value_type* ptr)
 		{
+			auto found = std::find_if(m_objects.begin(), m_objects.end(), [ptr](PtrOwner<value_type>& ptrOwner) {
+				return ptrOwner.getPtr() == ptr;
+			});
+
+			assert(found != m_objects.end());
+
+			bool destroyed = found->tryDestroy();
+
+			if(destroyed)
 			{
-				auto found = std::find_if(m_objects.begin(), m_objects.end(), [ptr](PtrOwner<value_type>& ptrOwner) {
-					return ptrOwner.getPtr() == ptr;
-				});
-
-				assert(found != m_objects.end());
-
 				m_objects.erase(found);
 			}
+		}
 
-			{
-				auto found = std::find_if(m_pool.begin(), m_pool.end(), [ptr](value_type& value) {
-					return &value == ptr;
-				});
+		void eraseFromPool(value_type* ptr)
+		{
+			auto found = std::find_if(m_pool.begin(), m_pool.end(), [ptr](value_type& value) {
+				return &value == ptr;
+			});
 
-				assert(found != m_pool.end());
+			assert(found != m_pool.end());
 
-				m_pool.erase(found);
-			}
+			m_pool.erase(found);
 		}
 
 		std::vector<PtrOwner<value_type>> m_objects;

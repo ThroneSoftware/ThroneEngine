@@ -10,15 +10,18 @@ namespace trs
 		template <typename Type>
 		friend class SharedPtr;
 
-	public:
-		using value_type = Type;
-		using pointer = value_type*;
-		using reference = value_type&;
+		template <typename Type>
+		friend class WeakPtr;
 
 	public:
-		PtrOwner(Private::BaseResource<value_type>* resource) noexcept
+		using value_type = Type;
+
+	public:
+		PtrOwner(gsl::not_null<Private::BaseResource<value_type>*> resource) noexcept
 		  : m_base(resource)
 		{
+			m_base.incrementRefCount();
+			m_base.incrementWRefCount();
 		}
 
 		PtrOwner(const PtrOwner& other) = delete;
@@ -31,7 +34,7 @@ namespace trs
 			// Also, the base cannot be set so it does not need to be destroyed.
 			if(this != &other)
 			{
-				m_base.destroy();
+				destroy();
 				m_base = std::move(other.m_base);
 			}
 			return *this;
@@ -39,25 +42,42 @@ namespace trs
 
 		~PtrOwner() noexcept
 		{
-			m_base.destroy();
+			destroy();
 		}
 
-		pointer getPtr() const noexcept
+		value_type* getPtr() const noexcept
 		{
 			return m_base.getPtr();
 		}
 
-		pointer operator->() const noexcept
+		value_type* operator->() const noexcept
 		{
 			return m_base.getPtr();
 		}
 
-		reference operator*() const noexcept
+		value_type& operator*() const noexcept
 		{
 			return *m_base.getPtr();
 		}
 
+		bool tryDestroy() noexcept
+		{
+			bool destroyed = m_base.tryDestroy();
+			if(destroyed)
+			{
+				m_base = nullptr;
+			}
+			return destroyed;
+		}
+
 	private:
+		void destroy() noexcept
+		{
+			// Keep the call out of the assert or else it will be optimized in release builds.
+			bool destroyed = tryDestroy();
+			assert(destroyed);
+		}
+
 		PointersPrivate::BasePtr<value_type> m_base;
 	};
 }  // namespace trs

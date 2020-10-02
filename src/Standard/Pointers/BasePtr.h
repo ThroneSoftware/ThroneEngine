@@ -2,6 +2,8 @@
 
 #include "../Private/Resource.h"
 
+#include <gsl/gsl>
+
 namespace trs
 {
 	namespace PointersPrivate
@@ -14,22 +16,15 @@ namespace trs
 
 		public:
 			using value_type = Type;
-			using pointer = value_type*;
-			using reference = value_type&;
 
 		public:
-			BasePtr() noexcept
+			BasePtr(std::nullptr_t = nullptr) noexcept
 			  : m_resource(nullptr)
 			  , m_ptr(nullptr)
 			{
 			}
 
-			BasePtr(std::nullptr_t) noexcept
-			  : BasePtr<value_type>()
-			{
-			}
-
-			explicit BasePtr(Private::BaseResource<value_type>* resource) noexcept
+			explicit BasePtr(gsl::not_null<Private::BaseResource<value_type>*> resource) noexcept
 			  : m_resource(resource)
 			  , m_ptr(resource->getPtr())
 			{
@@ -74,44 +69,69 @@ namespace trs
 				reset();
 			}
 
-			pointer getPtr() const noexcept
+			value_type* getPtr() const noexcept
 			{
 				return m_ptr;
 			}
 
-			pointer operator->() const noexcept
+			value_type* operator->() const noexcept
 			{
 				return getPtr();
 			}
 
-			reference operator*() const noexcept
+			value_type& operator*() const noexcept
 			{
 				return *getPtr();
 			}
 
-			void decreaseRefCount() noexcept
+			void incrementRefCount() noexcept
 			{
 				if(m_resource != nullptr)
 				{
-					m_resource->decreaseRefCount();
+					m_resource->incrementRefCount();
 				}
 			}
 
-			void increaseRefCount() noexcept
+			bool incrementRefCountIfNotZero() noexcept
 			{
 				if(m_resource != nullptr)
 				{
-					m_resource->increaseRefCount();
+					return m_resource->incrementRefCountIfNotZero();
+				}
+				return false;
+			}
+
+			void decrementRefCount() noexcept
+			{
+				if(m_resource != nullptr)
+				{
+					m_resource->decrementRefCount();
 				}
 			}
 
-			void destroy() noexcept
+			void incrementWRefCount() noexcept
 			{
 				if(m_resource != nullptr)
 				{
-					delete m_resource;
-					reset();
+					m_resource->incrementWRefCount();
 				}
+			}
+
+			void tryDestroyCtrlBlock() noexcept
+			{
+				if(m_resource != nullptr)
+				{
+					m_resource->tryDestroyCtrlBlock();
+				}
+			}
+
+			bool tryDestroy() noexcept
+			{
+				if(m_resource != nullptr)
+				{
+					return m_resource->tryDestroy();
+				}
+				return true;
 			}
 
 		private:
@@ -134,7 +154,7 @@ namespace trs
 			}
 
 			Private::BaseResource<value_type>* m_resource;
-			pointer m_ptr;
+			value_type* m_ptr;
 		};
 
 		template <typename Type>
