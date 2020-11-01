@@ -11,6 +11,7 @@ target_sources(Standard PRIVATE
 	Pointers/Comparisons.h
 	Pointers/EnableSharedFromThis.h
 	Pointers/MakeFunctions.h
+	Pointers/NotifiedPtr.h
 	Pointers/PtrOwner.h
 	Pointers/SharedPtr.h
 	Pointers/WeakPtr.h

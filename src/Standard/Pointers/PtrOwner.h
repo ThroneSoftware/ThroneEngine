@@ -13,6 +13,9 @@ namespace trs
 		template <typename Type>
 		friend class WeakPtr;
 
+		template <typename Type>
+		friend class NotifiedPtr;
+
 	public:
 		using value_type = Type;
 

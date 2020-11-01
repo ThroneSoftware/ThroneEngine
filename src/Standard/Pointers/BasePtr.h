@@ -134,6 +134,22 @@ namespace trs
 				return true;
 			}
 
+			void addNotifiedPtr() noexcept
+			{
+				if(m_resource != nullptr)
+				{
+					m_resource->addNotifiedPtr(&m_ptr);
+				}
+			}
+
+			void removeNotifiedPtr() noexcept
+			{
+				if(m_resource != nullptr)
+				{
+					m_resource->removeNotifiedPtr(&m_ptr);
+				}
+			}
+
 		private:
 			template <typename Other>
 			void setWith(Other&& other) noexcept

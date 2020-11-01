@@ -38,11 +38,10 @@ namespace trs::Private
 
 		void decrementRefCount() noexcept
 		{
-			assert(m_count != 0);
-			if(--m_count == 1)
-			{
-				notify();
-			}
+			auto temp1 = m_count.load();
+			auto temp2 = m_count--;
+			// Make sure we have no overflow
+			assert(temp1 > temp2);
 		}
 
 		void incrementWRefCount() noexcept
@@ -54,6 +53,8 @@ namespace trs::Private
 		{
 			if(tru::decrementEqual<1>(m_count))
 			{
+				resetAllNotified();
+
 				destroy();
 				tryDestroyCtrlBlock();
 				return true;
@@ -78,16 +79,40 @@ namespace trs::Private
 			}
 		}
 
+		void addNotifiedPtr(gsl::not_null<value_type**> ptr) noexcept
+		{
+			std::unique_lock lock(m_notifyMutex);
+
+			m_notifyList.emplace(ptr);
+		}
+
+		void removeNotifiedPtr(gsl::not_null<value_type**> ptr) noexcept
+		{
+			std::unique_lock lock(m_notifyMutex);
+
+			auto found = std::find(m_notifyList.begin(), m_notifyList.end(), ptr);
+			assert(found != m_notifyList.end());
+			m_notifyList.erase(found);
+		}
+
 		virtual value_type* getPtr() noexcept = 0;
 
 	protected:
-		/// Notfied is called when m_count goes down to 1 (the last SharedPtr is destroyed).
-		virtual void notify() noexcept = 0;
-
 		/// Destroy is used to destroy the object. It is called when m_count == 0.
 		virtual void destroy() noexcept = 0;
 
 	private:
+		void resetAllNotified()
+		{
+			std::unique_lock lock(m_notifyMutex);
+
+			for(auto ptr: m_notifyList)
+			{
+				*ptr = nullptr;
+			}
+			m_notifyList.clear();
+		}
+
 		// The PtrOwner and every SharedPtr increment m_count by 1.
 		// Possible values:
 		// 0  : Final state. It means that the object was destroyed.
@@ -101,6 +126,9 @@ namespace trs::Private
 		// 0  : Final state. The object is destroyed and the control block will be destroyed.
 		// >=1: The PtrOwner or WeakPtrs still exist.
 		std::atomic<uint32_t> m_wcount = 0;
+
+		std::mutex m_notifyMutex;
+		std::vector<value_type**> m_notifyList;
 	};
 
 	template <typename Type, typename Notifier>
@@ -111,9 +139,9 @@ namespace trs::Private
 
 	public:
 		template <typename Notifier, typename... Args>
-		CombinedResource(Notifier&& notifier, Args&&... args)
+		CombinedResource(Args&&... args)
 		  : BaseResource<value_type>()
-		  , m_notifier(std::forward<Notifier>(notifier))
+
 		{
 			new(&m_value) value_type(std::forward<Args>(args)...);
 		}
@@ -129,11 +157,6 @@ namespace trs::Private
 			return &m_value;
 		}
 
-		void notify() noexcept override
-		{
-			m_notifier(&m_value);
-		}
-
 		void destroy() noexcept override
 		{
 			m_value.~value_type();
@@ -145,8 +168,6 @@ namespace trs::Private
 		{
 			value_type m_value;
 		};
-		// todo c++20, use no_unique_address
-		Notifier m_notifier;
 	};
 
 	template <typename Type, typename Notifier, typename Deleter>
@@ -157,9 +178,8 @@ namespace trs::Private
 
 	public:
 		template <typename Notifier, typename Deleter>
-		SeparatedResource(Notifier&& notifier, Deleter&& deleter, value_type* ptr)
+		SeparatedResource(Deleter&& deleter, value_type* ptr)
 		  : BaseResource<value_type>()
-		  , m_notifier(std::forward<Notifier>(notifier))
 		  , m_deleter(std::forward<Deleter>(deleter))
 		  , m_ptr(ptr)
 		{
@@ -170,11 +190,6 @@ namespace trs::Private
 			return m_ptr;
 		}
 
-		void notify() noexcept override
-		{
-			m_notifier(m_ptr);
-		}
-
 		void destroy() noexcept override
 		{
 			m_deleter(m_ptr);
@@ -183,7 +198,6 @@ namespace trs::Private
 	private:
 		value_type* m_ptr;
 		// todo c++20, use no_unique_address
-		Notifier m_notifier;
 		Deleter m_deleter;
 	};
 }  // namespace trs::Private
