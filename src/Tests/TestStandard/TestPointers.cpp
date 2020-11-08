@@ -314,7 +314,7 @@ namespace Tests
 	}
 
 
-	SCENARIO("Test that the notifier is properly called", "Pointers")
+	SCENARIO("Test that the deleter is properly called", "Pointers")
 	{
 		GIVEN("A PtrOwner with deleter and SharedPtrs")
 		{
@@ -334,7 +334,7 @@ namespace Tests
 					auto shared3 = trs::SharedPtr(owner);
 				}
 
-				THEN("Notifier is called")
+				THEN("deleter is called")
 				{
 					testing::Mock::VerifyAndClearExpectations(&mock);
 				}
@@ -365,7 +365,6 @@ namespace Tests
 		{
 			auto owner = trs::makePtrOwner<int>(10);
 			auto weakPtr = trs::WeakPtr(owner);
-			;
 
 			owner.tryDestroy();
 

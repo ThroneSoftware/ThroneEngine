@@ -36,7 +36,7 @@ namespace Tests
 				resource->decrementRefCount();
 				resource->decrementRefCount();
 
-				THEN("Notifier is called")
+				THEN("deleter is called")
 				{
 					testing::Mock::VerifyAndClearExpectations(&mock);
 				}

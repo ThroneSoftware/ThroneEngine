@@ -14,23 +14,6 @@ namespace trs
 		using value_type = ObjectType;
 
 	private:
-		class Notifier
-		{
-		public:
-			Notifier(Manager& manager)
-			  : m_manager(manager)
-			{
-			}
-
-			void operator()(value_type* ptr)
-			{
-				m_manager.erase(ptr);
-			}
-
-		private:
-			Manager& m_manager;
-		};
-
 		class Deleter
 		{
 		public:
