@@ -120,22 +120,6 @@ int main()
 	}
 
 	{
-		auto notifier = [](int*) {
-
-		};
-
-		auto ptr = trs::makePtrOwnerWithNotifier<int, decltype(notifier)>(std::move(notifier), 10);
-
-		__nop();
-
-		{
-			trs::SharedPtr sPtr(ptr);
-		}
-
-		__nop();
-	}
-
-	{
 		class B
 		{
 		public:

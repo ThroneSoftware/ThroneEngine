@@ -64,7 +64,7 @@ namespace trs
 		{
 			// Order of destruction is important.
 			// It is expected that after m_objects.clear() -> m_pool.size() equals 0
-			// because when pointers are destroyed they will call Manager::eraseFromPool 
+			// because when pointers are destroyed they will call Manager::eraseFromPool
 			m_objects.clear();
 			m_pool.clear();
 		}
@@ -74,7 +74,7 @@ namespace trs
 		{
 			auto& ref = m_pool.emplace_back(std::forward<Args>(args)...);
 
-			auto ptrOwner = makePtrOwnerWithNotifier<value_type, Notifier, Deleter>(Notifier(*this), Deleter(*this), &ref);
+			auto ptrOwner = makePtrOwnerWithDeleter<value_type, Deleter>(Deleter(*this), &ref);
 			m_objects.emplace_back(std::move(ptrOwner));
 		}
 

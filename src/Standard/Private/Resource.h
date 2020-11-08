@@ -131,14 +131,14 @@ namespace trs::Private
 		std::vector<value_type**> m_notifyList;
 	};
 
-	template <typename Type, typename Notifier>
+	template <typename Type>
 	class CombinedResource : public BaseResource<Type>
 	{
 	public:
 		using value_type = Type;
 
 	public:
-		template <typename Notifier, typename... Args>
+		template <typename... Args>
 		CombinedResource(Args&&... args)
 		  : BaseResource<value_type>()
 
@@ -170,14 +170,14 @@ namespace trs::Private
 		};
 	};
 
-	template <typename Type, typename Notifier, typename Deleter>
+	template <typename Type, typename Deleter>
 	class SeparatedResource : public BaseResource<Type>
 	{
 	public:
 		using value_type = Type;
 
 	public:
-		template <typename Notifier, typename Deleter>
+		template <typename Deleter>
 		SeparatedResource(Deleter&& deleter, value_type* ptr)
 		  : BaseResource<value_type>()
 		  , m_deleter(std::forward<Deleter>(deleter))

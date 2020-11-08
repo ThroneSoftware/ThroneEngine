@@ -1,6 +1,6 @@
 #include <pch.h>
 
-#include "MockNotifier.h"
+#include "MockDeleter.h"
 #include "MockResource.h"
 
 #include <Standard/Pointers.h>
@@ -35,11 +35,16 @@ namespace Tests
 			}
 		}
 
-		WHEN("Constructing PtrOwner with notifier")
+		WHEN("Constructing PtrOwner with deleter")
 		{
-			MockNotifier<int> mock;
-			ProxyNotifier<int> notifier(mock);
-			auto owner = trs::makePtrOwnerWithNotifier<int>(std::move(notifier), 10);
+			MockDeleter<int> mock;
+			ProxyDeleter<int> deleter(mock);
+			auto owner = trs::makePtrOwnerWithDeleter<int>(std::move(deleter), new int(10));
+
+			EXPECT_CALL(mock, operatorProxy(testing::_)).Times(1).WillOnce([](int* ptr) {
+				delete ptr;
+			});
+
 			THEN("Object contained by PtrOwner is properly constructed")
 			{
 				REQUIRE(owner.getPtr() != nullptr);
@@ -311,13 +316,15 @@ namespace Tests
 
 	SCENARIO("Test that the notifier is properly called", "Pointers")
 	{
-		GIVEN("A PtrOwner with notifier and SharedPtrs")
+		GIVEN("A PtrOwner with deleter and SharedPtrs")
 		{
-			MockNotifier<int> mock;
-			ProxyNotifier<int> notifier(mock);
-			auto owner = trs::makePtrOwnerWithNotifier<int>(notifier, 10);
+			MockDeleter<int> mock;
+			ProxyDeleter<int> deleter(mock);
+			auto owner = trs::makePtrOwnerWithDeleter<int>(deleter, new int(10));
 
-			EXPECT_CALL(mock, operatorProxy(testing::_)).Times(1);
+			EXPECT_CALL(mock, operatorProxy(testing::_)).Times(1).WillOnce([](int* ptr) {
+				delete ptr;
+			});
 
 			WHEN("SharedPtrs are all destroyed")
 			{
@@ -357,8 +364,9 @@ namespace Tests
 		GIVEN("A WeakPtr that points to a ptr that is no longer valid")
 		{
 			auto owner = trs::makePtrOwner<int>(10);
-			auto weakPtr = trs::WeakPtr(owner);;
-			
+			auto weakPtr = trs::WeakPtr(owner);
+			;
+
 			owner.tryDestroy();
 
 			WHEN("Locking the WeakPtr")

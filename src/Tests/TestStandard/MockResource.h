@@ -14,7 +14,6 @@ namespace Tests
 		}
 
 		MOCK_METHOD(T*, getPtr, (), (override, noexcept));
-		MOCK_METHOD(void, notify, (), (override, noexcept));
 		MOCK_METHOD(void, destroy, (), (override, noexcept));
 
 		MOCK_METHOD0(dtor, void());
