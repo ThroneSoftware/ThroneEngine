@@ -38,6 +38,7 @@ namespace trs
 			{
 				m_base.tryDestroyCtrlBlock();
 				m_base.removeNotifiedPtr();
+
 				m_base = other.m_base;
 				m_base.incrementWRefCount();
 				m_base.addNotifiedPtr();
@@ -48,6 +49,7 @@ namespace trs
 		NotifiedPtr(NotifiedPtr&& other)
 		{
 			other.m_base.removeNotifiedPtr();
+
 			m_base = std::move(other.m_base);
 			m_base.incrementWRefCount();
 			m_base.addNotifiedPtr();
@@ -55,10 +57,12 @@ namespace trs
 		NotifiedPtr& operator=(NotifiedPtr&& other)
 		{
 			if(this != &other)
-			{
-				m_base.tryDestroyCtrlBlock();
-				m_base.removeNotifiedPtr();
+			{	
 				other.m_base.removeNotifiedPtr();
+				
+				m_base.removeNotifiedPtr();
+				m_base.tryDestroyCtrlBlock();
+
 				m_base = std::move(other.m_base);
 				m_base.incrementWRefCount();
 				m_base.addNotifiedPtr();
