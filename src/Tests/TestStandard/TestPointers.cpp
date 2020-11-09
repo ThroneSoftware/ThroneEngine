@@ -78,7 +78,7 @@ namespace Tests
 		}
 	}
 
-	SCENARIO("Test the move of PtrOwner, SharedPtr and WeakPtr")
+	SCENARIO("Test the move of PtrOwner, SharedPtr, WeakPtr and NotifiedPtr")
 	{
 		GIVEN("A PtrOwner")
 		{
@@ -210,9 +210,55 @@ namespace Tests
 				}
 			}
 		}
+
+		GIVEN("A NotifiedPtr")
+		{
+			auto owner = trs::makePtrOwner<int>(10);
+			auto notifiedPtr = trs::NotifiedPtr(owner);
+
+			WHEN("Moving NotifiedPtr")
+			{
+				auto notifiedPtr2 = std::move(notifiedPtr);
+				THEN("NotifiedPtr is moved")
+				{
+					REQUIRE(notifiedPtr2.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr2 == 10);
+
+					REQUIRE(notifiedPtr.getPtr() == nullptr);
+
+					REQUIRE(owner.getPtr() != nullptr);
+					REQUIRE(*owner == 10);
+				}
+			}
+
+			WHEN("Moving NotifiedPtr with assignment operator")
+			{
+				auto owner2 = trs::makePtrOwner<int>(5);
+				auto notifiedPtr2 = trs::NotifiedPtr(owner2);
+
+				notifiedPtr2 = std::move(notifiedPtr);
+				THEN("NotifiedPtr is moved")
+				{
+					REQUIRE(notifiedPtr.getPtr() == nullptr);
+
+					REQUIRE(notifiedPtr2.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr2 == 10);
+				}
+			}
+
+			WHEN("Moving NotifiedPtr into itself")
+			{
+				notifiedPtr = std::move(notifiedPtr);
+				THEN("Nothing happens")
+				{
+					REQUIRE(notifiedPtr.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr == 10);
+				}
+			}
+		}
 	}
 
-	SCENARIO("Test the copies of SharedPtr and WeakPtr", "Pointers")
+	SCENARIO("Test the copies of SharedPtr, WeakPtr and NotifiedPtr", "Pointers")
 	{
 		GIVEN("A SharedPtr")
 		{
@@ -308,6 +354,55 @@ namespace Tests
 				{
 					REQUIRE(weakPtr.lock().getPtr() != nullptr);
 					REQUIRE(*weakPtr.lock() == 10);
+				}
+			}
+		}
+
+		GIVEN("A NotifiedPtr")
+		{
+			auto owner = trs::makePtrOwner<int>(10);
+			auto notifiedPtr = trs::NotifiedPtr(owner);
+
+			WHEN("Copying NotifiedPtr")
+			{
+				auto notifiedPtr2 = notifiedPtr;
+				THEN("NotifiedPtr is copied and unchanged")
+				{
+					REQUIRE(notifiedPtr.getPtr() == notifiedPtr2.getPtr());
+
+					REQUIRE(notifiedPtr.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr == 10);
+
+					REQUIRE(notifiedPtr2.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr2 == 10);
+				}
+			}
+
+			WHEN("Copying NotifiedPtr with assignment operator")
+			{
+				auto owner2 = trs::makePtrOwner<int>(5);
+				auto notifiedPtr2 = trs::NotifiedPtr(owner2);
+
+				notifiedPtr2 = notifiedPtr;
+				THEN("NotifiedPtr is copied and unchanged")
+				{
+					REQUIRE(notifiedPtr.getPtr() == notifiedPtr2.getPtr());
+
+					REQUIRE(notifiedPtr.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr == 10);
+
+					REQUIRE(notifiedPtr2.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr2 == 10);
+				}
+			}
+
+			WHEN("Copying NotifiedPtr into itself")
+			{
+				notifiedPtr = notifiedPtr;
+				THEN("Nothing happens")
+				{
+					REQUIRE(notifiedPtr.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr == 10);
 				}
 			}
 		}

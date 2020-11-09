@@ -39,7 +39,7 @@ namespace trs::Private
 		void decrementRefCount() noexcept
 		{
 			auto temp1 = m_count.load();
-			auto temp2 = m_count--;
+			auto temp2 = --m_count;
 			// Make sure we have no overflow
 			assert(temp1 > temp2);
 		}
@@ -83,7 +83,7 @@ namespace trs::Private
 		{
 			std::unique_lock lock(m_notifyMutex);
 
-			m_notifyList.emplace(ptr);
+			m_notifyList.emplace_back(ptr);
 		}
 
 		void removeNotifiedPtr(gsl::not_null<value_type**> ptr) noexcept

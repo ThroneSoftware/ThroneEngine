@@ -15,7 +15,6 @@ namespace Tests
 		delete resource;
 	}
 
-	//todo
 	SCENARIO("Resource deleter", "Resource")
 	{
 		GIVEN("A separated resource")
