@@ -15,35 +15,6 @@ namespace Tests
 		delete resource;
 	}
 
-	SCENARIO("Resource deleter", "Resource")
-	{
-		GIVEN("A separated resource")
-		{
-			MockDeleter<int> mock;
-			ProxyDeleter<int> deleter(mock);
-			int* ptr = new int(10);
-
-			trs::Private::BaseResource<int>* resource = new trs::Private::SeparatedResource<int, ProxyDeleter<int>>(deleter, ptr);
-
-			WHEN("Increasing then decreasing count")
-			{
-				EXPECT_CALL(mock, operatorProxy(resource->getPtr()));
-
-				resource->incrementRefCount();
-				resource->incrementRefCount();
-
-				resource->decrementRefCount();
-				resource->decrementRefCount();
-
-				THEN("deleter is called")
-				{
-					testing::Mock::VerifyAndClearExpectations(&mock);
-				}
-			}
-			delete resource;
-		}
-	}
-
 	SCENARIO("Test tryDestroy and the deleter")
 	{
 		GIVEN("A MockResource")
@@ -167,6 +138,52 @@ namespace Tests
 						resource->decrementRefCount();
 						resource->incrementWRefCount();
 						resource->tryDestroyCtrlBlock();
+					}
+				}
+			}
+		}
+	}
+
+	SCENARIO("Test notification")
+	{
+		GIVEN("A Resource")
+		{
+			MockResource<int>* resource = new MockResource<int>();
+			resource->incrementRefCount();
+			resource->incrementWRefCount();
+
+			auto tempPtr = std::make_unique<int>();
+			int* ptr = tempPtr.get();
+
+			AND_GIVEN("A registered notified ptr")
+			{
+				resource->addNotifiedPtr(gsl::not_null(&ptr));
+
+				WHEN("Destroying the resource")
+				{
+
+					resource->tryDestroy();
+
+					THEN("The registered ptr is set to nullptr")
+					{
+						REQUIRE(ptr != tempPtr.get());
+						REQUIRE(ptr == nullptr);
+					}
+				}
+
+				AND_GIVEN("The registered ptr is removed")
+				{
+					resource->removeNotifiedPtr(gsl::not_null(&ptr));
+
+					WHEN("Destroying the resource")
+					{
+						resource->tryDestroy();
+
+						THEN("The registered ptr is not changed")
+						{
+							REQUIRE(ptr == tempPtr.get());
+							REQUIRE(ptr != nullptr);
+						}
 					}
 				}
 			}

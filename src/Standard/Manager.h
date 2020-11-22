@@ -49,6 +49,7 @@ namespace trs
 			// It is expected that after m_objects.clear() -> m_pool.size() equals 0
 			// because when pointers are destroyed they will call Manager::eraseFromPool
 			m_objects.clear();
+			assert(m_pool.empty());
 			m_pool.clear();
 		}
 
@@ -86,11 +87,10 @@ namespace trs
 			});
 		}
 
-	private:
-		void erase(value_type* ptr)
+		bool erase(value_type& ptr)
 		{
-			auto found = std::find_if(m_objects.begin(), m_objects.end(), [ptr](PtrOwner<value_type>& ptrOwner) {
-				return ptrOwner.getPtr() == ptr;
+			auto found = std::find_if(m_objects.begin(), m_objects.end(), [&ptr](PtrOwner<value_type>& ptrOwner) {
+				return ptrOwner.getPtr() == &ptr;
 			});
 
 			assert(found != m_objects.end());
@@ -101,8 +101,11 @@ namespace trs
 			{
 				m_objects.erase(found);
 			}
+
+			return destroyed;
 		}
 
+	private:
 		void eraseFromPool(value_type* ptr)
 		{
 			auto found = std::find_if(m_pool.begin(), m_pool.end(), [ptr](value_type& value) {

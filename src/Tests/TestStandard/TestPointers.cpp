@@ -408,35 +408,6 @@ namespace Tests
 		}
 	}
 
-
-	SCENARIO("Test that the deleter is properly called", "Pointers")
-	{
-		GIVEN("A PtrOwner with deleter and SharedPtrs")
-		{
-			MockDeleter<int> mock;
-			ProxyDeleter<int> deleter(mock);
-			auto owner = trs::makePtrOwnerWithDeleter<int>(deleter, new int(10));
-
-			EXPECT_CALL(mock, operatorProxy(testing::_)).Times(1).WillOnce([](int* ptr) {
-				delete ptr;
-			});
-
-			WHEN("SharedPtrs are all destroyed")
-			{
-				{
-					auto shared1 = trs::SharedPtr(owner);
-					auto shared2 = trs::SharedPtr(owner);
-					auto shared3 = trs::SharedPtr(owner);
-				}
-
-				THEN("deleter is called")
-				{
-					testing::Mock::VerifyAndClearExpectations(&mock);
-				}
-			}
-		}
-	}
-
 	SCENARIO("Test WeakPtr::lock")
 	{
 		GIVEN("A WeakPtr that points to a ptr that is still valid")
@@ -539,6 +510,26 @@ namespace Tests
 							REQUIRE(dtorCalled == false);
 						}
 					}
+				}
+			}
+		}
+	}
+
+	SCENARIO("Test NotifiedPtr's notification")
+	{
+		GIVEN("A PtrOwner and a NotifiedPtr")
+		{
+			auto ptrOwner = trs::makePtrOwner<int>(10);
+			auto notifiedPtr = trs::NotifiedPtr(ptrOwner);
+
+			WHEN("Destroying the PtrOwner")
+			{
+				auto destroyed = ptrOwner.tryDestroy();
+				REQUIRE(destroyed);
+
+				THEN("The NotifiedPtr is set to nullptr")
+				{
+					REQUIRE(notifiedPtr.getPtr() == nullptr);
 				}
 			}
 		}

@@ -136,7 +136,7 @@ namespace trs
 
 			void addNotifiedPtr() noexcept
 			{
-				if(m_resource != nullptr)
+				if(m_resource != nullptr && m_ptr != nullptr)
 				{
 					m_resource->addNotifiedPtr(&m_ptr);
 				}
@@ -144,7 +144,7 @@ namespace trs
 
 			void removeNotifiedPtr() noexcept
 			{
-				if(m_resource != nullptr)
+				if(m_resource != nullptr && m_ptr != nullptr)
 				{
 					m_resource->removeNotifiedPtr(&m_ptr);
 				}
