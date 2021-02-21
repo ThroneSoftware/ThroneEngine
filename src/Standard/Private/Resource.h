@@ -106,7 +106,7 @@ namespace trs::Private
 		{
 			std::unique_lock lock(m_notifyMutex);
 
-			for(auto ptr: m_notifyList)
+			for(value_type** ptr: m_notifyList)
 			{
 				*ptr = nullptr;
 			}

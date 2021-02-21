@@ -31,9 +31,9 @@ namespace Tests
 	SCENARIO("Test IsThronePtr concept")
 	{
 		REQUIRE(trs::IsThronePtr<trs::PtrOwner>);
-		REQUIRE(trs::IsThronePtr<trs::PtrOwner>);
-		REQUIRE(trs::IsThronePtr<trs::PtrOwner>);
-		REQUIRE(trs::IsThronePtr<trs::PtrOwner>);
+		REQUIRE(trs::IsThronePtr<trs::NotifiedPtr>);
+		REQUIRE(trs::IsThronePtr<trs::SharedPtr>);
+		REQUIRE(trs::IsThronePtr<trs::WeakPtr>);
 
 		REQUIRE(trs::IsThronePtr<TemplateClass> == false);
 	}

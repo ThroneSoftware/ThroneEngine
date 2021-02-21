@@ -9,5 +9,5 @@
 namespace trs
 {
 	template <template <typename Type> typename Pointer>
-	concept IsThronePtr = is_one_of<Pointer<void>, PtrOwner<void>, NotifiedPtr<void>, SharedPtr<void>, WeakPtr<void>>();
+	concept IsThronePtr = isOneOf<Pointer<void>, PtrOwner<void>, NotifiedPtr<void>, SharedPtr<void>, WeakPtr<void>>();
 }  // namespace trs
