@@ -23,6 +23,21 @@ namespace Tests
 		std::string str;
 	};
 
+	template <typename Type>
+	class TemplateClass
+	{
+	};
+
+	SCENARIO("Test IsThronePtr concept")
+	{
+		REQUIRE(trs::IsThronePtr<trs::PtrOwner>);
+		REQUIRE(trs::IsThronePtr<trs::PtrOwner>);
+		REQUIRE(trs::IsThronePtr<trs::PtrOwner>);
+		REQUIRE(trs::IsThronePtr<trs::PtrOwner>);
+
+		REQUIRE(trs::IsThronePtr<TemplateClass> == false);
+	}
+
 	SCENARIO("Test the construction of PtrOwner and SharedPtr", "Pointers")
 	{
 		WHEN("Constructing PtrOwner with makePtrOwner")

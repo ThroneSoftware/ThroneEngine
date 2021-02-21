@@ -170,7 +170,8 @@ namespace trs
 			}
 
 			Private::BaseResource<value_type>* m_resource;
-			value_type* m_ptr;
+			// Mutable because of NotifiedPtr
+			mutable value_type* m_ptr;
 		};
 
 		template <typename Type>

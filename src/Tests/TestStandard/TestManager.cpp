@@ -22,7 +22,7 @@ namespace Tests
 			return manager;
 		}
 
-		trs::SharedPtr<int> find(const trs::Manager<int>& manager, int value)
+		trs::NotifiedPtr<int> find(const trs::Manager<int>& manager, int value)
 		{
 			return manager.findIf([value](int& managerValue) {
 				return managerValue == value;
@@ -216,7 +216,7 @@ namespace Tests
 			for(size_t i = 0; i < 3; ++i)
 			{
 				manager.emplace(i);
-				auto ptr = manager.findIf([i](const MockObject& value) {
+				auto ptr = manager.findIf<trs::SharedPtr<MockObject>>([i](const MockObject& value) {
 					return value.m_id == i;
 				});
 				objectPtrs.emplace_back(ptr);

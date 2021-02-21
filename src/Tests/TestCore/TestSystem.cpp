@@ -46,7 +46,7 @@ namespace Tests
 			for(size_t i = 0; i < 3; ++i)
 			{
 				manager.emplace(i);
-				auto ptr = manager.findIf([i](const ComponentWithEvents& value) {
+				auto ptr = manager.findIf<trs::SharedPtr<ComponentWithEvents>>([i](const ComponentWithEvents& value) {
 					return value.m_id == i;
 				});
 				objectPtrs.emplace_back(ptr);

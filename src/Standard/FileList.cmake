@@ -10,6 +10,7 @@ target_sources(Standard PRIVATE
 	Pointers/BasePtr.h
 	Pointers/Comparisons.h
 	Pointers/EnableSharedFromThis.h
+	Pointers/IsThronePtr.h
 	Pointers/MakeFunctions.h
 	Pointers/NotifiedPtr.h
 	Pointers/PtrOwner.h
@@ -20,4 +21,5 @@ target_sources(Standard PRIVATE
 	Private/Resource.h
 	Private/TaskFence.h
 	Task.h
+	TypeTraits.h
 )

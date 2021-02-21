@@ -57,9 +57,9 @@ namespace trs
 		NotifiedPtr& operator=(NotifiedPtr&& other)
 		{
 			if(this != &other)
-			{	
+			{
 				other.m_base.removeNotifiedPtr();
-				
+
 				m_base.removeNotifiedPtr();
 				m_base.tryDestroyCtrlBlock();
 
@@ -72,8 +72,14 @@ namespace trs
 
 		~NotifiedPtr()
 		{
+			reset();
+		}
+
+		void reset() noexcept
+		{
 			m_base.removeNotifiedPtr();
 			m_base.tryDestroyCtrlBlock();
+			m_base = nullptr;
 		}
 
 		value_type* getPtr() const noexcept

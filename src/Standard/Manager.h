@@ -62,8 +62,8 @@ namespace trs
 			m_objects.emplace_back(std::move(ptrOwner));
 		}
 
-		template <typename FindFunc>
-		SharedPtr<value_type> findIf(FindFunc func) const
+		template <typename Pointer = NotifiedPtr<Manager::value_type>, typename FindFunc>
+		typename Pointer findIf(FindFunc func) const
 		{
 			auto find_locked = [func](const PtrOwner<value_type>& owner) {
 				// TODO: #88 -> Make this thread safe
@@ -71,7 +71,7 @@ namespace trs
 			};
 
 			auto found = std::find_if(m_objects.begin(), m_objects.end(), find_locked);
-			return found != m_objects.end() ? SharedPtr<value_type>(*found) : SharedPtr<value_type>(nullptr);
+			return found != m_objects.end() ? Pointer(*found) : Pointer(nullptr);
 		}
 
 		std::size_t size() const noexcept

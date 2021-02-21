@@ -12,4 +12,6 @@
 #include "Pointers/Comparisons.h"
 #include "Pointers/EnableSharedFromThis.h"
 
+#include "Pointers/IsThronePtr.h"
+
 // clang-format on
