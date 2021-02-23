@@ -121,6 +121,8 @@ namespace Tests
 					auto actual = manager->findIf(find);
 					REQUIRE(actual.getPtr() == nullptr);
 					REQUIRE(manager->size() == 2);
+
+					REQUIRE(ptr.getPtr() == nullptr);
 				}
 			}
 		}
