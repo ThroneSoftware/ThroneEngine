@@ -6,8 +6,6 @@
 
 namespace Tests
 {
-	// Should we add the destruction mode?
-
 	namespace TestManagerPrivate
 	{
 		std::unique_ptr<trs::Manager<int>> makeManager(int objectCount)
@@ -76,9 +74,9 @@ namespace Tests
 		}
 	}
 
-	SCENARIO("Remove object")
+	SCENARIO("Erase object")
 	{
-		GIVEN("A manager with one object")
+		GIVEN("A manager with many objects")
 		{
 			class MockObject
 			{
@@ -101,77 +99,28 @@ namespace Tests
 
 			auto manager = std::make_unique<trs::Manager<MockObject>>();
 			manager->emplace(0);
+			manager->emplace(1);
+			manager->emplace(2);
 
 			auto find = [](MockObject& obj) {
-				return obj.m_id == 0;
+				return obj.m_id == 1;
 			};
+
 
 			auto ptr = manager->findIf(find);
 
 			EXPECT_CALL(*ptr, dtor()).Times(1);
 
-			WHEN("The last SharedPtr to the object is destroyed")
+
+			WHEN("An object is erased")
 			{
-				ptr.reset();
+				manager->erase(*ptr);
+
 				THEN("The object is removed from the manager")
 				{
 					auto actual = manager->findIf(find);
 					REQUIRE(actual.getPtr() == nullptr);
-					REQUIRE(manager->size() == 0);
-				}
-			}
-		}
-
-		GIVEN("A manager with with many objects")
-		{
-			constexpr size_t size = 5;
-			auto manager = TestManagerPrivate::makeManager(size);
-
-			AND_GIVEN("A SharedPtr of an object at the end of the array")
-			{
-				constexpr int value = size - 1;
-				auto ptr = TestManagerPrivate::find(*manager, value);
-				WHEN("The last SharedPtr is destroyed")
-				{
-					ptr.reset();
-					THEN("The object is removed from the manager")
-					{
-						auto actual = TestManagerPrivate::find(*manager, value);
-						REQUIRE(actual.getPtr() == nullptr);
-						REQUIRE(manager->size() == size - 1);
-					}
-				}
-			}
-
-			AND_GIVEN("A SharedPtr of an object at the beggining of the array")
-			{
-				constexpr int value = 0;
-				auto ptr = TestManagerPrivate::find(*manager, value);
-				WHEN("The last SharedPtr is destroyed")
-				{
-					ptr.reset();
-					THEN("The object is removed from the manager")
-					{
-						auto actual = TestManagerPrivate::find(*manager, value);
-						REQUIRE(actual.getPtr() == nullptr);
-						REQUIRE(manager->size() == size - 1);
-					}
-				}
-			}
-
-			AND_GIVEN("A SharedPtr of an object in the middle of the array")
-			{
-				constexpr int value = size / 2;
-				auto ptr = TestManagerPrivate::find(*manager, value);
-				WHEN("The last SharedPtr is destroyed")
-				{
-					ptr.reset();
-					THEN("The object is removed from the manager")
-					{
-						auto actual = TestManagerPrivate::find(*manager, value);
-						REQUIRE(actual.getPtr() == nullptr);
-						REQUIRE(manager->size() == size - 1);
-					}
+					REQUIRE(manager->size() == 2);
 				}
 			}
 		}
