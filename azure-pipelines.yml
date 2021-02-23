@@ -13,7 +13,7 @@ jobs:
         key: 'vcpkg cache | "$(Agent.OS)"'
         path: 'c:\vcpkg\installed\'            
     - task: CmdLine@2
-      displayName: Generating project files
+      displayName: Generate project files
       inputs:
         script: 'call "cmake" -G "Visual Studio 16 2019" -S "." -B "Build/"'
     - task: CmdLine@2
