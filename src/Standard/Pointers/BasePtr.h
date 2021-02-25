@@ -122,7 +122,7 @@ namespace trs
 			{
 				if(m_resource != nullptr)
 				{
-					m_resource->tryDestroyCtrlBlock()
+					m_resource->tryDestroyCtrlBlock();
 				}
 			}
 
