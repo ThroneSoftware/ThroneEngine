@@ -36,8 +36,8 @@ namespace trs
 		{
 			if(this != &other)
 			{
-				m_base.tryDestroyCtrlBlock();
 				m_base.removeNotifiedPtr();
+				m_base.tryDestroyCtrlBlock();
 
 				m_base = other.m_base;
 				m_base.incrementWRefCount();
