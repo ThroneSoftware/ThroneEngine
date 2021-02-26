@@ -117,12 +117,12 @@ namespace trs
 				}
 			}
 
-			// BasePtr should not be used after a call to tryDestroyCtrlBlock.
 			void tryDestroyCtrlBlock() noexcept
 			{
 				if(m_resource != nullptr)
 				{
 					m_resource->tryDestroyCtrlBlock();
+					reset();
 				}
 			}
 

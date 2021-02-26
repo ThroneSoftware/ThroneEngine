@@ -20,28 +20,22 @@ namespace trs
 		NotifiedPtr(const PtrOwner<value_type>& ptrOwner)
 		  : m_base(ptrOwner.m_base)
 		{
-			m_base.incrementWRefCount();
-
-			m_base.addNotifiedPtr();
+			init();
 		}
 
 		NotifiedPtr(const NotifiedPtr& other)
 		  : m_base(other.m_base)
 		{
-			m_base.incrementWRefCount();
-
-			m_base.addNotifiedPtr();
+			init();
 		}
 		NotifiedPtr& operator=(const NotifiedPtr& other)
 		{
 			if(this != &other)
 			{
-				m_base.removeNotifiedPtr();
-				m_base.tryDestroyCtrlBlock();
+				reset();
 
 				m_base = other.m_base;
-				m_base.incrementWRefCount();
-				m_base.addNotifiedPtr();
+				init();
 			}
 			return *this;
 		}
@@ -51,8 +45,7 @@ namespace trs
 			other.m_base.removeNotifiedPtr();
 
 			m_base = std::move(other.m_base);
-			m_base.incrementWRefCount();
-			m_base.addNotifiedPtr();
+			init();
 		}
 		NotifiedPtr& operator=(NotifiedPtr&& other)
 		{
@@ -60,12 +53,10 @@ namespace trs
 			{
 				other.m_base.removeNotifiedPtr();
 
-				m_base.removeNotifiedPtr();
-				m_base.tryDestroyCtrlBlock();
+				reset();
 
 				m_base = std::move(other.m_base);
-				m_base.incrementWRefCount();
-				m_base.addNotifiedPtr();
+				init();
 			}
 			return *this;
 		}
@@ -98,6 +89,12 @@ namespace trs
 		}
 
 	private:
+		void init()
+		{
+			m_base.incrementWRefCount();
+			m_base.addNotifiedPtr();
+		}
+
 		PointersPrivate::BasePtr<value_type> m_base;
 	};
 }  // namespace trs
