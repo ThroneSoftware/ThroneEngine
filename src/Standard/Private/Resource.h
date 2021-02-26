@@ -38,10 +38,8 @@ namespace trs::Private
 
 		void decrementRefCount() noexcept
 		{
-			auto temp1 = m_count.load();
-			auto temp2 = --m_count;
-			// Make sure we have no overflow
-			assert(temp1 > temp2);
+			auto val = --m_count;
+			assert(val >= 0);
 		}
 
 		void incrementWRefCount() noexcept
@@ -118,14 +116,14 @@ namespace trs::Private
 		// 0  : Final state. It means that the object was destroyed.
 		// 1  : Only the PtrOwner exists.
 		// >1 : The PtrOwner exists and there is SharedPtrs.
-		std::atomic<uint32_t> m_count = 0;
+		std::atomic<int32_t> m_count = 0;
 
 		// The PtrOwner and every WeakPtr increment m_wcount by 1.
 		// It is possible for m_wcount to be >=1 even if the PtrOwner and the object are destroyed.
 		// Possible values:
 		// 0  : Final state. The object is destroyed and the control block will be destroyed.
 		// >=1: The PtrOwner or WeakPtrs still exist.
-		std::atomic<uint32_t> m_wcount = 0;
+		std::atomic<int32_t> m_wcount = 0;
 
 		std::mutex m_notifyMutex;
 		std::vector<value_type**> m_notifyList;
