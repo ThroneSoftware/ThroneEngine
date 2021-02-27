@@ -122,6 +122,7 @@ namespace trs
 				if(m_resource != nullptr)
 				{
 					m_resource->tryDestroyCtrlBlock();
+					reset();
 				}
 			}
 
@@ -132,6 +133,22 @@ namespace trs
 					return m_resource->tryDestroy();
 				}
 				return true;
+			}
+
+			void addNotifiedPtr() noexcept
+			{
+				if(m_resource != nullptr && m_ptr != nullptr)
+				{
+					m_resource->addNotifiedPtr(&m_ptr);
+				}
+			}
+
+			void removeNotifiedPtr() noexcept
+			{
+				if(m_resource != nullptr && m_ptr != nullptr)
+				{
+					m_resource->removeNotifiedPtr(&m_ptr);
+				}
 			}
 
 		private:
@@ -154,7 +171,8 @@ namespace trs
 			}
 
 			Private::BaseResource<value_type>* m_resource;
-			value_type* m_ptr;
+			// Mutable because of NotifiedPtr
+			mutable value_type* m_ptr;
 		};
 
 		template <typename Type>

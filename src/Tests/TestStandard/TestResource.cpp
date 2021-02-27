@@ -1,4 +1,4 @@
-#include "MockNotifier.h"
+#include "MockDeleter.h"
 #include "MockResource.h"
 
 #include <Standard/Private/Resource.h>
@@ -10,79 +10,14 @@ namespace Tests
 {
 	SCENARIO("Resource construction", "Resource")
 	{
-		MockNotifier<int> mock;
-		ProxyNotifier<int> notifier(mock);
-		trs::Private::BaseResource<int>* resource = new trs::Private::CombinedResource<int, ProxyNotifier<int>>(notifier, 10);
+		trs::Private::BaseResource<int>* resource = new trs::Private::CombinedResource<int>(10);
 		REQUIRE(*resource->getPtr() == 10);
 		delete resource;
 	}
 
-	SCENARIO("Resource notifier", "Resource")
-	{
-		GIVEN("A Combined resource")
-		{
-			MockNotifier<int> mock;
-			ProxyNotifier<int> notifier(mock);
-			trs::Private::BaseResource<int>* resource = new trs::Private::CombinedResource<int, ProxyNotifier<int>>(notifier, 10);
-
-			WHEN("Increasing then decreasing count")
-			{
-				EXPECT_CALL(mock, operatorProxy(resource->getPtr()));
-
-				resource->incrementRefCount();
-				resource->incrementRefCount();
-
-				resource->decrementRefCount();
-				resource->decrementRefCount();
-
-				THEN("Notifier is called")
-				{
-					testing::Mock::VerifyAndClearExpectations(&mock);
-				}
-			}
-			delete resource;
-		}
-
-		GIVEN("A separated resource")
-		{
-			MockNotifier<int> mock;
-			ProxyNotifier<int> notifier(mock);
-			int* ptr = new int(10);
-
-			class Deleter
-			{
-			public:
-				void operator()(int* ptr)
-				{
-					delete ptr;
-				}
-			};
-
-			trs::Private::BaseResource<int>* resource =
-				new trs::Private::SeparatedResource<int, ProxyNotifier<int>, Deleter>(notifier, Deleter(), ptr);
-
-			WHEN("Increasing then decreasing count")
-			{
-				EXPECT_CALL(mock, operatorProxy(resource->getPtr()));
-
-				resource->incrementRefCount();
-				resource->incrementRefCount();
-
-				resource->decrementRefCount();
-				resource->decrementRefCount();
-
-				THEN("Notifier is called")
-				{
-					testing::Mock::VerifyAndClearExpectations(&mock);
-				}
-			}
-			delete resource;
-		}
-	}
-
 	SCENARIO("Test tryDestroy and the deleter")
 	{
-		GIVEN("A Resource")
+		GIVEN("A MockResource")
 		{
 			MockResource<int>* resource = new MockResource<int>();
 
@@ -133,7 +68,7 @@ namespace Tests
 
 						// cleanup
 						resource->decrementRefCount();
-						resource->tryDestroy();	
+						resource->tryDestroy();
 					}
 				}
 			}
@@ -203,6 +138,51 @@ namespace Tests
 						resource->decrementRefCount();
 						resource->incrementWRefCount();
 						resource->tryDestroyCtrlBlock();
+					}
+				}
+			}
+		}
+	}
+
+	SCENARIO("Test notification")
+	{
+		GIVEN("A Resource")
+		{
+			MockResource<int>* resource = new MockResource<int>();
+			resource->incrementRefCount();
+			resource->incrementWRefCount();
+
+			int value = 0;
+			int* ptr = &value;
+
+			AND_GIVEN("A registered notified ptr")
+			{
+				resource->addNotifiedPtr(gsl::not_null(&ptr));
+
+				WHEN("Destroying the resource")
+				{
+					resource->tryDestroy();
+
+					THEN("The registered ptr is set to nullptr")
+					{
+						REQUIRE(ptr != &value);
+						REQUIRE(ptr == nullptr);
+					}
+				}
+
+				WHEN("The registered ptr is removed")
+				{
+					resource->removeNotifiedPtr(gsl::not_null(&ptr));
+
+					AND_WHEN("Destroying the resource")
+					{
+						resource->tryDestroy();
+
+						THEN("The registered ptr is not changed")
+						{
+							REQUIRE(ptr == &value);
+							REQUIRE(ptr != nullptr);
+						}
 					}
 				}
 			}

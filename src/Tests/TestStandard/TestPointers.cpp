@@ -1,6 +1,6 @@
 #include <pch.h>
 
-#include "MockNotifier.h"
+#include "MockDeleter.h"
 #include "MockResource.h"
 
 #include <Standard/Pointers.h>
@@ -23,6 +23,21 @@ namespace Tests
 		std::string str;
 	};
 
+	template <typename Type>
+	class TemplateClass
+	{
+	};
+
+	SCENARIO("Test IsThronePtr concept")
+	{
+		REQUIRE(trs::IsThronePtr<trs::PtrOwner>);
+		REQUIRE(trs::IsThronePtr<trs::NotifiedPtr>);
+		REQUIRE(trs::IsThronePtr<trs::SharedPtr>);
+		REQUIRE(trs::IsThronePtr<trs::WeakPtr>);
+
+		REQUIRE(trs::IsThronePtr<TemplateClass> == false);
+	}
+
 	SCENARIO("Test the construction of PtrOwner and SharedPtr", "Pointers")
 	{
 		WHEN("Constructing PtrOwner with makePtrOwner")
@@ -35,11 +50,16 @@ namespace Tests
 			}
 		}
 
-		WHEN("Constructing PtrOwner with notifier")
+		WHEN("Constructing PtrOwner with deleter")
 		{
-			MockNotifier<int> mock;
-			ProxyNotifier<int> notifier(mock);
-			auto owner = trs::makePtrOwnerWithNotifier<int>(std::move(notifier), 10);
+			MockDeleter<int> deleter_mock;
+			ProxyDeleter<int> deleter(deleter_mock);
+			auto owner = trs::makePtrOwnerWithDeleter<int>(std::move(deleter), new int(10));
+
+			EXPECT_CALL(deleter_mock, operatorProxy(testing::_)).Times(1).WillOnce([](int* ptr) {
+				delete ptr;
+			});
+
 			THEN("Object contained by PtrOwner is properly constructed")
 			{
 				REQUIRE(owner.getPtr() != nullptr);
@@ -73,7 +93,7 @@ namespace Tests
 		}
 	}
 
-	SCENARIO("Test the move of PtrOwner, SharedPtr and WeakPtr")
+	SCENARIO("Test the move of PtrOwner, SharedPtr, WeakPtr and NotifiedPtr")
 	{
 		GIVEN("A PtrOwner")
 		{
@@ -205,9 +225,55 @@ namespace Tests
 				}
 			}
 		}
+
+		GIVEN("A NotifiedPtr")
+		{
+			auto owner = trs::makePtrOwner<int>(10);
+			auto notifiedPtr = trs::NotifiedPtr(owner);
+
+			WHEN("Moving NotifiedPtr")
+			{
+				auto notifiedPtr2 = std::move(notifiedPtr);
+				THEN("NotifiedPtr is moved")
+				{
+					REQUIRE(notifiedPtr2.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr2 == 10);
+
+					REQUIRE(notifiedPtr.getPtr() == nullptr);
+
+					REQUIRE(owner.getPtr() != nullptr);
+					REQUIRE(*owner == 10);
+				}
+			}
+
+			WHEN("Moving NotifiedPtr with assignment operator")
+			{
+				auto owner2 = trs::makePtrOwner<int>(5);
+				auto notifiedPtr2 = trs::NotifiedPtr(owner2);
+
+				notifiedPtr2 = std::move(notifiedPtr);
+				THEN("NotifiedPtr is moved")
+				{
+					REQUIRE(notifiedPtr.getPtr() == nullptr);
+
+					REQUIRE(notifiedPtr2.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr2 == 10);
+				}
+			}
+
+			WHEN("Moving NotifiedPtr into itself")
+			{
+				notifiedPtr = std::move(notifiedPtr);
+				THEN("Nothing happens")
+				{
+					REQUIRE(notifiedPtr.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr == 10);
+				}
+			}
+		}
 	}
 
-	SCENARIO("Test the copies of SharedPtr and WeakPtr", "Pointers")
+	SCENARIO("Test the copies of SharedPtr, WeakPtr and NotifiedPtr", "Pointers")
 	{
 		GIVEN("A SharedPtr")
 		{
@@ -306,30 +372,52 @@ namespace Tests
 				}
 			}
 		}
-	}
 
-
-	SCENARIO("Test that the notifier is properly called", "Pointers")
-	{
-		GIVEN("A PtrOwner with notifier and SharedPtrs")
+		GIVEN("A NotifiedPtr")
 		{
-			MockNotifier<int> mock;
-			ProxyNotifier<int> notifier(mock);
-			auto owner = trs::makePtrOwnerWithNotifier<int>(notifier, 10);
+			auto owner = trs::makePtrOwner<int>(10);
+			auto notifiedPtr = trs::NotifiedPtr(owner);
 
-			EXPECT_CALL(mock, operatorProxy(testing::_)).Times(1);
-
-			WHEN("SharedPtrs are all destroyed")
+			WHEN("Copying NotifiedPtr")
 			{
+				auto notifiedPtr2 = notifiedPtr;
+				THEN("NotifiedPtr is copied and unchanged")
 				{
-					auto shared1 = trs::SharedPtr(owner);
-					auto shared2 = trs::SharedPtr(owner);
-					auto shared3 = trs::SharedPtr(owner);
-				}
+					REQUIRE(notifiedPtr.getPtr() == notifiedPtr2.getPtr());
 
-				THEN("Notifier is called")
+					REQUIRE(notifiedPtr.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr == 10);
+
+					REQUIRE(notifiedPtr2.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr2 == 10);
+				}
+			}
+
+			WHEN("Copying NotifiedPtr with assignment operator")
+			{
+				auto owner2 = trs::makePtrOwner<int>(5);
+				auto notifiedPtr2 = trs::NotifiedPtr(owner2);
+
+				notifiedPtr2 = notifiedPtr;
+				THEN("NotifiedPtr is copied and unchanged")
 				{
-					testing::Mock::VerifyAndClearExpectations(&mock);
+					REQUIRE(notifiedPtr.getPtr() == notifiedPtr2.getPtr());
+
+					REQUIRE(notifiedPtr.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr == 10);
+
+					REQUIRE(notifiedPtr2.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr2 == 10);
+				}
+			}
+
+			WHEN("Copying NotifiedPtr into itself")
+			{
+				notifiedPtr = notifiedPtr;
+				THEN("Nothing happens")
+				{
+					REQUIRE(notifiedPtr.getPtr() != nullptr);
+					REQUIRE(*notifiedPtr == 10);
 				}
 			}
 		}
@@ -357,8 +445,8 @@ namespace Tests
 		GIVEN("A WeakPtr that points to a ptr that is no longer valid")
 		{
 			auto owner = trs::makePtrOwner<int>(10);
-			auto weakPtr = trs::WeakPtr(owner);;
-			
+			auto weakPtr = trs::WeakPtr(owner);
+
 			owner.tryDestroy();
 
 			WHEN("Locking the WeakPtr")
@@ -437,6 +525,26 @@ namespace Tests
 							REQUIRE(dtorCalled == false);
 						}
 					}
+				}
+			}
+		}
+	}
+
+	SCENARIO("Test NotifiedPtr's notification")
+	{
+		GIVEN("A PtrOwner and a NotifiedPtr")
+		{
+			auto ptrOwner = trs::makePtrOwner<int>(10);
+			auto notifiedPtr = trs::NotifiedPtr(ptrOwner);
+
+			WHEN("Destroying the PtrOwner")
+			{
+				auto destroyed = ptrOwner.tryDestroy();
+				REQUIRE(destroyed);
+
+				THEN("The NotifiedPtr is set to nullptr")
+				{
+					REQUIRE(notifiedPtr.getPtr() == nullptr);
 				}
 			}
 		}

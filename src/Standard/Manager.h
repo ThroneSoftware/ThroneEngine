@@ -14,23 +14,6 @@ namespace trs
 		using value_type = ObjectType;
 
 	private:
-		class Notifier
-		{
-		public:
-			Notifier(Manager& manager)
-			  : m_manager(manager)
-			{
-			}
-
-			void operator()(value_type* ptr)
-			{
-				m_manager.erase(ptr);
-			}
-
-		private:
-			Manager& m_manager;
-		};
-
 		class Deleter
 		{
 		public:
@@ -64,8 +47,9 @@ namespace trs
 		{
 			// Order of destruction is important.
 			// It is expected that after m_objects.clear() -> m_pool.size() equals 0
-			// because when pointers are destroyed they will call Manager::eraseFromPool 
+			// because when pointers are destroyed they will call Manager::eraseFromPool
 			m_objects.clear();
+			assert(m_pool.empty());
 			m_pool.clear();
 		}
 
@@ -74,12 +58,12 @@ namespace trs
 		{
 			auto& ref = m_pool.emplace_back(std::forward<Args>(args)...);
 
-			auto ptrOwner = makePtrOwnerWithNotifier<value_type, Notifier, Deleter>(Notifier(*this), Deleter(*this), &ref);
+			auto ptrOwner = makePtrOwnerWithDeleter<value_type, Deleter>(Deleter(*this), &ref);
 			m_objects.emplace_back(std::move(ptrOwner));
 		}
 
-		template <typename FindFunc>
-		SharedPtr<value_type> findIf(FindFunc func) const
+		template <typename Pointer = NotifiedPtr<Manager::value_type>, typename FindFunc>
+		typename Pointer findIf(FindFunc func) const
 		{
 			auto find_locked = [func](const PtrOwner<value_type>& owner) {
 				// TODO: #88 -> Make this thread safe
@@ -87,7 +71,7 @@ namespace trs
 			};
 
 			auto found = std::find_if(m_objects.begin(), m_objects.end(), find_locked);
-			return found != m_objects.end() ? SharedPtr<value_type>(*found) : SharedPtr<value_type>(nullptr);
+			return found != m_objects.end() ? Pointer(*found) : Pointer(nullptr);
 		}
 
 		std::size_t size() const noexcept
@@ -103,11 +87,10 @@ namespace trs
 			});
 		}
 
-	private:
-		void erase(value_type* ptr)
+		bool erase(value_type& ptr)
 		{
-			auto found = std::find_if(m_objects.begin(), m_objects.end(), [ptr](PtrOwner<value_type>& ptrOwner) {
-				return ptrOwner.getPtr() == ptr;
+			auto found = std::find_if(m_objects.begin(), m_objects.end(), [&ptr](PtrOwner<value_type>& ptrOwner) {
+				return ptrOwner.getPtr() == &ptr;
 			});
 
 			assert(found != m_objects.end());
@@ -118,8 +101,11 @@ namespace trs
 			{
 				m_objects.erase(found);
 			}
+
+			return destroyed;
 		}
 
+	private:
 		void eraseFromPool(value_type* ptr)
 		{
 			auto found = std::find_if(m_pool.begin(), m_pool.end(), [ptr](value_type& value) {

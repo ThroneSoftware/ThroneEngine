@@ -8,19 +8,24 @@ jobs:
     - checkout: self
       lfs: true     
     - task: Cache@2
+      displayName: Vcpkg cache
       inputs:
         key: 'vcpkg cache | "$(Agent.OS)"'
         path: 'c:\vcpkg\installed\'            
     - task: CmdLine@2
+      displayName: Generate project files
       inputs:
         script: 'call "cmake" -G "Visual Studio 16 2019" -S "." -B "Build/"'
     - task: CmdLine@2
+      displayName: Build project
       inputs:
         script: 'call "cmake" --build "Build/"" --target ALL_BUILD -j --verbose'
     - task: CmdLine@2
+      displayName: Build tests
       inputs:
         script: 'call "cmake" --build "Build/"" --target BuildTests -j'
     - task: CmdLine@2
+      displayName: Execute tests
       inputs:
         script: 'call "ctest" --force-new-ctest-process --output-on-failure'
         workingDirectory: 'Build/'

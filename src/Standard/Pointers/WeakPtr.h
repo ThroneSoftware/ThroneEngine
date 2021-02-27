@@ -29,7 +29,11 @@ namespace trs
 
 		WeakPtr(const SharedPtr<value_type>& sharedPtr) noexcept;
 
-		WeakPtr(const WeakPtr& other) noexcept = default;
+		WeakPtr(const WeakPtr& other) noexcept
+		  : m_base(other.m_base)
+		{
+			m_base.incrementWRefCount();
+		}
 		WeakPtr& operator=(const WeakPtr& other) noexcept
 		{
 			if(this != &other)
