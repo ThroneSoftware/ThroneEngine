@@ -170,11 +170,11 @@ namespace Tests
 					}
 				}
 
-				AND_GIVEN("The registered ptr is removed")
+				WHEN("The registered ptr is removed")
 				{
 					resource->removeNotifiedPtr(gsl::not_null(&ptr));
 
-					WHEN("Destroying the resource")
+					AND_WHEN("Destroying the resource")
 					{
 						resource->tryDestroy();
 

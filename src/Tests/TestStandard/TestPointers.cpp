@@ -52,11 +52,11 @@ namespace Tests
 
 		WHEN("Constructing PtrOwner with deleter")
 		{
-			MockDeleter<int> mock;
-			ProxyDeleter<int> deleter(mock);
+			MockDeleter<int> deleter_mock;
+			ProxyDeleter<int> deleter(deleter_mock);
 			auto owner = trs::makePtrOwnerWithDeleter<int>(std::move(deleter), new int(10));
 
-			EXPECT_CALL(mock, operatorProxy(testing::_)).Times(1).WillOnce([](int* ptr) {
+			EXPECT_CALL(deleter_mock, operatorProxy(testing::_)).Times(1).WillOnce([](int* ptr) {
 				delete ptr;
 			});
 
