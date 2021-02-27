@@ -152,8 +152,8 @@ namespace Tests
 			resource->incrementRefCount();
 			resource->incrementWRefCount();
 
-			auto tempPtr = std::make_unique<int>();
-			int* ptr = tempPtr.get();
+			int value = 0;
+			int* ptr = &value;
 
 			AND_GIVEN("A registered notified ptr")
 			{
@@ -161,12 +161,11 @@ namespace Tests
 
 				WHEN("Destroying the resource")
 				{
-
 					resource->tryDestroy();
 
 					THEN("The registered ptr is set to nullptr")
 					{
-						REQUIRE(ptr != tempPtr.get());
+						REQUIRE(ptr != &value);
 						REQUIRE(ptr == nullptr);
 					}
 				}
@@ -181,7 +180,7 @@ namespace Tests
 
 						THEN("The registered ptr is not changed")
 						{
-							REQUIRE(ptr == tempPtr.get());
+							REQUIRE(ptr == &value);
 							REQUIRE(ptr != nullptr);
 						}
 					}
