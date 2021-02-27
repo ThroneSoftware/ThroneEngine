@@ -26,7 +26,7 @@ function(configIncludeDirectories target_name)
 
     target_include_directories(${target_name} PRIVATE "Vendors")
 
-    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Vulkan/1.1.121.2/include")
+    target_include_directories(${target_name} PRIVATE "Vendors/Vendors/Vulkan/1.2.162.1/include")
 endfunction()
 
 function(configTestsIncludeDirectories target_name)
