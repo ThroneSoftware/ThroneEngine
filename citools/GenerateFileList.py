@@ -57,7 +57,8 @@ def generateFileList(parentDirectoryPath, targetsList):
             generateFileListRecursive(sourceFile.path, targetsList)
 
 # Change the order of targets since some targets need to come before others.
-def writeTargetsFile(targetsList):
+def writeTargetsFile(targetsList, srcPath):
+    os.chdir(srcPath)
 
     pchTarget = next(target for target in targetsList if "Pch" in target)
 
@@ -67,21 +68,20 @@ def writeTargetsFile(targetsList):
 
     with open("Targets.cmake","w+") as targetsFile:
         for target in targetsList:
-            targetsFile.writelines(f"add_subdirectory({Path(target).relative_to(Path(src_path).parent).as_posix()})\n")
+            targetsFile.writelines(f"add_subdirectory({Path(target).relative_to(Path(srcPath).parent).as_posix()})\n")
 
 
 
 def main():
     # Change the directory to src
-    global src_path
-    src_path = os.path.dirname(__file__) + "/../src"
-    src_path = os.path.abspath(src_path)
-    os.chdir(src_path)
+    srcPath = os.path.dirname(__file__) + "/../src"
+    srcPath = os.path.abspath(srcPath)
+    os.chdir(srcPath)
 
     targetsList = []
-    generateFileList(src_path, targetsList)
+    generateFileList(srcPath, targetsList)
 
-    writeTargetsFile(targetsList)
+    writeTargetsFile(targetsList, srcPath)
 
 if __name__ == "__main__":
     main()
