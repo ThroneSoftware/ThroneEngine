@@ -24,7 +24,7 @@ add_custom_target(GenerateFileList DEPENDS "DUMMYFILE.h")
 add_custom_command(TARGET GenerateFileList 
     PRE_BUILD
     COMMAND python
-    ${PROJECT_SOURCE_DIR}/GenerateFileList.py
+    ${PROJECT_SOURCE_DIR}/citools/GenerateFileList.py
 )
 
 set_target_properties(GenerateFileList
@@ -54,11 +54,11 @@ file(COPY "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/vld.ini"
      DESTINATION "${PROJECT_BINARY_DIR}")
 endif()
 
-include(${PROJECT_SOURCE_DIR}/CMakeScripts/SetupVcpkg.cmake)
+include(${PROJECT_SOURCE_DIR}/citools/CMakeScripts/SetupVcpkg.cmake)
 
 include(CTest)
 enable_testing()
 include(${Catch2_DIR}/Catch.cmake)
 
 
-include(Targets.cmake)
+include(src/Targets.cmake)

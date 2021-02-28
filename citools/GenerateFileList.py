@@ -13,10 +13,10 @@ def scanFolder(folderPath, file, relativeTo):
             # Convert the sourceFile.path to be relative to relativeTo 
             # and convert it in posix (cmake requires posix style in target_source)
             sourcePath = Path(sourceFile.path).relative_to(relativeTo).as_posix()
-            file.writelines("\t" + sourcePath + "\n")
+            file.writelines(f"\t{sourcePath}\n")
         # The sourceFile is a directory
         elif sourceFile.is_dir():
-            if Path(os.path.abspath(str(sourceFile.path) + "/TARGET")).exists():
+            if Path(os.path.abspath(f"{sourceFile.path}/TARGET")).exists():
                 # TARGET exists in the directory so we need to start another sequence
                 generateFileListRecursive(sourceFile.path)
             else:
@@ -24,7 +24,7 @@ def scanFolder(folderPath, file, relativeTo):
                 scanFolder(sourceFile.path, file, relativeTo)
 
 # Populate the FileList.cmake if the file TARGET is present in the targetPath folder
-def generateFileListRecursive(targetPath):
+def generateFileListRecursive(targetPath, targetsList):
     # Change the directory to targetPath
     os.chdir(targetPath)
 
@@ -37,32 +37,51 @@ def generateFileListRecursive(targetPath):
         # Example : c:/Throne/src/Core to Core
         folder_name = os.path.basename(os.path.normpath(targetPath))
 
-        file.write("target_sources(" + folder_name + " PRIVATE \n")
+        file.write(f"target_sources({folder_name} PRIVATE \n")
 
         scanFolder(targetPath, file, targetPath)
 
         file.write(")")
+
+        targetsList.append(targetPath)
     else:
         # The TARGET was not found so we want to continue searching subdirectories
-        generateFileList(targetPath)
+        generateFileList(targetPath, targetsList)
 
 # Explore all folders in the current directory
-def generateFileList(parentDirectoryPath):
+def generateFileList(parentDirectoryPath, targetsList):
     # Find each directory in the parentDirectoryPath
     for sourceFile in os.scandir(parentDirectoryPath):
         # The sourceFile is a directory
         if sourceFile.is_dir():
-            generateFileListRecursive(sourceFile.path)
+            generateFileListRecursive(sourceFile.path, targetsList)
+
+# Change the order of targets since some targets need to come before others.
+def writeTargetsFile(targetsList):
+
+    pchTarget = next(target for target in targetsList if "Pch" in target)
+
+    # Pch must be at the beggining
+    targetsList.remove(pchTarget)
+    targetsList.insert(0, pchTarget)
+
+    with open("Targets.cmake","w+") as targetsFile:
+        for target in targetsList:
+            targetsFile.writelines(f"add_subdirectory({Path(target).relative_to(Path(src_path).parent).as_posix()})\n")
+
 
 
 def main():
     # Change the directory to src
-    source_path = os.path.dirname(__file__) + "/src"
-    source_path = os.path.abspath(source_path)
-    os.chdir(source_path)
+    global src_path
+    src_path = os.path.dirname(__file__) + "/../src"
+    src_path = os.path.abspath(src_path)
+    os.chdir(src_path)
 
-    generateFileList(source_path)
+    targetsList = []
+    generateFileList(src_path, targetsList)
 
+    writeTargetsFile(targetsList)
 
 if __name__ == "__main__":
     main()
