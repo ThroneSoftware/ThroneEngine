@@ -5,6 +5,7 @@
 #include <Utilities/Utility.h>
 
 #include <memory>
+#include <optional>
 
 namespace Tests
 {

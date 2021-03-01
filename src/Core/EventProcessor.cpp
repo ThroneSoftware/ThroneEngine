@@ -2,6 +2,8 @@
 
 #include "ComponentTypeTraits/ComponentTypeTrait.h"
 
+#include <optional>
+
 namespace trc
 {
 	namespace EventProcessorPrivate

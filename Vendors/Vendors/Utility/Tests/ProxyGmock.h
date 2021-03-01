@@ -3,11 +3,13 @@
 
 #pragma once
 
+#include <type_traits>
+
 // DO NOT USE.
 namespace std
 {
-    template <typename T>
-    using result_of = std::invoke_result<T>;
+	template <typename T>
+	using result_of = std::invoke_result<T>;
 }
 
 #include <gmock/gmock.h>

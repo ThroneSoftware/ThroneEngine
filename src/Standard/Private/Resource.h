@@ -1,8 +1,12 @@
 #pragma once
 
-#include <pch.h>
-
 #include <Utilities/Utility.h>
+
+#include <gsl/gsl>
+
+#include <atomic>
+#include <cstdint>
+#include <mutex>
 
 namespace trs::Private
 {

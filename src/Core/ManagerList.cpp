@@ -2,6 +2,8 @@
 
 #include "ComponentTypeTraits/ComponentTypeTrait.h"
 
+#include <algorithm>
+
 namespace trc
 {
 	std::optional<std::reference_wrapper<const ComponentTypeTrait>> ManagerList::getComponentTypeTrait(std::type_index componentTypeIndex)

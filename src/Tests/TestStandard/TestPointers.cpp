@@ -1,5 +1,3 @@
-#include <pch.h>
-
 #include "MockDeleter.h"
 #include "MockResource.h"
 

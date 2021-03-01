@@ -1,7 +1,5 @@
 #define CATCH_CONFIG_RUNNER
 
-#include <pch.h>
-
 #include <Tests/ProxyGmock.h>
 
 #include <Vendors/Utility/Tests/GMockCatchInterceptor.hpp>

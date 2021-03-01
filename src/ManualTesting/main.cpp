@@ -1,7 +1,3 @@
-//#include "Test.h"
-
-#include <pch.h>
-
 #include <Core/Component.h>
 #include <Core/Entity.h>
 #include <Standard/CompressedPair.h>
@@ -9,8 +5,12 @@
 #include <Standard/Pointers.h>
 
 #include <boost/algorithm/string.hpp>
+#include <fmt/format.h>
+#include <glm/glm.hpp>
 #include <windows.h>
 
+#include <iostream>
+#include <optional>
 #include <typeinfo>
 
 //

@@ -1,6 +1,13 @@
 #pragma once
 
-#include <pch.h>
+#include <vector>
+#include <deque>
+#include <list>
+#include <forward_list>
+#include <unordered_map>
+#include <map>
+#include <unordered_set>
+#include <set>
 
 namespace trs
 {

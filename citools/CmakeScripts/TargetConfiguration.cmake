@@ -50,7 +50,7 @@ endfunction()
 function(setCompileOptions target_name)
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         # Adds compiler options, at the time of writing this i'm unsure why the PRIVATE is required
-        target_compile_options(${target_name} PRIVATE "/permissive-" "/W4" "/WX") 
+        target_compile_options(${target_name} PRIVATE "/permissive-" "/W4" "/WX" "/MP") 
         # Compile options only in debug mode
         target_compile_options(${target_name} PRIVATE "$<$<CONFIG:DEBUG>:/MTd>") 
         # Compile options only in release mode

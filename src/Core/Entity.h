@@ -4,6 +4,7 @@
 
 #include <boost/signals2.hpp>
 
+#include <optional>
 #include <vector>
 
 namespace trc
