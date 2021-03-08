@@ -44,15 +44,18 @@ namespace trc
 
 	void Entity::addChild(Entity& child)
 	{
-		// assert child is not already a child of this
-		assert(&child.m_parentData->m_parent != this);
+		if(child.m_parentData.has_value())
+		{
+			// assert child is not already a child of this
+			assert(&child.m_parentData->m_parent != this);
+		}
 		child.setParent(*this);
 	}
 
 	void Entity::removeChild(Entity& child)
 	{
 		// assert child is a child of this
-		assert(&child.m_parentData->m_parent == this);
+		assert(child.m_parentData.has_value() && &child.m_parentData->m_parent == this);
 		child.setParent(std::nullopt);
 	}
 
