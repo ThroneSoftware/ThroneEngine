@@ -57,7 +57,7 @@ namespace trg
 
 			if(!swapChainResult.has_value())
 			{
-				throw std::runtime_error(fmt::format("Graphics queue initialization failed. Error code: {0}. Error message: {1}",
+				throw std::runtime_error(fmt::format("Swapchain initialization failed. Error code: {0}. Error message: {1}",
 													 swapChainResult.error().value(),
 													 swapChainResult.error().message()));
 			}
