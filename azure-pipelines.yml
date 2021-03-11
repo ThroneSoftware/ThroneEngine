@@ -11,6 +11,7 @@ jobs:
       displayName: Install Vulkan Sdk
       inputs:
         filePath: '.\citools\InstallVulkan\InstallVulkan.ps1'
+        workingDirectory: '.\citools\InstallVulkan\'
     - task: Cache@2
       displayName: Vcpkg cache
       inputs:
