@@ -10,7 +10,7 @@ jobs:
     - task: PowerShell@2
       displayName: Install Vulkan Sdk
       inputs:
-        filePath: 'citools\InstallVulkan.ps1'
+        filePath: '.\citools\InstallVulkan.ps1'
     - task: Cache@2
       displayName: Vcpkg cache
       inputs:
