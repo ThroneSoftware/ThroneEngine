@@ -1,2 +1,3 @@
-choco pack .\vulkan-sdk\
-choco install vulkan-sdk -s -y .\vulkan-sdk\
+cd .\vulkan-sdk\
+choco pack
+choco install vulkan-sdk -s -y .
