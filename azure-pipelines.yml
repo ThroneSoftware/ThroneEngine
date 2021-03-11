@@ -12,11 +12,10 @@ jobs:
       inputs:
         filePath: '.\citools\InstallVulkan\InstallVulkan.ps1'
         workingDirectory: '.\citools\InstallVulkan\'
-    - task: PowerShell@
+    - task: PowerShell@2
       displayName: Set VulkanSdk environment variable
       inputs:
         filePath: '.\citools\InstallVulkan\SetVulkanSdkEnvVariable.ps1'
-        workingDirectory: 'c:\'
     - task: Cache@2
       displayName: Vcpkg cache
       inputs:
