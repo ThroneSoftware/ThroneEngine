@@ -12,6 +12,9 @@ jobs:
       inputs:
         filePath: '.\citools\InstallVulkan\InstallVulkan.ps1'
         workingDirectory: '.\citools\InstallVulkan\'
+    - task: CmdLine@2
+      inputs:
+        script: 'SET'
     - task: Cache@2
       displayName: Vcpkg cache
       inputs:
