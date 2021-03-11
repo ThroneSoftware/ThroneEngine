@@ -7,11 +7,16 @@ jobs:
   steps:
     - checkout: self
       lfs: true
+    # - task: PowerShell@2
+    #   displayName: Install Vulkan Sdk
+    #   inputs:
+    #     filePath: '.\citools\InstallVulkan\InstallVulkan.ps1'
+    #     workingDirectory: '.\citools\InstallVulkan\'
     - task: PowerShell@2
       displayName: Install Vulkan Sdk
+      targetType: 'inline'
       inputs:
-        filePath: '.\citools\InstallVulkan\InstallVulkan.ps1'
-        workingDirectory: '.\citools\InstallVulkan\'
+        script: 'choco install vulkan-sdk'
     - task: CmdLine@2
       inputs:
         script: 'SET'
