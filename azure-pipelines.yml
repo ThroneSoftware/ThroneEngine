@@ -6,7 +6,11 @@ jobs:
     vmImage: windows-2019
   steps:
     - checkout: self
-      lfs: true     
+      lfs: true
+    - task: PowerShell@2
+      displayName: Install Vulkan Sdk
+      inputs:
+        filePath: 'citools\InstallVulkan.ps1'
     - task: Cache@2
       displayName: Vcpkg cache
       inputs:
