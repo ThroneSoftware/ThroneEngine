@@ -1,5 +1,6 @@
 #include "VulkanInitializer.h"
 
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 #include <VkBootstrap.h>
@@ -24,10 +25,12 @@ namespace trg
 			return instanceResult.value();
 		}
 
-		vkb::PhysicalDevice getPhysicalDevice(const vkb::Instance& instance)
+		vkb::PhysicalDevice getPhysicalDevice(const vkb::Instance& instance, GLFWwindow& window)
 		{
-			// needs to add the surface
-			auto physicalDeviceResult = vkb::PhysicalDeviceSelector(instance).select();
+			VkSurfaceKHR surface;
+			VkResult result = glfwCreateWindowSurface(instance.instance, &window, nullptr, &surface);
+
+			auto physicalDeviceResult = vkb::PhysicalDeviceSelector(instance).set_surface(surface).select();
 
 			if(!physicalDeviceResult.has_value())
 			{
@@ -99,13 +102,24 @@ namespace trg
 
 	VulkanInitializer::VulkanInitializer()
 	{
+		glfwInit();
+
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		m_window = glfwCreateWindow(1024, 768, "Throne", nullptr, nullptr);
 
-		auto instance = VulkanInitializerPrivate::makeInstance();
-		auto physicalDevice = VulkanInitializerPrivate::getPhysicalDevice(instance);
-		auto device = VulkanInitializerPrivate::makeDevice(physicalDevice);
-		auto swapChain = VulkanInitializerPrivate::makeSwapChain(device);
-		auto graphicsQueue = VulkanInitializerPrivate::makeGraphicsQueue(device);
-		auto presentQueue = VulkanInitializerPrivate::makePresentQueue(device);
+		using namespace VulkanInitializerPrivate;
+
+		m_instance = std::make_unique<vkb::Instance>(makeInstance());
+		m_physicalDevice = std::make_unique<vkb::PhysicalDevice>(getPhysicalDevice(*m_instance, *m_window));
+		m_device = std::make_unique<vkb::Device>(makeDevice(*m_physicalDevice));
+		m_swapchain = std::make_unique<vkb::Swapchain>(makeSwapChain(*m_device));
+		m_graphicsQueue = std::make_unique<VkQueue>(makeGraphicsQueue(*m_device));
+		m_presentQueue = std::make_unique<VkQueue>(makePresentQueue(*m_device));
+	}
+
+	VulkanInitializer::~VulkanInitializer()
+	{
+		glfwDestroyWindow(m_window);
+		glfwTerminate();
 	}
 }  // namespace trg

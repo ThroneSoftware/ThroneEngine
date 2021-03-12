@@ -11,5 +11,5 @@ set_target_properties(Pch PROPERTIES LINKER_LANGUAGE CXX)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 target_include_directories(Pch PRIVATE "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/include")
-target_link_libraries(Pch debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/lib/Win64/vld.lib")
+target_link_libraries(Pch PUBLIC debug "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/lib/Win64/vld.lib")
 endif()

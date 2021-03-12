@@ -178,6 +178,11 @@ int main()
 		try
 		{
 			trg::VulkanInitializer init;
+
+			while (true)
+			{
+
+			}
 		}
 		catch(const std::exception& e)
 		{
