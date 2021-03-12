@@ -4,6 +4,7 @@
 #include <Standard/Manager.h>
 #include <Standard/Pointers.h>
 
+#include <Graphics/VulkanInitializer.h>
 #include <boost/algorithm/string.hpp>
 #include <fmt/format.h>
 #include <glm/glm.hpp>
@@ -171,5 +172,16 @@ int main()
 
 		Health health(*entity);
 		__nop();
+	}
+
+	{
+		try
+		{
+			trg::VulkanInitializer init;
+		}
+		catch(const std::exception& e)
+		{
+			std::cout << e.what() << std::endl;
+		}
 	}
 }

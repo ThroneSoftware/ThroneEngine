@@ -55,6 +55,7 @@ file(COPY "${PROJECT_SOURCE_DIR}/Vendors/Vendors/Visual Leak Detector/vld.ini"
 endif()
 
 include(${PROJECT_SOURCE_DIR}/citools/CMakeScripts/SetupVcpkg.cmake)
+include(${PROJECT_SOURCE_DIR}/citools/CMakeScripts/FetchDependencies.cmake)
 
 include(CTest)
 enable_testing()
