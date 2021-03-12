@@ -1,5 +1,7 @@
 #include "VulkanInitializer.h"
 
+#include <GLFW/glfw3.h>
+
 #include <VkBootstrap.h>
 #include <Vulkan/vulkan.hpp>
 #include <fmt/format.h>
@@ -97,7 +99,8 @@ namespace trg
 
 	VulkanInitializer::VulkanInitializer()
 	{
-		// needs to create the window
+		m_window = glfwCreateWindow(1024, 768, "Throne", nullptr, nullptr);
+
 		auto instance = VulkanInitializerPrivate::makeInstance();
 		auto physicalDevice = VulkanInitializerPrivate::getPhysicalDevice(instance);
 		auto device = VulkanInitializerPrivate::makeDevice(physicalDevice);

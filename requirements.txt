@@ -8,3 +8,4 @@ Stb
 boost-container
 boost-signals2
 boost-algorithm
+glfw3

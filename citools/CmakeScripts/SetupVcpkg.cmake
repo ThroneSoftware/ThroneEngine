@@ -4,7 +4,7 @@ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_SOURCE_DI
 
 function(vcpkg_install_packages)
     execute_process(
-        COMMAND ${VCPKG_ROOT_FOLDER}/vcpkg install @${CMAKE_SOURCE_DIR}/requirements.txt --triplet ${VCPKG_TARGET_TRIPLET} --clean-after-build)
+        COMMAND ${VCPKG_ROOT_FOLDER}/vcpkg install @${CMAKE_SOURCE_DIR}/requirements.txt --triplet ${VCPKG_TARGET_TRIPLET} --clean-after-build --recurse)
 endfunction()
 
 function(find_packages packages)
@@ -34,7 +34,7 @@ if(VCPKG_ROOT_FOLDER)
     vcpkg_install_packages()
 
     # vcpkg packages
-    set(packages Catch2;glm;GTest;fmt;Freetype)
+    set(packages Catch2;glm;GTest;fmt;Freetype;glfw3)
     find_packages("${packages}")
     find_non_generic_packages()
 
