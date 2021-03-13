@@ -4,3 +4,5 @@ addStaticLibrary(Graphics)
 
 target_link_libraries(Graphics PUBLIC Core)
 target_link_libraries(Graphics PRIVATE vk-bootstrap glfw)
+
+target_compile_definitions(Graphics PRIVATE GLFW_INCLUDE_VULKAN)

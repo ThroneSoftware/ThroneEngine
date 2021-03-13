@@ -1,10 +1,10 @@
 #include <Core/Component.h>
 #include <Core/Entity.h>
+#include <Graphics/GraphicsContext.h>
 #include <Standard/CompressedPair.h>
 #include <Standard/Manager.h>
 #include <Standard/Pointers.h>
 
-#include <Graphics/VulkanInitializer.h>
 #include <boost/algorithm/string.hpp>
 #include <fmt/format.h>
 #include <glm/glm.hpp>
@@ -177,11 +177,10 @@ int main()
 	{
 		try
 		{
-			trg::VulkanInitializer init;
+			auto context = std::make_unique<trg::GraphicsContext>(trg::VulkanContextFactory());
 
-			while (true)
+			while(true)
 			{
-
 			}
 		}
 		catch(const std::exception& e)

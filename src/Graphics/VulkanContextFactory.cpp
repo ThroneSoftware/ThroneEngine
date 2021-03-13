@@ -1,6 +1,5 @@
-#include "VulkanInitializer.h"
+#include "VulkanContextFactory.h"
 
-#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 #include <VkBootstrap.h>
@@ -9,7 +8,7 @@
 
 namespace trg
 {
-	namespace VulkanInitializerPrivate
+	namespace VulkanContextFactoryPrivate
 	{
 		vkb::Instance makeInstance()
 		{
@@ -100,26 +99,32 @@ namespace trg
 	}  // namespace VulkanInitializerPrivate
 
 
-	VulkanInitializer::VulkanInitializer()
+	VulkanContextFactory::VulkanContextFactory()
+	{
+	}
+
+	std::unique_ptr<VulkanContext> VulkanContextFactory::makeContext() const
 	{
 		glfwInit();
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		m_window = glfwCreateWindow(1024, 768, "Throne", nullptr, nullptr);
+		auto window = glfwCreateWindow(1024, 768, "Throne", nullptr, nullptr);
 
-		using namespace VulkanInitializerPrivate;
+		using namespace VulkanContextFactoryPrivate;
 
-		m_instance = std::make_unique<vkb::Instance>(makeInstance());
-		m_physicalDevice = std::make_unique<vkb::PhysicalDevice>(getPhysicalDevice(*m_instance, *m_window));
-		m_device = std::make_unique<vkb::Device>(makeDevice(*m_physicalDevice));
-		m_swapchain = std::make_unique<vkb::Swapchain>(makeSwapChain(*m_device));
-		m_graphicsQueue = std::make_unique<VkQueue>(makeGraphicsQueue(*m_device));
-		m_presentQueue = std::make_unique<VkQueue>(makePresentQueue(*m_device));
-	}
+		auto instance = makeInstance();
+		auto physicalDevice = getPhysicalDevice(instance, *window);
+		auto device = makeDevice(physicalDevice);
+		auto swapchain = makeSwapChain(device);
+		auto graphicsQueue = makeGraphicsQueue(device);
+		auto presentQueue = makePresentQueue(device);
 
-	VulkanInitializer::~VulkanInitializer()
-	{
-		glfwDestroyWindow(m_window);
-		glfwTerminate();
+		return std::make_unique<VulkanContext>(window,
+											   std::move(instance),
+											   std::move(physicalDevice),
+											   std::move(device),
+											   std::move(swapchain),
+											   graphicsQueue,
+											   presentQueue);
 	}
 }  // namespace trg

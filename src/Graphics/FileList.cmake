@@ -1,4 +1,8 @@
 target_sources(Graphics PRIVATE 
-	VulkanInitializer.cpp
-	VulkanInitializer.h
+	GraphicsContext.cpp
+	GraphicsContext.h
+	VulkanContext.cpp
+	VulkanContext.h
+	VulkanContextFactory.cpp
+	VulkanContextFactory.h
 )
