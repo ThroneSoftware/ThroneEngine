@@ -15,10 +15,6 @@ function(groupTargetSources target relative_source_path)
 	endforeach()
 endfunction()
 
-function(targetLinkLibraryFreetype target_name)
-    target_link_libraries(${target_name} freetype)
-endfunction()
-
 function(configIncludeDirectories target_name)
     # Add an include directory to target
     # Thoses are the includes with <>
@@ -26,7 +22,7 @@ function(configIncludeDirectories target_name)
 
     target_include_directories(${target_name} PRIVATE ${PROJECT_SOURCE_DIR}/Vendors)
 
-    target_include_directories(${target_name} PRIVATE ${PROJECT_SOURCE_DIR}/Vendors/Vendors/Vulkan/1.2.162.1/include)
+    target_include_directories(${target_name} PRIVATE ${PROJECT_SOURCE_DIR}/Vendors/Vendors/Vulkan/1.2.170.0/include)
 endfunction()
 
 function(configTestsIncludeDirectories target_name)
@@ -36,15 +32,15 @@ function(configTestsIncludeDirectories target_name)
 endfunction()
 
 function(linkCommonVendors target_name)
-    target_link_libraries(${target_name} fmt::fmt)
-    target_link_libraries(${target_name} Microsoft.GSL::GSL)
-    target_link_libraries(${target_name} glm)
+    target_link_libraries(${target_name} PUBLIC fmt::fmt)
+    target_link_libraries(${target_name} PUBLIC Microsoft.GSL::GSL)
+    target_link_libraries(${target_name} PUBLIC glm)
 endfunction()
 
 function(linkTestVendors target_name)
-    target_link_libraries(${target_name} GTest::gtest)
-    target_link_libraries(${target_name} GTest::gmock)
-    target_link_libraries(${target_name} Catch2::Catch2)
+    target_link_libraries(${target_name} PUBLIC GTest::gtest)
+    target_link_libraries(${target_name} PUBLIC GTest::gmock)
+    target_link_libraries(${target_name} PUBLIC Catch2::Catch2)
 endfunction()
 
 function(setCompileOptions target_name)
