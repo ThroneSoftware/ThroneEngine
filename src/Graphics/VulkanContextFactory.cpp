@@ -96,7 +96,7 @@ namespace trg
 
 			return queueResult.value();
 		}
-	}  // namespace VulkanInitializerPrivate
+	}  // namespace VulkanContextFactoryPrivate
 
 
 	VulkanContextFactory::VulkanContextFactory()
