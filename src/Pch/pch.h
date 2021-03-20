@@ -5,8 +5,6 @@
 //#include <vld.h>
 #endif
 
-#include <Vulkan/vulkan.hpp>
-
 #pragma region GLM
 
 #include <glm/common.hpp>
