@@ -20,9 +20,8 @@ namespace trg
 
 		auto semaphores = std::initializer_list<VkSemaphore>{};
 		auto swapchains = std::initializer_list<VkSwapchainKHR>{vkContext.m_swapchain.swapchain};
-		auto indices = std::initializer_list<uint32_t>{0};
-
 		uint32_t indice = 0;
+
 		dispatch.vkAcquireNextImageKHR(vkContext.m_device.device,
 									   vkContext.m_swapchain.swapchain,
 									   std::numeric_limits<std::uint64_t>::max(),
@@ -39,7 +38,7 @@ namespace trg
 		presentInfo.pSwapchains = swapchains.begin();
 		presentInfo.swapchainCount = static_cast<uint32_t>(swapchains.size());
 
-		presentInfo.pImageIndices = indices.begin();
+		presentInfo.pImageIndices = &indice;
 
 
 		dispatch.vkQueuePresentKHR(vkContext.m_presentQueue, &presentInfo);
