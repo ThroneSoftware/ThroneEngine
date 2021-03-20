@@ -1,6 +1,6 @@
 #include <Core/Component.h>
 #include <Core/Entity.h>
-#include <Graphics/GraphicsContext.h>
+#include <Graphics/GraphicsInstance.h>
 #include <Standard/CompressedPair.h>
 #include <Standard/Manager.h>
 #include <Standard/Pointers.h>
@@ -177,10 +177,11 @@ int main()
 	{
 		try
 		{
-			auto context = std::make_unique<trg::GraphicsContext>(trg::VulkanContextFactory());
+			auto context = trg::GraphicsInstance(std::make_unique<trg::GraphicsContext>(trg::VulkanContextFactory()));
 
 			while(true)
 			{
+				context.present();
 			}
 		}
 		catch(const std::exception& e)

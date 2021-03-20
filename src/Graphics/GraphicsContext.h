@@ -15,7 +15,6 @@ namespace trg
 
 		~GraphicsContext();
 
-	private:
 		std::unique_ptr<VulkanContext> m_vulkanContext;
 	};
 }  // namespace trg
