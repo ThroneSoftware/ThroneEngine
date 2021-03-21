@@ -185,7 +185,6 @@ namespace trg
 			vk::defaultDispatchLoaderDynamic.init(context->m_instance);
 
 			context->m_messenger = makeDebugMessenger(context->m_instance);
-			;
 
 			auto physicalDevice = getPhysicalDevice(instance, *context->m_window);
 			context->m_physicalDevice = vk::PhysicalDevice(physicalDevice.physical_device);

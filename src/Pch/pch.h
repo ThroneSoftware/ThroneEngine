@@ -5,6 +5,9 @@
 //#include <vld.h>
 #endif
 
+#define VULKAN_HPP_DISPATCH_LOADER_DYNAMIC 1
+#include <Vulkan/vulkan.hpp>
+
 #pragma region GLM
 
 #include <glm/common.hpp>
