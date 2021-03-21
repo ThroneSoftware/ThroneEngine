@@ -1,27 +1,23 @@
 #include "VulkanContext.h"
 
+#include <GLFW/glfw3.h>
+
 namespace trg
 {
-	VulkanContext::VulkanContext(GLFWwindow* window,
-								 vkb::Instance&& instance,
-								 vkb::PhysicalDevice&& physicalDevice,
-								 vkb::Device&& device,
-								 vkb::Swapchain&& swapchain,
-								 VkQueue graphicsQueue,
-								 VkQueue presentQueue)
-	  : m_window(window)
-	  , m_instance(std::move(instance))
-	  , m_physicalDevice(std::move(physicalDevice))
-	  , m_device(std::move(device))
-	  , m_swapchain(std::move(swapchain))
-	  , m_graphicsQueue(graphicsQueue)
-	  , m_presentQueue(presentQueue)
+	VulkanContext::VulkanContext()
 	{
 	}
 
-
 	VulkanContext::~VulkanContext()
 	{
+		m_swapchain.~Swapchain();
+
+		m_instance.destroySurfaceKHR(m_surface);
+		m_instance.destroyDebugUtilsMessengerEXT(m_messenger);
+
+		m_device.destroy();
+		m_instance.destroy();
+
 		glfwDestroyWindow(m_window);
 		glfwTerminate();
 	}

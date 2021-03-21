@@ -179,10 +179,7 @@ int main()
 		{
 			auto context = trg::GraphicsInstance(std::make_unique<trg::GraphicsContext>(trg::VulkanContextFactory()));
 
-			while(true)
-			{
-				context.present();
-			}
+			context.present();
 		}
 		catch(const std::exception& e)
 		{

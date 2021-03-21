@@ -14,34 +14,18 @@ namespace trg
 	{
 		VulkanContext& vkContext = vulkanContext();
 
-		vk::DynamicLoader libLoader;
-		vk::DispatchLoaderDynamic dispatch;
-		dispatch.init(vk::Instance(vkContext.m_instance.instance), vk::Device(vkContext.m_device.device), libLoader);
 
-		auto semaphores = std::initializer_list<VkSemaphore>{};
-		auto swapchains = std::initializer_list<VkSwapchainKHR>{vkContext.m_swapchain.swapchain};
-		uint32_t indice = 0;
-
-		dispatch.vkAcquireNextImageKHR(vkContext.m_device.device,
-									   vkContext.m_swapchain.swapchain,
-									   std::numeric_limits<std::uint64_t>::max(),
-									   VK_NULL_HANDLE,
-									   VK_NULL_HANDLE,
-									   &indice);
-
-		VkPresentInfoKHR presentInfo = {};
-		presentInfo.pNext = nullptr;
-		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-		presentInfo.pWaitSemaphores = semaphores.begin();
-		presentInfo.waitSemaphoreCount = static_cast<uint32_t>(semaphores.size());
-
-		presentInfo.pSwapchains = swapchains.begin();
-		presentInfo.swapchainCount = static_cast<uint32_t>(swapchains.size());
-
-		presentInfo.pImageIndices = &indice;
+		auto index = vkContext.m_device.acquireNextImageKHR(vkContext.m_swapchain.getSwapchain(),
+															std::numeric_limits<std::uint64_t>::max(),
+															vk::Semaphore(),
+															vk::Fence());
 
 
-		dispatch.vkQueuePresentKHR(vkContext.m_presentQueue, &presentInfo);
+		auto indices = {index.value};
+
+		auto presentInfo = vk::PresentInfoKHR(vkContext.m_presentSemaphores, vkContext.m_swapchains, indices);
+
+		auto result = vkContext.m_presentQueue.presentKHR(presentInfo);
 	}
 
 	VulkanContext& GraphicsInstance::vulkanContext()

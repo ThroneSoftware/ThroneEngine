@@ -1,33 +1,37 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
+#include "VulkanWrappers/Swapchain.h"
 
 #include <VkBootstrap.h>
 #include <Vulkan/vulkan.hpp>
+
+struct GLFWwindow;
 
 namespace trg
 {
 	class VulkanContext
 	{
 	public:
-		VulkanContext(GLFWwindow* window,
-					  vkb::Instance&& instance,
-					  vkb::PhysicalDevice&& physicalDevice,
-					  vkb::Device&& device,
-					  vkb::Swapchain&& swapchain,
-					  VkQueue graphicsQueue,
-					  VkQueue presentQueue);
-
+		VulkanContext();
 		~VulkanContext();
 
 		GLFWwindow* m_window;
 
-		vkb::Instance m_instance;
-		vkb::PhysicalDevice m_physicalDevice;
-		vkb::Device m_device;
-		vkb::Swapchain m_swapchain;
+		vk::Instance m_instance;
+		vk::DebugUtilsMessengerEXT m_messenger;
 
-		VkQueue m_graphicsQueue;
-		VkQueue m_presentQueue;
+		vk::PhysicalDevice m_physicalDevice;
+		vk::Device m_device;
+		union
+		{
+			Swapchain m_swapchain;
+		};
+		vk::SurfaceKHR m_surface;
+
+		vk::Queue m_graphicsQueue;
+		vk::Queue m_presentQueue;
+
+		std::vector<vk::Semaphore> m_presentSemaphores;
+		std::vector<vk::SwapchainKHR> m_swapchains;
 	};
 }  // namespace trg

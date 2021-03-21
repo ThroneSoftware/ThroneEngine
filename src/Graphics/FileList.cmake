@@ -7,4 +7,6 @@ target_sources(Graphics PRIVATE
 	VulkanContext.h
 	VulkanContextFactory.cpp
 	VulkanContextFactory.h
+	VulkanWrappers/Swapchain.cpp
+	VulkanWrappers/Swapchain.h
 )
