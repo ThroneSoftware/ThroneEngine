@@ -17,10 +17,10 @@ namespace trg
 		Swapchain(vk::Device& device, vkb::Swapchain& swapchain);
 
 		Swapchain(const Swapchain& other) = delete;
-		Swapchain& operator=(const Swapchain & other) = delete;
+		Swapchain& operator=(const Swapchain& other) = delete;
 
-		Swapchain(Swapchain && other) = delete;
-		Swapchain& operator=(Swapchain && other) = delete;
+		Swapchain(Swapchain&& other) = delete;
+		Swapchain& operator=(Swapchain&& other) = delete;
 
 		~Swapchain();
 
@@ -33,5 +33,7 @@ namespace trg
 		vk::Device& m_device;
 
 		vk::SwapchainKHR m_swapchain;
+
+		vk::Format m_imageFormat;
 	};
 }  // namespace trg

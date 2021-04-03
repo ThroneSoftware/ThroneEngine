@@ -7,6 +7,7 @@ namespace trg
 	Swapchain::Swapchain(vk::Device& device, vkb::Swapchain& swapchain)
 	  : m_device(device)
 	  , m_swapchain(swapchain.swapchain)
+	  , m_imageFormat(swapchain.image_format)
 	{
 	}
 
