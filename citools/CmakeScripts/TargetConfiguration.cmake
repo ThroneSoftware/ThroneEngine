@@ -34,7 +34,7 @@ endfunction()
 function(linkCommonVendors target_name)
     target_link_libraries(${target_name} PUBLIC fmt::fmt)
     target_link_libraries(${target_name} PUBLIC Microsoft.GSL::GSL)
-    target_link_libraries(${target_name} PUBLIC glm)
+    target_link_libraries(${target_name} PUBLIC glm::glm)
 endfunction()
 
 function(linkTestVendors target_name)
