@@ -8,7 +8,7 @@ function(groupTargetSources target relative_source_path)
 		get_filename_component(parent_directory_path ${file} DIRECTORY)
 		
 		source_group(TREE 
-			${PROJECT_SOURCE_DIR}/${relative_source_path} 
+			${relative_source_path} 
 			PREFIX "src\\"
 			FILES ${file}
 		)
@@ -72,7 +72,7 @@ function(configTarget target_name)
 
     setCompileOptions(${target_name})
 
-    groupTargetSources(${target_name} src/${target_name})
+    groupTargetSources(${target_name} ${CMAKE_CURRENT_SOURCE_DIR})
 
     set_target_properties(${target_name} PROPERTIES LINKER_LANGUAGE CXX)
 endfunction()
@@ -92,7 +92,7 @@ function(configTestTarget target_name)
 
     target_compile_definitions(${target_name} PRIVATE GTEST_DONT_DEFINE_FAIL GTEST_DONT_DEFINE_SUCCEED)
 
-    groupTargetSources(${target_name} src/Tests/${target_name})
+    groupTargetSources(${target_name} ${CMAKE_CURRENT_SOURCE_DIR})
 
     add_dependencies(BuildTests ${target_name})
 
