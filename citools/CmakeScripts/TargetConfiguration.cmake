@@ -1,14 +1,11 @@
 # Group source files based on their folder
-# Remove the prefix relative_source_path
-function(groupTargetSources target relative_source_path)
+# Remove the prefix target_path
+function(groupTargetSources target target_path)
 	# get all sources files in a target
 	get_target_property(sources ${target} SOURCES)
-	foreach(file ${sources})
-		# This get the the path of the parent directory in the file
-		get_filename_component(parent_directory_path ${file} DIRECTORY)
-		
+	foreach(file ${sources})	
 		source_group(TREE 
-			${relative_source_path} 
+			${target_path} 
 			PREFIX "src\\"
 			FILES ${file}
 		)
