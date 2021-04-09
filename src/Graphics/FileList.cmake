@@ -7,6 +7,12 @@ target_sources(Graphics PRIVATE
 	VulkanContext.h
 	VulkanContextFactory.cpp
 	VulkanContextFactory.h
+	VulkanWrappers/Memory/Buffer.cpp
+	VulkanWrappers/Memory/Buffer.h
+	VulkanWrappers/Memory/Image.cpp
+	VulkanWrappers/Memory/Image.h
+	VulkanWrappers/Memory/VmaAllocator.cpp
+	VulkanWrappers/Memory/VmaAllocator.h
 	VulkanWrappers/RenderPass.cpp
 	VulkanWrappers/RenderPass.h
 	VulkanWrappers/Swapchain.cpp

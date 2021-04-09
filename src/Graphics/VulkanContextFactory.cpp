@@ -1,6 +1,8 @@
 #include "VulkanContextFactory.h"
 
 #include "VulkanContext.h"
+#include "VulkanWrappers/Memory/Buffer.h"
+#include "VulkanWrappers/Memory/VmaAllocator.h"
 
 #include <GLFW/glfw3.h>
 
@@ -16,6 +18,8 @@ VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
 namespace trg
 {
+	extern std::atomic_bool alreadyCreated = false;
+
 	namespace VulkanContextFactoryPrivate
 	{
 		const char* toString(VkDebugUtilsMessageTypeFlagsEXT messageType)
@@ -163,8 +167,6 @@ namespace trg
 
 	std::unique_ptr<VulkanContext> VulkanContextFactory::makeContext() const
 	{
-		std::atomic_bool alreadyCreated = false;
-
 		if(bool expected = false; alreadyCreated.compare_exchange_strong(expected, true))
 		{
 			glfwInit();
@@ -194,6 +196,8 @@ namespace trg
 			context->m_device = vk::Device(device.device);
 			vk::defaultDispatchLoaderDynamic.init(context->m_device);
 
+			initializeVmaDefaultAllocator(context->m_physicalDevice, context->m_device);
+
 			auto swapchain = makeSwapchain(device);
 			new(&context->m_swapchain) Swapchain(context->m_device, swapchain);
 			context->m_swapchains = {context->m_swapchain.getSwapchain()};
@@ -206,7 +210,9 @@ namespace trg
 		}
 		else
 		{
-			// This is because of the loader since we currently use a default loader.
+			// This is because of two things.
+			// The vulkan loader since we currently use a default loader.
+			// The g_vmaDefaultAllocator.
 			throw std::runtime_error("Only one VulkanContext at a time is currently supported.");
 		}
 	}
