@@ -13,7 +13,7 @@ namespace trg
 			vma::AllocationCreateInfo allocationCreateInfo = vma::AllocationCreateInfo();
 			allocationCreateInfo.usage = vma::MemoryUsage::eGpuOnly;
 
-			return vmaDefaultAllocator.createImage(imageInfo, allocationCreateInfo);
+			return g_vmaDefaultAllocator.createImage(imageInfo, allocationCreateInfo);
 		}
 	}  // namespace ImagePrivate
 
@@ -24,7 +24,7 @@ namespace trg
 
 	Image::~Image()
 	{
-		vmaDefaultAllocator.destroyImage(m_image, m_allocation);
+		g_vmaDefaultAllocator.destroyImage(m_image, m_allocation);
 	}
 
 	Image::Image(std::pair<vk::Image, vma::Allocation>&& image)

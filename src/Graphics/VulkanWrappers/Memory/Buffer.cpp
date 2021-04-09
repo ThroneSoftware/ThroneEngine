@@ -13,7 +13,7 @@ namespace trg
 			vma::AllocationCreateInfo allocationCreateInfo = vma::AllocationCreateInfo();
 			allocationCreateInfo.usage = vma::MemoryUsage::eGpuOnly;
 
-			return vmaDefaultAllocator.createBuffer(bufferInfo, allocationCreateInfo);
+			return g_vmaDefaultAllocator.createBuffer(bufferInfo, allocationCreateInfo);
 		}
 	}  // namespace BufferPrivate
 
@@ -24,7 +24,7 @@ namespace trg
 
 	Buffer::~Buffer()
 	{
-		vmaDefaultAllocator.destroyBuffer(m_buffer, m_allocation);
+		g_vmaDefaultAllocator.destroyBuffer(m_buffer, m_allocation);
 	}
 
 	Buffer::Buffer(std::pair<vk::Buffer, vma::Allocation>&& buffer)

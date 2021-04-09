@@ -212,7 +212,7 @@ namespace trg
 		{
 			// This is because of two things.
 			// The vulkan loader since we currently use a default loader.
-			// The vmaDefaultAllocator.
+			// The g_vmaDefaultAllocator.
 			throw std::runtime_error("Only one VulkanContext at a time is currently supported.");
 		}
 	}

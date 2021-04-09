@@ -2,7 +2,7 @@
 
 namespace trg
 {
-	vma::Allocator vmaDefaultAllocator;
+	vma::Allocator g_vmaDefaultAllocator;
 
 	namespace VmaAllocatorPrivate
 	{
@@ -43,6 +43,6 @@ namespace trg
 
 		allocatorCreateInfo.setPVulkanFunctions(&vulkanFunctions);
 
-		vmaDefaultAllocator = vma::createAllocator(allocatorCreateInfo);
+		g_vmaDefaultAllocator = vma::createAllocator(allocatorCreateInfo);
 	}
 }  // namespace trg
