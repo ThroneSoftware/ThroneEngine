@@ -1,6 +1,7 @@
 #include "VulkanContextFactory.h"
 
 #include "VulkanContext.h"
+#include "VulkanWrappers/Memory/VmaAllocator.h"
 
 #include <GLFW/glfw3.h>
 
@@ -154,6 +155,13 @@ namespace trg
 
 			return queueResult.value();
 		}
+
+		void initializeVmaDefaultAllocator(vk::PhysicalDevice& physicalDevice, vk::Device& device)
+		{
+			auto allocatorCreateInfo = vma::AllocatorCreateInfo({}, physicalDevice, device);
+
+			vmaDefaultAllocator = vma::createAllocator(allocatorCreateInfo);
+		}
 	}  // namespace VulkanContextFactoryPrivate
 
 
@@ -194,6 +202,8 @@ namespace trg
 			context->m_device = vk::Device(device.device);
 			vk::defaultDispatchLoaderDynamic.init(context->m_device);
 
+			initializeVmaDefaultAllocator(context->m_physicalDevice, context->m_device);
+
 			auto swapchain = makeSwapchain(device);
 			new(&context->m_swapchain) Swapchain(context->m_device, swapchain);
 			context->m_swapchains = {context->m_swapchain.getSwapchain()};
@@ -206,7 +216,9 @@ namespace trg
 		}
 		else
 		{
-			// This is because of the loader since we currently use a default loader.
+			// This is because of two things.
+			// The vulkan loader since we currently use a default loader.
+			// The vmaDefaultAllocator.
 			throw std::runtime_error("Only one VulkanContext at a time is currently supported.");
 		}
 	}

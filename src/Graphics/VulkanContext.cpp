@@ -1,5 +1,7 @@
 #include "VulkanContext.h"
 
+#include "VulkanWrappers/Memory/VmaAllocator.h"
+
 #include <GLFW/glfw3.h>
 
 namespace trg
@@ -14,6 +16,8 @@ namespace trg
 
 		m_instance.destroySurfaceKHR(m_surface);
 		m_instance.destroyDebugUtilsMessengerEXT(m_messenger);
+
+		vmaDefaultAllocator.destroy();
 
 		m_device.destroy();
 		m_instance.destroy();
