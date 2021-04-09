@@ -17,6 +17,8 @@ VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
 namespace trg
 {
+	vma::Allocator vmaDefaultAllocator;
+
 	namespace VulkanContextFactoryPrivate
 	{
 		const char* toString(VkDebugUtilsMessageTypeFlagsEXT messageType)
