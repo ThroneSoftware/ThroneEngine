@@ -1,14 +1,11 @@
 # Group source files based on their folder
-# Remove the prefix relative_source_path
-function(groupTargetSources target relative_source_path)
+# Remove the prefix target_path
+function(groupTargetSources target target_path)
 	# get all sources files in a target
 	get_target_property(sources ${target} SOURCES)
-	foreach(file ${sources})
-		# This get the the path of the parent directory in the file
-		get_filename_component(parent_directory_path ${file} DIRECTORY)
-		
+	foreach(file ${sources})	
 		source_group(TREE 
-			${PROJECT_SOURCE_DIR}/${relative_source_path} 
+			${target_path} 
 			PREFIX "src\\"
 			FILES ${file}
 		)
@@ -72,7 +69,7 @@ function(configTarget target_name)
 
     setCompileOptions(${target_name})
 
-    groupTargetSources(${target_name} src/${target_name})
+    groupTargetSources(${target_name} ${CMAKE_CURRENT_SOURCE_DIR})
 
     set_target_properties(${target_name} PROPERTIES LINKER_LANGUAGE CXX)
 endfunction()
@@ -92,7 +89,7 @@ function(configTestTarget target_name)
 
     target_compile_definitions(${target_name} PRIVATE GTEST_DONT_DEFINE_FAIL GTEST_DONT_DEFINE_SUCCEED)
 
-    groupTargetSources(${target_name} src/Tests/${target_name})
+    groupTargetSources(${target_name} ${CMAKE_CURRENT_SOURCE_DIR})
 
     add_dependencies(BuildTests ${target_name})
 

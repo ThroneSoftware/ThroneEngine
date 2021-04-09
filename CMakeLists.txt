@@ -63,3 +63,5 @@ include(${Catch2_DIR}/Catch.cmake)
 
 
 include(src/Targets.cmake)
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/Vendors/Vendors/VulkanMemoryAllocator)
