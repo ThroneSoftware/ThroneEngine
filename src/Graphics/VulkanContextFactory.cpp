@@ -18,6 +18,8 @@ VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
 namespace trg
 {
+	extern std::atomic_bool alreadyCreated = false;
+
 	namespace VulkanContextFactoryPrivate
 	{
 		const char* toString(VkDebugUtilsMessageTypeFlagsEXT messageType)
@@ -165,8 +167,6 @@ namespace trg
 
 	std::unique_ptr<VulkanContext> VulkanContextFactory::makeContext() const
 	{
-		std::atomic_bool alreadyCreated = false;
-
 		if(bool expected = false; alreadyCreated.compare_exchange_strong(expected, true))
 		{
 			glfwInit();
