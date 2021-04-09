@@ -1,6 +1,7 @@
 #include "VulkanContextFactory.h"
 
 #include "VulkanContext.h"
+#include "VulkanWrappers/Memory/Buffer.h"
 #include "VulkanWrappers/Memory/VmaAllocator.h"
 
 #include <GLFW/glfw3.h>
@@ -17,8 +18,6 @@ VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
 namespace trg
 {
-	vma::Allocator vmaDefaultAllocator;
-
 	namespace VulkanContextFactoryPrivate
 	{
 		const char* toString(VkDebugUtilsMessageTypeFlagsEXT messageType)
@@ -156,13 +155,6 @@ namespace trg
 			}
 
 			return queueResult.value();
-		}
-
-		void initializeVmaDefaultAllocator(vk::PhysicalDevice& physicalDevice, vk::Device& device)
-		{
-			auto allocatorCreateInfo = vma::AllocatorCreateInfo({}, physicalDevice, device);
-
-			vmaDefaultAllocator = vma::createAllocator(allocatorCreateInfo);
 		}
 	}  // namespace VulkanContextFactoryPrivate
 

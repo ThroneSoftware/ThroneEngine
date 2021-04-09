@@ -5,4 +5,6 @@
 namespace trg
 {
 	extern vma::Allocator vmaDefaultAllocator;
-}
+
+	void initializeVmaDefaultAllocator(vk::PhysicalDevice& physicalDevice, vk::Device& device);
+}  // namespace trg
