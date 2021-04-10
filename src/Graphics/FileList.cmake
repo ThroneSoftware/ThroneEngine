@@ -11,6 +11,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Memory/Buffer.h
 	VulkanWrappers/Memory/Image.cpp
 	VulkanWrappers/Memory/Image.h
+	VulkanWrappers/Memory/ImageView.cpp
+	VulkanWrappers/Memory/ImageView.h
 	VulkanWrappers/Memory/VmaAllocator.cpp
 	VulkanWrappers/Memory/VmaAllocator.h
 	VulkanWrappers/Memory/VmaUnique.h
