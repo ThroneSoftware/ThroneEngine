@@ -18,18 +18,7 @@ namespace trg
 	}  // namespace ImagePrivate
 
 	Image::Image()
-	  : Image(ImagePrivate::makeImage())
-	{
-	}
-
-	Image::~Image()
-	{
-		g_vmaDefaultAllocator.destroyImage(m_image, m_allocation);
-	}
-
-	Image::Image(std::pair<vk::Image, vma::Allocation>&& image)
-	  : m_image(std::move(image.first))
-	  , m_allocation(image.second)
+	  : m_image(ImagePrivate::makeImage())
 	{
 	}
 }  // namespace trg

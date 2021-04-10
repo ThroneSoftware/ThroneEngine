@@ -18,18 +18,7 @@ namespace trg
 	}  // namespace BufferPrivate
 
 	Buffer::Buffer(vk::DeviceSize bufferSize, vk::BufferUsageFlagBits bufferUsage)
-	  : Buffer(BufferPrivate::makeBuffer(bufferSize, bufferUsage))
-	{
-	}
-
-	Buffer::~Buffer()
-	{
-		g_vmaDefaultAllocator.destroyBuffer(m_buffer, m_allocation);
-	}
-
-	Buffer::Buffer(std::pair<vk::Buffer, vma::Allocation>&& buffer)
-	  : m_buffer(std::move(buffer.first))
-	  , m_allocation(buffer.second)
+	  : m_buffer(BufferPrivate::makeBuffer(bufferSize, bufferUsage))
 	{
 	}
 }  // namespace trg
