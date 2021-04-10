@@ -9,17 +9,7 @@ namespace trg
 	public:
 		RenderPass(vk::Device& device, vk::Format swapchainFormat);
 
-		RenderPass(const RenderPass& other) = delete;
-		RenderPass& operator=(const RenderPass& other) = delete;
-
-		RenderPass(RenderPass&& other) = delete;
-		RenderPass& operator=(RenderPass&& other) = delete;
-
-		~RenderPass();
-
 	private:
-		vk::Device& m_device;
-
-		vk::RenderPass m_renderPass;
+		vk::UniqueRenderPass m_renderPass;
 	};
 }  // namespace trg

@@ -3,7 +3,6 @@
 namespace trg
 {
 	RenderPass::RenderPass(vk::Device& device, vk::Format swapchainFormat)
-	  : m_device(device)
 	{
 		auto colorAttachment = vk::AttachmentDescription({},
 														 swapchainFormat,
@@ -63,11 +62,6 @@ namespace trg
 		vk::RenderPassCreateInfo createInfo = vk::RenderPassCreateInfo({}, attachments, subpassDescriptions, subpassDependencies);
 
 
-		m_renderPass = m_device.createRenderPass(createInfo);
-	}
-
-	RenderPass::~RenderPass()
-	{
-		m_device.destroyRenderPass(m_renderPass);
+		m_renderPass = device.createRenderPassUnique(createInfo);
 	}
 }  // namespace trg

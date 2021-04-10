@@ -13,6 +13,7 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Memory/Image.h
 	VulkanWrappers/Memory/VmaAllocator.cpp
 	VulkanWrappers/Memory/VmaAllocator.h
+	VulkanWrappers/Memory/VmaUnique.h
 	VulkanWrappers/RenderPass.cpp
 	VulkanWrappers/RenderPass.h
 	VulkanWrappers/Swapchain.cpp

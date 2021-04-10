@@ -5,30 +5,18 @@
 namespace trg
 {
 	Swapchain::Swapchain(vk::Device& device, vkb::Swapchain& swapchain)
-	  : m_device(device)
-	  , m_swapchain(swapchain.swapchain)
+	  : m_swapchain(vk::UniqueSwapchainKHR(swapchain.swapchain, vk::ObjectDestroy(device, nullptr, vk::defaultDispatchLoaderDynamic)))
 	  , m_imageFormat(static_cast<vk::Format>(swapchain.image_format))
 	{
 	}
 
-	Swapchain::~Swapchain()
-	{
-		reset();
-	}
-
-	void Swapchain::reset()
-	{
-		m_device.destroySwapchainKHR(m_swapchain);
-		m_swapchain = nullptr;
-	}
-
 	vk::SwapchainKHR& Swapchain::getSwapchain()
 	{
-		return m_swapchain;
+		return m_swapchain.get();
 	}
 
 	const vk::SwapchainKHR& Swapchain::getSwapchain() const
 	{
-		return m_swapchain;
+		return m_swapchain.get();
 	}
 }  // namespace trg
