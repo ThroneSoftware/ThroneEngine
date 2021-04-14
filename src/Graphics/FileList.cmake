@@ -3,10 +3,13 @@ target_sources(Graphics PRIVATE
 	GraphicsContext.h
 	GraphicsInstance.cpp
 	GraphicsInstance.h
+	Utility.h
 	VulkanContext.cpp
 	VulkanContext.h
 	VulkanContextFactory.cpp
 	VulkanContextFactory.h
+	VulkanWrappers/FrameBuffer.cpp
+	VulkanWrappers/FrameBuffer.h
 	VulkanWrappers/Memory/Buffer.cpp
 	VulkanWrappers/Memory/Buffer.h
 	VulkanWrappers/Memory/Image.cpp
