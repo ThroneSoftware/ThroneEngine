@@ -35,4 +35,14 @@ namespace trg
 	  : m_view(ImageViewPrivate::makeImageView(device, image, aspect, viewType, format, layer, layerCount))
 	{
 	}
+
+	vk::ImageView& ImageView::getVkHandle()
+	{
+		return m_view.get();
+	}
+
+	const vk::ImageView& ImageView::getVkHandle() const
+	{
+		return m_view.get();
+	}
 }  // namespace trg

@@ -64,4 +64,14 @@ namespace trg
 
 		m_renderPass = device.createRenderPassUnique(createInfo);
 	}
+
+	vk::RenderPass& RenderPass::getVkHandle()
+	{
+		return m_renderPass.get();
+	}
+
+	const vk::RenderPass& RenderPass::getVkHandle() const
+	{
+		return m_renderPass.get();
+	}
 }  // namespace trg
