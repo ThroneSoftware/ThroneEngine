@@ -2,6 +2,11 @@
 
 namespace trg
 {
+	FencePool::FencePool(vk::Device& device)
+	  : m_device(device)
+	{
+	}
+
 	FencePool::FencePool(vk::Device& device, int numberOfFences)
 	  : m_device(device)
 	{

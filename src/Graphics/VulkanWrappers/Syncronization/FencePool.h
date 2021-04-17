@@ -9,6 +9,7 @@ namespace trg
 	class FencePool
 	{
 	public:
+		explicit FencePool(vk::Device& device);
 		FencePool(vk::Device& device, int numberOfFences);
 
 		void addFences(int numberOfFences);

@@ -12,7 +12,7 @@ namespace trg
 		using VkHandleType = vk::Fence;
 
 	public:
-		Fence(vk::Device& device);
+		explicit Fence(vk::Device& device);
 
 		VkHandleType& getVkHandle();
 		const VkHandleType& getVkHandle() const;
