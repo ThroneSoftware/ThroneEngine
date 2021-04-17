@@ -37,4 +37,9 @@ namespace trg
 	{
 		return &getVkHandle();
 	}
+
+	uint32_t CommandQueue::getFamilyIndex() const
+	{
+		return m_familyIndex;
+	}
 }  // namespace trg

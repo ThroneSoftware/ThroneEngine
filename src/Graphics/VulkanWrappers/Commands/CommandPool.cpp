@@ -10,7 +10,7 @@ namespace trg
 	{
 		auto makeCommandPool(vk::Device& device, const CommandQueue& commandQueue, vk::CommandPoolCreateFlagBits flags)
 		{
-			auto createInfo = vk::CommandPoolCreateInfo(flags, commandQueue.m_familyIndex);
+			auto createInfo = vk::CommandPoolCreateInfo(flags, commandQueue.getFamilyIndex());
 			return device.createCommandPoolUnique(createInfo);
 		}
 	}  // namespace CommandPoolPrivate
