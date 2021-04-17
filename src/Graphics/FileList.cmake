@@ -29,4 +29,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/RenderPass.h
 	VulkanWrappers/Swapchain.cpp
 	VulkanWrappers/Swapchain.h
+	VulkanWrappers/Syncronization/Fence.cpp
+	VulkanWrappers/Syncronization/Fence.h
+	VulkanWrappers/Syncronization/FencePool.cpp
+	VulkanWrappers/Syncronization/FencePool.h
 )
