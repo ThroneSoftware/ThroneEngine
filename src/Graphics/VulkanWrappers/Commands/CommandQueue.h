@@ -12,8 +12,6 @@ namespace trg
 	public:
 		CommandQueue(vk::Queue&& queue, uint32_t familyIndex);
 
-		const uint32_t m_familyIndex = 0;
-
 		VkHandleType& getVkHandle();
 		const VkHandleType& getVkHandle() const;
 
@@ -22,6 +20,8 @@ namespace trg
 
 		VkHandleType* operator->();
 		const VkHandleType* operator->() const;
+
+		const uint32_t m_familyIndex = 0;
 
 	private:
 		vk::Queue m_queue;
