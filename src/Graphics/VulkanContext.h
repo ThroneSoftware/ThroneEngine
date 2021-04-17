@@ -1,5 +1,6 @@
 #pragma once
 
+#include "VulkanWrappers/Commands/CommandQueue.h"
 #include "VulkanWrappers/Swapchain.h"
 
 #include <VkBootstrap.h>
@@ -28,8 +29,8 @@ namespace trg
 		};
 		vk::SurfaceKHR m_surface;
 
-		vk::Queue m_graphicsQueue;
-		vk::Queue m_presentQueue;
+		CommandQueue m_graphicsQueue;
+		CommandQueue m_presentQueue;
 
 		std::vector<vk::Semaphore> m_presentSemaphores;
 		std::vector<vk::SwapchainKHR> m_swapchains;

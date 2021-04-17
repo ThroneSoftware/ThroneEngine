@@ -131,7 +131,7 @@ namespace trg
 			return swapChainResult.value();
 		}
 
-		VkQueue makeGraphicsQueue(const vkb::Device& device)
+		CommandQueue makeGraphicsQueue(const vkb::Device& device)
 		{
 			auto queueResult = device.get_queue(vkb::QueueType::graphics);
 
@@ -142,10 +142,10 @@ namespace trg
 													 queueResult.error().message()));
 			}
 
-			return queueResult.value();
+			return CommandQueue(vk::Queue(queueResult.value()), device.get_queue_index(vkb::QueueType::graphics).value());
 		}
 
-		VkQueue makePresentQueue(const vkb::Device& device)
+		CommandQueue makePresentQueue(const vkb::Device& device)
 		{
 			auto queueResult = device.get_queue(vkb::QueueType::present);
 
@@ -156,7 +156,7 @@ namespace trg
 													 queueResult.error().message()));
 			}
 
-			return queueResult.value();
+			return CommandQueue(vk::Queue(queueResult.value()), device.get_queue_index(vkb::QueueType::present).value());
 		}
 	}  // namespace VulkanContextFactoryPrivate
 
@@ -202,9 +202,9 @@ namespace trg
 			new(&context->m_swapchain) Swapchain(context->m_device, swapchain);
 			context->m_swapchains = {context->m_swapchain.getSwapchain()};
 
-			context->m_presentQueue = vk::Queue(makePresentQueue(device));
+			context->m_presentQueue = makePresentQueue(device);
 
-			context->m_graphicsQueue = vk::Queue(makeGraphicsQueue(device));
+			context->m_graphicsQueue = makeGraphicsQueue(device);
 
 			return context;
 		}

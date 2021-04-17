@@ -25,7 +25,7 @@ namespace trg
 
 		auto presentInfo = vk::PresentInfoKHR(vkContext.m_presentSemaphores, vkContext.m_swapchains, indices);
 
-		auto result = vkContext.m_presentQueue.presentKHR(presentInfo);
+		auto result = vkContext.m_presentQueue->presentKHR(presentInfo);
 	}
 
 	VulkanContext& GraphicsInstance::vulkanContext()

@@ -8,6 +8,12 @@ target_sources(Graphics PRIVATE
 	VulkanContext.h
 	VulkanContextFactory.cpp
 	VulkanContextFactory.h
+	VulkanWrappers/Commands/CommandBuffer.cpp
+	VulkanWrappers/Commands/CommandBuffer.h
+	VulkanWrappers/Commands/CommandPool.cpp
+	VulkanWrappers/Commands/CommandPool.h
+	VulkanWrappers/Commands/CommandQueue.cpp
+	VulkanWrappers/Commands/CommandQueue.h
 	VulkanWrappers/FrameBuffer.cpp
 	VulkanWrappers/FrameBuffer.h
 	VulkanWrappers/Memory/Buffer.cpp
