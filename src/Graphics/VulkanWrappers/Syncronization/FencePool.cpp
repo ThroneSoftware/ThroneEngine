@@ -19,7 +19,10 @@ namespace trg
 
 		m_fences.reserve(m_fences.size() + numberOfFences);
 
-		m_fences.emplace_back(m_device);
+		for(size_t i = 0; i < numberOfFences; ++i)
+		{
+			m_fences.emplace_back(m_device);
+		}
 	}
 
 	void FencePool::wait(uint64_t timeout)

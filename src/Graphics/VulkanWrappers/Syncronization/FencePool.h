@@ -18,6 +18,7 @@ namespace trg
 
 	private:
 		vk::Device& m_device;
+
 		std::vector<Fence> m_fences;
 	};
 }  // namespace trg

@@ -33,4 +33,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Syncronization/Fence.h
 	VulkanWrappers/Syncronization/FencePool.cpp
 	VulkanWrappers/Syncronization/FencePool.h
+	VulkanWrappers/Syncronization/Semaphore.cpp
+	VulkanWrappers/Syncronization/Semaphore.h
+	VulkanWrappers/Syncronization/SemaphorePool.cpp
+	VulkanWrappers/Syncronization/SemaphorePool.h
 )
