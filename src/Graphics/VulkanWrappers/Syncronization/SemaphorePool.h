@@ -12,7 +12,7 @@ namespace trg
 		explicit SemaphorePool(vk::Device& device);
 		SemaphorePool(vk::Device& device, int numberOfSemaphores);
 
-		void addSemaphore(int numberOfSemaphores);
+		void addSemaphores(int numberOfSemaphores);
 
 	private:
 		vk::Device& m_device;
