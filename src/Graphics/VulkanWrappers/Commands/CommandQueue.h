@@ -1,5 +1,9 @@
 #pragma once
 
+#include "../Syncronization/Fence.h"
+#include "../Syncronization/SemaphorePool.h"
+#include "CommandBuffer.h"
+
 #include <Vulkan/vulkan.hpp>
 
 namespace trg
@@ -31,6 +35,12 @@ namespace trg
 		const VkHandleType* operator->() const;
 
 		uint32_t getFamilyIndex() const;
+
+		void submitCommandBuffer(SemaphorePool& waitSemaphores,
+								 std::vector<vk::PipelineStageFlags> waitingStages,
+								 CommandBuffer& commandBuffer,
+								 SemaphorePool& semaphoresToSignal,
+								 Fence& signalFence);
 
 	private:
 		vk::Queue m_queue;
