@@ -1,7 +1,25 @@
 # Group source files based on their folder
 # Remove the prefix target_path
 function(groupTargetSources target target_path)
-	# get all sources files in a target
+
+    # Validate that target_path contains one of the prefixes.
+    # This validation must exist because the fail case can be hard to debug.
+    if(NOT (
+        ("${target_path}" MATCHES "${PROJECT_SOURCE_DIR}/src") OR 
+        ("${target_path}" MATCHES "${PROJECT_SOURCE_DIR}/Vendors/Vendors"))
+      )
+        message(FATAL_ERROR "target_path does not contain any of the supported prefixes.")
+    endif()
+
+    # Modify target_path so that it becomes the filter that we want in the editor.
+    STRING(REPLACE "${PROJECT_SOURCE_DIR}/src" "" filter ${target_path})
+    STRING(REPLACE "${PROJECT_SOURCE_DIR}/Vendors/Vendors" "" filter ${filter})
+    STRING(REPLACE "/${target}" "" filter ${filter})
+    if (NOT ("${filter}" STREQUAL ""))
+        set_target_properties(${target_name} PROPERTIES FOLDER ${filter})
+    endif()
+
+    # Get all sources files in a target 
 	get_target_property(sources ${target} SOURCES)
 	foreach(file ${sources})	
 		source_group(TREE 
@@ -93,7 +111,12 @@ function(configTestTarget target_name)
 
     add_dependencies(BuildTests ${target_name})
 
-    set_target_properties(${target_name} PROPERTIES FOLDER "Tests")
+    #set_target_properties(${target_name} PROPERTIES FOLDER "Tests")
+endfunction()
+
+function(configSampleTarget target_name)
+    #set_target_properties(${target_name} PROPERTIES FOLDER "Samples")
+    configTarget(${target_name})
 endfunction()
 
 function(configTargetToUsePch target_name)
