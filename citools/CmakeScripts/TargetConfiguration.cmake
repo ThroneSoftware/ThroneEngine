@@ -1,13 +1,12 @@
 # Group source files based on their folder
 # Remove the prefix target_path
 function(groupTargetSources target target_path)
-
     # Validate that target_path contains one of the prefixes.
     # This validation must exist because the fail case can be hard to debug.
     if(NOT (
         ("${target_path}" MATCHES "${PROJECT_SOURCE_DIR}/src") OR 
         ("${target_path}" MATCHES "${PROJECT_SOURCE_DIR}/Vendors/Vendors"))
-      )
+    )
         message(FATAL_ERROR "target_path does not contain any of the supported prefixes.")
     endif()
 
@@ -20,14 +19,14 @@ function(groupTargetSources target target_path)
     endif()
 
     # Get all sources files in a target 
-	get_target_property(sources ${target} SOURCES)
-	foreach(file ${sources})	
-		source_group(TREE 
-			${target_path} 
-			PREFIX "src\\"
-			FILES ${file}
-		)
-	endforeach()
+    get_target_property(sources ${target} SOURCES)
+    foreach(file ${sources})	
+        source_group(TREE 
+            ${target_path} 
+            PREFIX "src\\"
+            FILES ${file}
+        )
+    endforeach()
 endfunction()
 
 function(configIncludeDirectories target_name)
@@ -110,12 +109,9 @@ function(configTestTarget target_name)
     groupTargetSources(${target_name} ${CMAKE_CURRENT_SOURCE_DIR})
 
     add_dependencies(BuildTests ${target_name})
-
-    #set_target_properties(${target_name} PROPERTIES FOLDER "Tests")
 endfunction()
 
 function(configSampleTarget target_name)
-    #set_target_properties(${target_name} PROPERTIES FOLDER "Samples")
     configTarget(${target_name})
 endfunction()
 
