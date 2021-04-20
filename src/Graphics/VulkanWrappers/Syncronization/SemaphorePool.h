@@ -14,6 +14,9 @@ namespace trg
 
 		void addSemaphores(int numberOfSemaphores);
 
+		std::span<Semaphore> getAll();
+		std::span<const Semaphore> getAll() const;
+
 	private:
 		vk::Device& m_device;
 

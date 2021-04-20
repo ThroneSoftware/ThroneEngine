@@ -1,5 +1,7 @@
 #include "CommandQueue.h"
 
+#include "../../Utility.h"
+
 namespace trg
 {
 	CommandQueue::CommandQueue(vk::Queue&& queue, uint32_t familyIndex)
@@ -41,5 +43,18 @@ namespace trg
 	uint32_t CommandQueue::getFamilyIndex() const
 	{
 		return m_familyIndex;
+	}
+
+	void CommandQueue::submitCommandBuffer(SemaphorePool& waitSemaphores,
+										   std::vector<vk::PipelineStageFlags> waitingStages,
+										   CommandBuffer& commandBuffer,
+										   SemaphorePool& semaphoresToSignal,
+										   Fence& signalFence)
+	{
+		auto vkWaitSemaphores = toVkHandle(waitSemaphores.getAll());
+		auto vkSemaphoresToSignal = toVkHandle(semaphoresToSignal.getAll());
+
+		auto submitInfo = vk::SubmitInfo(vkWaitSemaphores, waitingStages, *commandBuffer, vkSemaphoresToSignal);
+		m_queue.submit(submitInfo, *signalFence);
 	}
 }  // namespace trg

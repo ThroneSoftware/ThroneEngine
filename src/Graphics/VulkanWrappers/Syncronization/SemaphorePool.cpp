@@ -24,4 +24,14 @@ namespace trg
 			m_semaphores.emplace_back(m_device);
 		}
 	}
+
+	std::span<Semaphore> SemaphorePool::getAll()
+	{
+		return m_semaphores;
+	}
+
+	std::span<const Semaphore> SemaphorePool::getAll() const
+	{
+		return m_semaphores;
+	}
 }  // namespace trg

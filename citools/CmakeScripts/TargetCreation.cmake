@@ -36,3 +36,11 @@ function(addTestLibrary target_name)
 
     configTargetToUsePch(${target_name})
 endfunction()
+
+function(addSampleTarget target_name)
+    addExecutable(${target_name} "")
+
+    configSampleTarget(${target_name})
+
+    configTargetToUsePch(${target_name})
+endfunction()
