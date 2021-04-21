@@ -1,5 +1,6 @@
 #include "GraphicsInstance.h"
 
+#include "Utility.h"
 #include "Vulkan/vulkan.hpp"
 #include "VulkanContext.h"
 
@@ -23,9 +24,10 @@ namespace trg
 
 		auto indices = {index.value};
 
-		auto presentInfo = vk::PresentInfoKHR(vkContext.m_presentSemaphores, vkContext.m_swapchains, indices);
+		auto vkPresentWaitSemaphores = toVkHandle(vkContext.m_presentWaitSemaphores.getAll());
+		auto presentInfo = vk::PresentInfoKHR(vkPresentWaitSemaphores, vkContext.m_swapchains, indices);
 
-		auto result = vkContext.m_presentQueue->presentKHR(presentInfo);
+		auto result = vkContext.m_graphicsQueue->presentKHR(presentInfo);
 	}
 
 	VulkanContext& GraphicsInstance::vulkanContext()

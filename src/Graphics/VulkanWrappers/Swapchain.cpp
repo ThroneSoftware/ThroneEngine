@@ -19,4 +19,9 @@ namespace trg
 	{
 		return m_swapchain.get();
 	}
+
+	vk::Format Swapchain::getFormat() const
+	{
+		return m_imageFormat;
+	}
 }  // namespace trg

@@ -16,6 +16,9 @@ namespace trg
 		void wait(uint64_t timeout = std::numeric_limits<uint64_t>::max());
 		void reset();
 
+		std::span<Fence> getAll();
+		std::span<const Fence> getAll() const;
+
 	private:
 		vk::Device& m_device;
 

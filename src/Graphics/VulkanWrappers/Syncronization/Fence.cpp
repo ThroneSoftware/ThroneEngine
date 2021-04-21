@@ -8,7 +8,7 @@ namespace trg
 	{
 		auto makeFence(vk::Device& device)
 		{
-			auto createInfo = vk::FenceCreateInfo();
+			auto createInfo = vk::FenceCreateInfo(vk::FenceCreateFlagBits::eSignaled);
 			return device.createFenceUnique(createInfo);
 		}
 	}  // namespace FencePrivate

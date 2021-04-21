@@ -19,6 +19,8 @@ namespace trg
 		vk::SwapchainKHR& getSwapchain();
 		const vk::SwapchainKHR& getSwapchain() const;
 
+		vk::Format getFormat() const;
+
 	private:
 		vk::UniqueSwapchainKHR m_swapchain;
 
