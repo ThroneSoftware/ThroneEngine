@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GraphicsContext.h"
+#include "VulkanWrappers/Syncronization/Semaphore.h"
 
 namespace trg
 {
@@ -11,7 +12,7 @@ namespace trg
 	public:
 		GraphicsInstance(std::unique_ptr<GraphicsContext> context);
 
-		void present();
+		void present(uint32_t imageIndex, std::vector<vk::Semaphore>& waitSemaphores);
 
 		VulkanContext& vulkanContext();
 

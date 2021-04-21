@@ -11,21 +11,13 @@ namespace trg
 	{
 	}
 
-	void GraphicsInstance::present()
+	void GraphicsInstance::present(uint32_t imageIndex, std::vector<vk::Semaphore>& waitSemaphores)
 	{
 		VulkanContext& vkContext = vulkanContext();
 
+		auto indices = { imageIndex };
 
-		auto index = vkContext.m_device.acquireNextImageKHR(vkContext.m_swapchain.getSwapchain(),
-															std::numeric_limits<std::uint64_t>::max(),
-															vk::Semaphore(),
-															vk::Fence());
-
-
-		auto indices = {index.value};
-
-		auto vkPresentWaitSemaphores = toVkHandle(vkContext.m_presentWaitSemaphores.getAll());
-		auto presentInfo = vk::PresentInfoKHR(vkPresentWaitSemaphores, vkContext.m_swapchains, indices);
+		auto presentInfo = vk::PresentInfoKHR(waitSemaphores, vkContext.m_swapchains, indices);
 
 		auto result = vkContext.m_graphicsQueue->presentKHR(presentInfo);
 	}

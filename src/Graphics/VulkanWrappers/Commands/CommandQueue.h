@@ -36,10 +36,10 @@ namespace trg
 
 		uint32_t getFamilyIndex() const;
 
-		void submitCommandBuffer(SemaphorePool& waitSemaphores,
+		void submitCommandBuffer(std::span<vk::Semaphore> waitSemaphores,
 								 std::vector<vk::PipelineStageFlags> waitingStages,
 								 CommandBuffer& commandBuffer,
-								 SemaphorePool& semaphoresToSignal,
+								 std::span<Semaphore> semaphoresToSignal,
 								 Fence& signalFence);
 
 	private:

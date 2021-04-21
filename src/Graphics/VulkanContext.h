@@ -34,7 +34,7 @@ namespace trg
 
 		union
 		{
-			SemaphorePool m_presentWaitSemaphores;
+			SemaphorePool m_acquireNextImageSemaphores;
 		};
 		std::vector<vk::SwapchainKHR> m_swapchains;
 	};

@@ -192,7 +192,7 @@ namespace trg
 
 			context->m_graphicsQueue = makeGraphicsQueue(device);
 
-			new(&context->m_presentWaitSemaphores) SemaphorePool(context->m_device);
+			new(&context->m_acquireNextImageSemaphores) SemaphorePool(context->m_device, 2);
 
 			return context;
 		}

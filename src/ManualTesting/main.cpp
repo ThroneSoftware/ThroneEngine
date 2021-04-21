@@ -173,17 +173,4 @@ int main()
 		Health health(*entity);
 		__nop();
 	}
-
-	{
-		try
-		{
-			auto context = trg::GraphicsInstance(std::make_unique<trg::GraphicsContext>(trg::VulkanContextFactory()));
-
-			context.present();
-		}
-		catch(const std::exception& e)
-		{
-			std::cout << e.what() << std::endl;
-		}
-	}
 }
