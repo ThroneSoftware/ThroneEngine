@@ -61,8 +61,11 @@ namespace trg
 
 		vkb::Instance makeInstance()
 		{
-			auto instanceResult =
-				vkb::InstanceBuilder().enable_extension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME).request_validation_layers().build();
+			auto instanceResult = vkb::InstanceBuilder()
+									  .require_api_version(1, 2)
+									  .enable_extension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME)
+									  .request_validation_layers()
+									  .build();
 
 			if(!instanceResult.has_value())
 			{
@@ -105,7 +108,10 @@ namespace trg
 
 		vkb::Device makeDevice(const vkb::PhysicalDevice& physicalDevice)
 		{
-			auto deviceResult = vkb::DeviceBuilder(physicalDevice).build();
+			auto features = vk::PhysicalDeviceVulkan12Features();
+			features.separateDepthStencilLayouts = true;
+
+			auto deviceResult = vkb::DeviceBuilder(physicalDevice).add_pNext(&features).build();
 
 			if(!deviceResult.has_value())
 			{

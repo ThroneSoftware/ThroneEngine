@@ -17,29 +17,41 @@ int main()
 
 	constexpr auto swapchainCount = 2;
 
-	// missing arguments
-	//trg::Image depthImage = trg::Image(device);
-	// init view
+	auto depthImage = trg::Image(device,
+								 vk::ImageType::e2D,
+								 vk::Format::eD32Sfloat,
+								 vk::Extent3D(vkContext.m_swapchainExtent, 1),
+								 1,
+								 1,
+								 vk::SampleCountFlagBits::e1,
+								 vk::ImageUsageFlagBits::eDepthStencilAttachment,
+								 vk::ImageLayout::eUndefined);
+	depthImage.addImageView(vk::ImageAspectFlagBits::eDepth, vk::ImageViewType::e2D, vk::Format::eD32Sfloat, 0, 1);
 
-	trg::RenderPass renderPass = trg::RenderPass(device, vkContext.m_swapchain.getFormat());
+	auto renderPass = trg::RenderPass(device, vkContext.m_swapchain.getFormat());
 
-	//trg::FrameBuffer frameBuffer =
-	//	trg::FrameBuffer(device, renderPass, std::span(&depthImage.getImageView(), 1), vkContext.m_swapchainExtent, 1);
+	auto imageViews = vkContext.m_swapchain.getImageViews();
+	std::vector<vk::ImageView> attachments = {*imageViews[0], *depthImage.getImageView()};
+	auto frameBuffer = trg::FrameBuffer(device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
 
-	trg::CommandPool commandBuffers = trg::CommandPool(device,
-													   vkContext.m_graphicsQueue,
-													   vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
-													   2,
-													   vk::CommandBufferLevel::ePrimary);
+	auto commandBuffers = trg::CommandPool(device,
+										   vkContext.m_graphicsQueue,
+										   vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
+										   2,
+										   vk::CommandBufferLevel::ePrimary);
 
-	trg::FencePool commandBufferFences = trg::FencePool(device, swapchainCount);
+	auto commandBufferFences = trg::FencePool(device, swapchainCount);
 
-	trg::SemaphorePool renderFinishedSemaphores = trg::SemaphorePool(device, swapchainCount);
+	auto renderFinishedSemaphores = trg::SemaphorePool(device, swapchainCount);
 
 	uint64_t frameId = 0;
 	while(true)
 	{
 		auto frameIndex = frameId % swapchainCount;
+
+		auto& fence = commandBufferFences.getAll()[frameIndex];
+		fence.wait();
+		fence.reset();
 
 		auto& acquireNextImageSemaphore = vkContext.m_acquireNextImageSemaphores.getAll()[frameIndex];
 		auto imageIndex = vkContext.m_device.acquireNextImageKHR(vkContext.m_swapchain.getSwapchain(),
@@ -47,15 +59,23 @@ int main()
 																 *acquireNextImageSemaphore,
 																 vk::Fence());
 
-		auto& fence = commandBufferFences.getAll()[frameIndex];
-		fence.wait();
-		fence.reset();
-
 		auto& commandBuffer = commandBuffers.getAll()[frameIndex];
 
 		{
 			auto cmdScope = trg::CommandBufferRecordScope(commandBuffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
 
+
+			vk::SubpassContents subpassContents = vk::SubpassContents::eInline;
+
+			vk::ClearValue clearColor = vk::ClearValue(vk::ClearColorValue(std::array{0.0f, 0.0f, 0.0f, 1.0f}));
+			vk::ClearValue clearDepth = vk::ClearValue(vk::ClearDepthStencilValue(1.0f));
+
+			auto clearValues = std::vector<vk::ClearValue>{clearColor, clearDepth};
+			auto beginInfo =
+				vk::RenderPassBeginInfo(*renderPass, *frameBuffer, vk::Rect2D({0, 0}, vkContext.m_swapchainExtent), clearValues);
+
+			commandBuffer->beginRenderPass(beginInfo, subpassContents);
+			commandBuffer->endRenderPass();
 			//commandBuffer->beginRenderPass();
 			//commandBuffer->endRenderPass();
 		}

@@ -6,9 +6,27 @@ namespace trg
 {
 	namespace ImagePrivate
 	{
-		auto makeImage()
+		auto makeImage(vk::ImageType type,
+					   vk::Format format,
+					   vk::Extent3D dimensions,
+					   uint32_t mipmapCount,
+					   uint32_t layerCount,
+					   vk::SampleCountFlagBits samples,
+					   vk::ImageUsageFlagBits usage,
+					   vk::ImageLayout layout)
 		{
-			vk::ImageCreateInfo imageInfo = vk::ImageCreateInfo();
+			auto imageInfo = vk::ImageCreateInfo({},
+												 type,
+												 format,
+												 dimensions,
+												 mipmapCount,
+												 layerCount,
+												 samples,
+												 vk::ImageTiling::eOptimal,
+												 usage,
+												 vk::SharingMode::eExclusive,
+												 {},
+												 layout);
 
 			vma::AllocationCreateInfo allocationCreateInfo = vma::AllocationCreateInfo();
 			allocationCreateInfo.usage = vma::MemoryUsage::eGpuOnly;
@@ -17,9 +35,17 @@ namespace trg
 		}
 	}  // namespace ImagePrivate
 
-	Image::Image(vk::Device& device)
+	Image::Image(vk::Device& device,
+				 vk::ImageType type,
+				 vk::Format format,
+				 vk::Extent3D dimensions,
+				 uint32_t mipmapCount,
+				 uint32_t layerCount,
+				 vk::SampleCountFlagBits samples,
+				 vk::ImageUsageFlagBits usage,
+				 vk::ImageLayout layout)
 	  : m_device(device)
-	  , m_image(ImagePrivate::makeImage())
+	  , m_image(ImagePrivate::makeImage(type, format, dimensions, mipmapCount, layerCount, samples, usage, layout))
 	{
 	}
 

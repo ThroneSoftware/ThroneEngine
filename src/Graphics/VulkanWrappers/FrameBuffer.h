@@ -17,12 +17,18 @@ namespace trg
 	public:
 		FrameBuffer(vk::Device& device,
 					RenderPass& renderPass,
-					std::span<ImageView> attachments,
+					std::span<vk::ImageView> attachments,
 					vk::Extent2D frameBufferSize,
 					uint32_t layers);
 
-		vk::Framebuffer& getVkHandle();
-		const vk::Framebuffer& getVkHandle() const;
+		VkHandleType& getVkHandle();
+		const VkHandleType& getVkHandle() const;
+
+		VkHandleType& operator*();
+		const VkHandleType& operator*() const;
+
+		VkHandleType* operator->();
+		const VkHandleType* operator->() const;
 
 	private:
 		vk::UniqueFramebuffer m_frameBuffer;

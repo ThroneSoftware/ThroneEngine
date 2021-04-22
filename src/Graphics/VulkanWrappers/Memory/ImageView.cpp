@@ -25,6 +25,11 @@ namespace trg
 		}
 	}  // namespace ImageViewPrivate
 
+	ImageView::ImageView(vk::Device& device, vk::ImageView imageView)
+	  : m_view(vk::UniqueImageView(imageView, vk::ObjectDestroy(device, nullptr, vk::defaultDispatchLoaderDynamic)))
+	{
+	}
+
 	ImageView::ImageView(vk::Device& device,
 						 vk::Image& image,
 						 vk::ImageAspectFlagBits aspect,
@@ -36,13 +41,33 @@ namespace trg
 	{
 	}
 
-	vk::ImageView& ImageView::getVkHandle()
+	ImageView::VkHandleType& ImageView::getVkHandle()
 	{
 		return m_view.get();
 	}
 
-	const vk::ImageView& ImageView::getVkHandle() const
+	const ImageView::VkHandleType& ImageView::getVkHandle() const
 	{
 		return m_view.get();
+	}
+
+	ImageView::VkHandleType& ImageView::operator*()
+	{
+		return getVkHandle();
+	}
+
+	const ImageView::VkHandleType& ImageView::operator*() const
+	{
+		return getVkHandle();
+	}
+
+	ImageView::VkHandleType* ImageView::operator->()
+	{
+		return &getVkHandle();
+	}
+
+	const ImageView::VkHandleType* ImageView::operator->() const
+	{
+		return &getVkHandle();
 	}
 }  // namespace trg

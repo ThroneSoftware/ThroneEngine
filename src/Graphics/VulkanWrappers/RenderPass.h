@@ -7,13 +7,19 @@ namespace trg
 	class RenderPass
 	{
 	public:
-		using VkHandleType = vk::Framebuffer;
+		using VkHandleType = vk::RenderPass;
 
 	public:
 		RenderPass(vk::Device& device, vk::Format swapchainFormat);
 
-		vk::RenderPass& getVkHandle();
-		const vk::RenderPass& getVkHandle() const;
+		VkHandleType& getVkHandle();
+		const VkHandleType& getVkHandle() const;
+
+		VkHandleType& operator*();
+		const VkHandleType& operator*() const;
+
+		VkHandleType* operator->();
+		const VkHandleType* operator->() const;
 
 	private:
 		vk::UniqueRenderPass m_renderPass;
