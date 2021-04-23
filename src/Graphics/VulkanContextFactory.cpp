@@ -61,8 +61,11 @@ namespace trg
 
 		vkb::Instance makeInstance()
 		{
-			auto instanceResult =
-				vkb::InstanceBuilder().enable_extension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME).request_validation_layers().build();
+			auto instanceResult = vkb::InstanceBuilder()
+									  .require_api_version(1, 2)
+									  .enable_extension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME)
+									  .request_validation_layers()
+									  .build();
 
 			if(!instanceResult.has_value())
 			{
@@ -105,7 +108,10 @@ namespace trg
 
 		vkb::Device makeDevice(const vkb::PhysicalDevice& physicalDevice)
 		{
-			auto deviceResult = vkb::DeviceBuilder(physicalDevice).build();
+			auto features = vk::PhysicalDeviceVulkan12Features();
+			features.separateDepthStencilLayouts = true;
+
+			auto deviceResult = vkb::DeviceBuilder(physicalDevice).add_pNext(&features).build();
 
 			if(!deviceResult.has_value())
 			{
@@ -144,20 +150,6 @@ namespace trg
 
 			return CommandQueue(vk::Queue(queueResult.value()), device.get_queue_index(vkb::QueueType::graphics).value());
 		}
-
-		CommandQueue makePresentQueue(const vkb::Device& device)
-		{
-			auto queueResult = device.get_queue(vkb::QueueType::present);
-
-			if(!queueResult.has_value())
-			{
-				throw std::runtime_error(fmt::format("Present queue initialization failed. Error code: {0}. Error message: {1}",
-													 queueResult.error().value(),
-													 queueResult.error().message()));
-			}
-
-			return CommandQueue(vk::Queue(queueResult.value()), device.get_queue_index(vkb::QueueType::present).value());
-		}
 	}  // namespace VulkanContextFactoryPrivate
 
 
@@ -177,7 +169,9 @@ namespace trg
 			auto context = std::make_unique<VulkanContext>();
 
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-			context->m_window = glfwCreateWindow(1024, 768, "Throne", nullptr, nullptr);
+			context->m_swapchainExtent = vk::Extent2D(1024, 768);
+			context->m_window =
+				glfwCreateWindow(context->m_swapchainExtent.width, context->m_swapchainExtent.height, "Throne", nullptr, nullptr);
 
 			using namespace VulkanContextFactoryPrivate;
 
@@ -201,8 +195,6 @@ namespace trg
 			auto swapchain = makeSwapchain(device);
 			new(&context->m_swapchain) Swapchain(context->m_device, swapchain);
 			context->m_swapchains = {context->m_swapchain.getSwapchain()};
-
-			context->m_presentQueue = makePresentQueue(device);
 
 			context->m_graphicsQueue = makeGraphicsQueue(device);
 

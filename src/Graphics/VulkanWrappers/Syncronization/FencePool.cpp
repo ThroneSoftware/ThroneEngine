@@ -34,4 +34,14 @@ namespace trg
 	{
 		Fence::resetFences(m_device, m_fences);
 	}
+
+	std::span<Fence> FencePool::getAll()
+	{
+		return m_fences;
+	}
+
+	std::span<const Fence> FencePool::getAll() const
+	{
+		return m_fences;
+	}
 }  // namespace trg

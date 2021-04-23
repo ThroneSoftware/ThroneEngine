@@ -22,11 +22,11 @@ namespace trg
 														 vk::AttachmentLoadOp::eDontCare,
 														 vk::AttachmentStoreOp::eDontCare,
 														 vk::ImageLayout::eUndefined,
-														 vk::ImageLayout::eDepthAttachmentOptimal);
+														 vk::ImageLayout::eDepthStencilAttachmentOptimal);
 
 		auto colorAttachmentRef = vk::AttachmentReference(0, vk::ImageLayout::eColorAttachmentOptimal);
 
-		auto depthAttachmentRef = vk::AttachmentReference(1, vk::ImageLayout::eDepthAttachmentOptimal);
+		auto depthAttachmentRef = vk::AttachmentReference(1, vk::ImageLayout::eDepthStencilAttachmentOptimal);
 
 		auto colorAttachments = {colorAttachmentRef};
 		decltype(colorAttachments) inputAttachments = {};
@@ -65,13 +65,33 @@ namespace trg
 		m_renderPass = device.createRenderPassUnique(createInfo);
 	}
 
-	vk::RenderPass& RenderPass::getVkHandle()
+	RenderPass::VkHandleType& RenderPass::getVkHandle()
 	{
 		return m_renderPass.get();
 	}
 
-	const vk::RenderPass& RenderPass::getVkHandle() const
+	const RenderPass::VkHandleType& RenderPass::getVkHandle() const
 	{
 		return m_renderPass.get();
+	}
+
+	RenderPass::VkHandleType& RenderPass::operator*()
+	{
+		return getVkHandle();
+	}
+
+	const RenderPass::VkHandleType& RenderPass::operator*() const
+	{
+		return getVkHandle();
+	}
+
+	RenderPass::VkHandleType* RenderPass::operator->()
+	{
+		return &getVkHandle();
+	}
+
+	const RenderPass::VkHandleType* RenderPass::operator->() const
+	{
+		return &getVkHandle();
 	}
 }  // namespace trg

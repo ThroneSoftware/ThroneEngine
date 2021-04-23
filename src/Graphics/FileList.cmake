@@ -10,10 +10,14 @@ target_sources(Graphics PRIVATE
 	VulkanContextFactory.h
 	VulkanWrappers/Commands/CommandBuffer.cpp
 	VulkanWrappers/Commands/CommandBuffer.h
+	VulkanWrappers/Commands/CommandBufferRecordScope.cpp
+	VulkanWrappers/Commands/CommandBufferRecordScope.h
 	VulkanWrappers/Commands/CommandPool.cpp
 	VulkanWrappers/Commands/CommandPool.h
 	VulkanWrappers/Commands/CommandQueue.cpp
 	VulkanWrappers/Commands/CommandQueue.h
+	VulkanWrappers/Commands/RenderPassRecordScope.cpp
+	VulkanWrappers/Commands/RenderPassRecordScope.h
 	VulkanWrappers/FrameBuffer.cpp
 	VulkanWrappers/FrameBuffer.h
 	VulkanWrappers/Memory/Buffer.cpp

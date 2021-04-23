@@ -2,8 +2,8 @@
 
 #include "VulkanWrappers/Commands/CommandQueue.h"
 #include "VulkanWrappers/Swapchain.h"
+#include "VulkanWrappers/Syncronization/SemaphorePool.h"
 
-#include <VkBootstrap.h>
 #include <Vulkan/vulkan.hpp>
 
 struct GLFWwindow;
@@ -17,6 +17,7 @@ namespace trg
 		~VulkanContext();
 
 		GLFWwindow* m_window;
+		vk::Extent2D m_swapchainExtent;
 
 		vk::Instance m_instance;
 		vk::DebugUtilsMessengerEXT m_messenger;
@@ -30,9 +31,7 @@ namespace trg
 		vk::SurfaceKHR m_surface;
 
 		CommandQueue m_graphicsQueue;
-		CommandQueue m_presentQueue;
 
-		std::vector<vk::Semaphore> m_presentSemaphores;
 		std::vector<vk::SwapchainKHR> m_swapchains;
 	};
 }  // namespace trg

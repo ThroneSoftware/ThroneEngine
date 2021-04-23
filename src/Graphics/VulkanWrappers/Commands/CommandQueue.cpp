@@ -45,16 +45,15 @@ namespace trg
 		return m_familyIndex;
 	}
 
-	void CommandQueue::submitCommandBuffer(SemaphorePool& waitSemaphores,
+	void CommandQueue::submitCommandBuffer(std::span<vk::Semaphore> waitSemaphores,
 										   std::vector<vk::PipelineStageFlags> waitingStages,
 										   CommandBuffer& commandBuffer,
-										   SemaphorePool& semaphoresToSignal,
+										   std::span<Semaphore> semaphoresToSignal,
 										   Fence& signalFence)
 	{
-		auto vkWaitSemaphores = toVkHandle(waitSemaphores.getAll());
-		auto vkSemaphoresToSignal = toVkHandle(semaphoresToSignal.getAll());
+		auto vkSemaphoresToSignal = toVkHandle(semaphoresToSignal);
 
-		auto submitInfo = vk::SubmitInfo(vkWaitSemaphores, waitingStages, *commandBuffer, vkSemaphoresToSignal);
+		auto submitInfo = vk::SubmitInfo(waitSemaphores, waitingStages, *commandBuffer, vkSemaphoresToSignal);
 		m_queue.submit(submitInfo, *signalFence);
 	}
 }  // namespace trg

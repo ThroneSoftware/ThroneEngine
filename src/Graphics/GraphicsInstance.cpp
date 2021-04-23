@@ -1,5 +1,6 @@
 #include "GraphicsInstance.h"
 
+#include "Utility.h"
 #include "Vulkan/vulkan.hpp"
 #include "VulkanContext.h"
 
@@ -10,22 +11,13 @@ namespace trg
 	{
 	}
 
-	void GraphicsInstance::present()
+	void GraphicsInstance::present(uint32_t imageIndex, std::vector<vk::Semaphore>& waitSemaphores)
 	{
-		VulkanContext& vkContext = vulkanContext();
+		auto indices = { imageIndex };
 
+		auto presentInfo = vk::PresentInfoKHR(waitSemaphores, vulkanContext().m_swapchains, indices);
 
-		auto index = vkContext.m_device.acquireNextImageKHR(vkContext.m_swapchain.getSwapchain(),
-															std::numeric_limits<std::uint64_t>::max(),
-															vk::Semaphore(),
-															vk::Fence());
-
-
-		auto indices = {index.value};
-
-		auto presentInfo = vk::PresentInfoKHR(vkContext.m_presentSemaphores, vkContext.m_swapchains, indices);
-
-		auto result = vkContext.m_presentQueue->presentKHR(presentInfo);
+		auto result = vulkanContext().m_graphicsQueue->presentKHR(presentInfo);
 	}
 
 	VulkanContext& GraphicsInstance::vulkanContext()

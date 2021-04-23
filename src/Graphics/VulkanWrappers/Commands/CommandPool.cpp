@@ -67,4 +67,14 @@ namespace trg
 											commandBufferLevel,
 											std::span(m_commandBuffers.end() - numberOfCommandBuffers, numberOfCommandBuffers));
 	}
+
+	std::span<CommandBuffer> CommandPool::getAll()
+	{
+		return m_commandBuffers;
+	}
+
+	std::span<const CommandBuffer> CommandPool::getAll() const
+	{
+		return m_commandBuffers;
+	}
 }  // namespace trg

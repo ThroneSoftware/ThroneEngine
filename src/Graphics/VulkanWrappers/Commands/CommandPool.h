@@ -31,6 +31,9 @@ namespace trg
 
 		void addCommandBuffers(int numberOfCommandBuffers, vk::CommandBufferLevel commandBufferLevel);
 
+		std::span<CommandBuffer> getAll();
+		std::span<const CommandBuffer> getAll() const;
+
 	private:
 		vk::Device& m_device;
 

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <Vulkan/vulkan.hpp>
+#include "Memory/ImageView.h"
 
+#include <Vulkan/vulkan.hpp>
 
 namespace vkb
 {
@@ -19,8 +20,14 @@ namespace trg
 		vk::SwapchainKHR& getSwapchain();
 		const vk::SwapchainKHR& getSwapchain() const;
 
+		std::span<ImageView> getImageViews();
+		std::span<const ImageView> getImageViews() const;
+
+		vk::Format getFormat() const;
+
 	private:
 		vk::UniqueSwapchainKHR m_swapchain;
+		std::vector<ImageView> m_imageViews;
 
 		vk::Format m_imageFormat;
 	};

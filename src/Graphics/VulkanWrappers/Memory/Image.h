@@ -13,7 +13,15 @@ namespace trg
 	class Image
 	{
 	public:
-		Image(vk::Device& device);
+		Image(vk::Device& device,
+			  vk::ImageType type,
+			  vk::Format format,
+			  vk::Extent3D dimensions,
+			  uint32_t mipmapCount,
+			  uint32_t layerCount,
+			  vk::SampleCountFlagBits samples,
+			  vk::ImageUsageFlagBits usage,
+			  vk::ImageLayout layout);
 
 		void addImageView(vk::ImageAspectFlagBits aspect,
 						  vk::ImageViewType viewType,

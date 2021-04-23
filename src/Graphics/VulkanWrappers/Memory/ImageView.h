@@ -10,6 +10,7 @@ namespace trg
 		using VkHandleType = vk::ImageView;
 
 	public:
+		ImageView(vk::Device& device, vk::ImageView&& imageView);
 		ImageView(vk::Device& device,
 				  vk::Image& image,
 				  vk::ImageAspectFlagBits aspect,
@@ -18,8 +19,14 @@ namespace trg
 				  uint32_t layer,
 				  uint32_t layerCount);
 
-		vk::ImageView& getVkHandle();
-		const vk::ImageView& getVkHandle() const;
+		VkHandleType& getVkHandle();
+		const VkHandleType& getVkHandle() const;
+
+		VkHandleType& operator*();
+		const VkHandleType& operator*() const;
+
+		VkHandleType* operator->();
+		const VkHandleType* operator->() const;
 
 	private:
 		vk::UniqueImageView m_view;
