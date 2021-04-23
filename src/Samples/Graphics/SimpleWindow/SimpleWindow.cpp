@@ -174,7 +174,7 @@ int main()
 		// range: [0, 1]
 		auto lerpValue = (std::cos(cosValue) + 1) / 2.0f;
 
-		if(glm::epsilonEqual(lerpValue, 1.0f, glm::epsilon<float>()))
+		if(cosValue > 2 * glm::pi<float>())
 		{
 			cosValue = glm::pi<float>();
 			lerpValue = (std::sin(cosValue) + 1) / 2.0f;
