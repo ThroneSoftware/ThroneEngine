@@ -8,16 +8,13 @@
 #include <Graphics/VulkanWrappers/Memory/Image.h>
 #include <Graphics/VulkanWrappers/RenderPass.h>
 #include <Graphics/VulkanWrappers/Syncronization/FencePool.h>
+#include <gsl/gsl>
 
-int main()
+#include <iostream>
+
+trg::Image makeDepthImage(trg::VulkanContext& vkContext)
 {
-	auto instance = trg::GraphicsInstance(std::make_unique<trg::GraphicsContext>(trg::VulkanContextFactory()));
-	auto& vkContext = instance.vulkanContext();
-	auto& device = vkContext.m_device;
-
-	constexpr auto swapchainCount = 2;
-
-	auto depthImage = trg::Image(device,
+	auto depthImage = trg::Image(vkContext.m_device,
 								 vk::ImageType::e2D,
 								 vk::Format::eD32Sfloat,
 								 vk::Extent3D(vkContext.m_swapchainExtent, 1),
@@ -26,70 +23,147 @@ int main()
 								 vk::SampleCountFlagBits::e1,
 								 vk::ImageUsageFlagBits::eDepthStencilAttachment,
 								 vk::ImageLayout::eUndefined);
+
 	depthImage.addImageView(vk::ImageAspectFlagBits::eDepth, vk::ImageViewType::e2D, vk::Format::eD32Sfloat, 0, 1);
 
-	auto renderPass = trg::RenderPass(device, vkContext.m_swapchain.getFormat());
+	return depthImage;
+}
 
+trg::RenderPass makeRenderPass(trg::VulkanContext& vkContext)
+{
+	return trg::RenderPass(vkContext.m_device, vkContext.m_swapchain.getFormat());
+}
+
+trg::FrameBuffer
+	makeFrameBuffer(trg::VulkanContext& vkContext, trg::ImageView& swapchainImageView, trg::Image& depthImage, trg::RenderPass& renderPass)
+{
 	auto imageViews = vkContext.m_swapchain.getImageViews();
-	std::vector<vk::ImageView> attachments = {*imageViews[0], *depthImage.getImageView()};
-	auto frameBuffer = trg::FrameBuffer(device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
+	std::vector<vk::ImageView> attachments = {*swapchainImageView, *depthImage.getImageView()};
+	return trg::FrameBuffer(vkContext.m_device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
+}
 
-	auto commandBuffers = trg::CommandPool(device,
-										   vkContext.m_graphicsQueue,
-										   vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
-										   2,
-										   vk::CommandBufferLevel::ePrimary);
+trg::Fence makeFence(trg::VulkanContext& vkContext)
+{
+	return trg::Fence(vkContext.m_device);
+}
 
-	auto commandBufferFences = trg::FencePool(device, swapchainCount);
+trg::Semaphore makeSemaphore(trg::VulkanContext& vkContext)
+{
+	return trg::Semaphore(vkContext.m_device);
+}
 
-	auto renderFinishedSemaphores = trg::SemaphorePool(device, swapchainCount);
-
-	uint64_t frameId = 0;
-	while(true)
+class FrameContext
+{
+public:
+	FrameContext(trg::GraphicsInstance& graphicsInstance, trg::CommandBuffer& commandBuffer, trg::ImageView& swapchainImageView)
+	  : m_graphicsInstance(graphicsInstance)
+	  , m_vkContext(m_graphicsInstance.vulkanContext())
+	  , m_commandBuffer(commandBuffer)
+	  , m_swapchainImageView(swapchainImageView)
+	  , m_depthImage(makeDepthImage(m_vkContext))
+	  , m_renderPass(makeRenderPass(m_vkContext))
+	  , m_frameBuffer(makeFrameBuffer(m_vkContext, m_swapchainImageView, m_depthImage, m_renderPass))
+	  , m_acquireNextImageSemaphore(makeSemaphore(m_vkContext))
+	  , m_submitCommandBufferFinishedFence(makeFence(m_vkContext))
+	  , m_submitCommandBufferFinishedSemaphore(makeSemaphore(m_vkContext))
 	{
-		auto frameIndex = frameId % swapchainCount;
+	}
 
-		auto& fence = commandBufferFences.getAll()[frameIndex];
-		fence.wait();
-		fence.reset();
+	void renderFrame()
+	{
+		m_submitCommandBufferFinishedFence.wait();
+		m_submitCommandBufferFinishedFence.reset();
 
-		auto& acquireNextImageSemaphore = vkContext.m_acquireNextImageSemaphores.getAll()[frameIndex];
-		auto imageIndex = vkContext.m_device.acquireNextImageKHR(vkContext.m_swapchain.getSwapchain(),
-																 std::numeric_limits<std::uint64_t>::max(),
-																 *acquireNextImageSemaphore,
-																 vk::Fence());
-
-		auto& commandBuffer = commandBuffers.getAll()[frameIndex];
+		auto imageIndex = m_vkContext.m_device.acquireNextImageKHR(m_vkContext.m_swapchain.getSwapchain(),
+																   std::numeric_limits<std::uint64_t>::max(),
+																   *m_acquireNextImageSemaphore,
+																   vk::Fence());
 
 		{
-			auto cmdScope = trg::CommandBufferRecordScope(commandBuffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
+			auto cmdScope = trg::CommandBufferRecordScope(m_commandBuffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
 
 
 			vk::SubpassContents subpassContents = vk::SubpassContents::eInline;
 
-			vk::ClearValue clearColor = vk::ClearValue(vk::ClearColorValue(std::array{0.0f, 0.0f, 0.0f, 1.0f}));
+			vk::ClearValue clearColor = vk::ClearValue(vk::ClearColorValue(std::array{1.0f, 0.0f, 0.0f, 1.0f}));
 			vk::ClearValue clearDepth = vk::ClearValue(vk::ClearDepthStencilValue(1.0f));
 
 			auto clearValues = std::vector<vk::ClearValue>{clearColor, clearDepth};
 			auto beginInfo =
-				vk::RenderPassBeginInfo(*renderPass, *frameBuffer, vk::Rect2D({0, 0}, vkContext.m_swapchainExtent), clearValues);
+				vk::RenderPassBeginInfo(*m_renderPass, *m_frameBuffer, vk::Rect2D({0, 0}, m_vkContext.m_swapchainExtent), clearValues);
 
-			commandBuffer->beginRenderPass(beginInfo, subpassContents);
-			commandBuffer->endRenderPass();
-			//commandBuffer->beginRenderPass();
-			//commandBuffer->endRenderPass();
+			m_commandBuffer->beginRenderPass(beginInfo, subpassContents);
+			m_commandBuffer->endRenderPass();
 		}
 
-		std::vector submitWaitSemaphores = {*acquireNextImageSemaphore};
-		vkContext.m_graphicsQueue.submitCommandBuffer(submitWaitSemaphores,
-													  {vk::PipelineStageFlagBits::eAllGraphics},
-													  commandBuffer,
-													  std::span(&renderFinishedSemaphores.getAll()[frameIndex], 1),
-													  fence);
+		std::vector submitWaitSemaphores = {*m_acquireNextImageSemaphore};
+		m_vkContext.m_graphicsQueue.submitCommandBuffer(submitWaitSemaphores,
+														{vk::PipelineStageFlagBits::eAllGraphics},
+														m_commandBuffer,
+														std::span(&m_submitCommandBufferFinishedSemaphore, 1),
+														m_submitCommandBufferFinishedFence);
 
-		std::vector presentWaitSemaphores = {*renderFinishedSemaphores.getAll()[frameIndex]};
-		instance.present(imageIndex.value, presentWaitSemaphores);
+		std::vector presentWaitSemaphores = {*m_submitCommandBufferFinishedSemaphore};
+		m_graphicsInstance.present(imageIndex.value, presentWaitSemaphores);
+	}
+
+private:
+	// Order of variables is important for initialization.
+
+	trg::GraphicsInstance& m_graphicsInstance;
+	trg::VulkanContext& m_vkContext;
+
+	trg::CommandBuffer& m_commandBuffer;
+
+	trg::ImageView& m_swapchainImageView;
+
+	trg::Image m_depthImage;
+
+	trg::RenderPass m_renderPass;
+	trg::FrameBuffer m_frameBuffer;
+
+	trg::Semaphore m_acquireNextImageSemaphore;
+
+	trg::Fence m_submitCommandBufferFinishedFence;
+	trg::Semaphore m_submitCommandBufferFinishedSemaphore;
+};
+
+int main()
+{
+	auto instance = trg::GraphicsInstance(std::make_unique<trg::GraphicsContext>(trg::VulkanContextFactory()));
+
+	auto swapchainImageViews = instance.vulkanContext().m_swapchain.getImageViews();
+	auto frameContextCount = swapchainImageViews.size();
+
+	auto commandBuffers = trg::CommandPool(instance.vulkanContext().m_device,
+										   instance.vulkanContext().m_graphicsQueue,
+										   vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
+										   gsl::narrow<int>(frameContextCount),
+										   vk::CommandBufferLevel::ePrimary);
+
+	std::vector<FrameContext> frameContexts;
+
+	for(size_t i = 0; i < frameContextCount; ++i)
+	{
+		frameContexts.emplace_back(instance, commandBuffers.getAll()[i], swapchainImageViews[i]);
+	}
+
+
+	uint64_t frameId = 0;
+	while(true)
+	{
+		auto begin = std::chrono::steady_clock::now();
+
+		auto frameIndex = frameId % frameContextCount;
+
+		FrameContext& frameContext = frameContexts[frameIndex];
+		frameContext.renderFrame();
 
 		frameId++;
+
+		auto end = std::chrono::steady_clock::now();
+
+		std::cout << "Frame time: " << std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(end - begin).count() << "ms"
+				  << std::endl;
 	}
 }
