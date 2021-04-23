@@ -9,15 +9,15 @@ namespace trg
 	public:
 		CommandBufferRecordScope(CommandBuffer& commandBuffer, vk::CommandBufferUsageFlagBits usage);
 
-		CommandBufferRecordScope(const CommandBufferRecordScope& other) = default;
-		CommandBufferRecordScope& operator=(const CommandBufferRecordScope & other) = default;
+		CommandBufferRecordScope(const CommandBufferRecordScope& other) = delete;
+		CommandBufferRecordScope& operator=(const CommandBufferRecordScope& other) = delete;
 
-		CommandBufferRecordScope(CommandBufferRecordScope && other) = default;
-		CommandBufferRecordScope& operator=(CommandBufferRecordScope && other) = default;
+		CommandBufferRecordScope(CommandBufferRecordScope&& other) = delete;
+		CommandBufferRecordScope& operator=(CommandBufferRecordScope&& other) = delete;
 
 		~CommandBufferRecordScope();
 
 	private:
 		CommandBuffer& m_commandBuffer;
 	};
-}
+}  // namespace trg

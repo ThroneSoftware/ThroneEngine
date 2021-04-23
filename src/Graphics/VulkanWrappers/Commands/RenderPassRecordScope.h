@@ -18,11 +18,11 @@ namespace trg
 							  FrameBuffer& frameBuffer,
 							  glm::vec3 clearColor);
 
-		RenderPassRecordScope(const RenderPassRecordScope& other) = default;
-		RenderPassRecordScope& operator=(const RenderPassRecordScope& other) = default;
+		RenderPassRecordScope(const RenderPassRecordScope& other) = delete;
+		RenderPassRecordScope& operator=(const RenderPassRecordScope& other) = delete;
 
-		RenderPassRecordScope(RenderPassRecordScope&& other) = default;
-		RenderPassRecordScope& operator=(RenderPassRecordScope&& other) = default;
+		RenderPassRecordScope(RenderPassRecordScope&& other) = delete;
+		RenderPassRecordScope& operator=(RenderPassRecordScope&& other) = delete;
 
 		~RenderPassRecordScope();
 

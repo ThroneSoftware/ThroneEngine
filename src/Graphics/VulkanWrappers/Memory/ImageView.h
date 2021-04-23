@@ -10,7 +10,7 @@ namespace trg
 		using VkHandleType = vk::ImageView;
 
 	public:
-		ImageView(vk::Device& device, vk::ImageView imageView);
+		ImageView(vk::Device& device, vk::ImageView&& imageView);
 		ImageView(vk::Device& device,
 				  vk::Image& image,
 				  vk::ImageAspectFlagBits aspect,

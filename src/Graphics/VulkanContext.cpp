@@ -13,7 +13,6 @@ namespace trg
 	VulkanContext::~VulkanContext()
 	{
 		m_swapchain.~Swapchain();
-		m_acquireNextImageSemaphores.~SemaphorePool();
 
 		m_instance.destroySurfaceKHR(m_surface);
 		m_instance.destroyDebugUtilsMessengerEXT(m_messenger);

@@ -13,7 +13,7 @@ namespace trg
 							 uint32_t layers)
 		{
 			auto frameBufferCreateInfo =
-				vk::FramebufferCreateInfo({}, renderPass.getVkHandle(), attachments, frameBufferSize.width, frameBufferSize.height, layers);
+				vk::FramebufferCreateInfo({}, *renderPass, attachments, frameBufferSize.width, frameBufferSize.height, layers);
 
 
 			return device.createFramebufferUnique(frameBufferCreateInfo);

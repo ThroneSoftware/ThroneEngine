@@ -58,13 +58,16 @@ trg::Semaphore makeSemaphore(trg::VulkanContext& vkContext)
 class FrameContext
 {
 public:
-	FrameContext(trg::GraphicsInstance& graphicsInstance, trg::CommandBuffer& commandBuffer, trg::ImageView& swapchainImageView)
+	FrameContext(trg::GraphicsInstance& graphicsInstance,
+				 trg::CommandBuffer& commandBuffer,
+				 trg::ImageView& swapchainImageView,
+				 trg::RenderPass& renderPass)
 	  : m_graphicsInstance(graphicsInstance)
 	  , m_vkContext(m_graphicsInstance.vulkanContext())
 	  , m_commandBuffer(commandBuffer)
 	  , m_swapchainImageView(swapchainImageView)
+	  , m_renderPass(renderPass)
 	  , m_depthImage(makeDepthImage(m_vkContext))
-	  , m_renderPass(makeRenderPass(m_vkContext))
 	  , m_frameBuffer(makeFrameBuffer(m_vkContext, m_swapchainImageView, m_depthImage, m_renderPass))
 	  , m_acquireNextImageSemaphore(makeSemaphore(m_vkContext))
 	  , m_submitCommandBufferFinishedFence(makeFence(m_vkContext))
@@ -109,9 +112,10 @@ private:
 
 	trg::ImageView& m_swapchainImageView;
 
+	trg::RenderPass& m_renderPass;
+
 	trg::Image m_depthImage;
 
-	trg::RenderPass m_renderPass;
 	trg::FrameBuffer m_frameBuffer;
 
 	trg::Semaphore m_acquireNextImageSemaphore;
@@ -133,27 +137,33 @@ int main()
 										   gsl::narrow<int>(frameContextCount),
 										   vk::CommandBufferLevel::ePrimary);
 
+	auto renderPass = makeRenderPass(instance.vulkanContext());
+
 	std::vector<FrameContext> frameContexts;
 	frameContexts.reserve(frameContextCount);
 
 	for(size_t i = 0; i < frameContextCount; ++i)
 	{
-		frameContexts.emplace_back(instance, commandBuffers.getAll()[i], swapchainImageViews[i]);
+		frameContexts.emplace_back(instance, commandBuffers.getAll()[i], swapchainImageViews[i], renderPass);
 	}
 
-	auto clearColors = std::array<glm::vec3, 6>{glm::vec3{1.0f, 0.0f, 0.0f},
-												glm::vec3{1.0f, 1.0f, 0.0f},
-												glm::vec3{0.0f, 1.0f, 0.0f},
-												glm::vec3{0.0f, 1.0f, 1.0f},
-												glm::vec3{0.0f, 0.0f, 1.0f},
-												glm::vec3{1.0f, 0.0f, 1.0f}};
-
-	int previousId = gsl::narrow<int>(clearColors.size() - 1);
-	int currendId = 0;
-	auto previousColor = clearColors[previousId];
-	auto currentColor = clearColors[currendId];
-	float sinValue = -glm::pi<float>() / 2.0f;
 	float deltaTime = 0;
+
+	auto clearColors = std::array{glm::vec3{1.0f, 0.0f, 0.0f},
+								  glm::vec3{1.0f, 1.0f, 0.0f},
+								  glm::vec3{0.0f, 1.0f, 0.0f},
+								  glm::vec3{0.0f, 1.0f, 1.0f},
+								  glm::vec3{0.0f, 0.0f, 1.0f},
+								  glm::vec3{1.0f, 0.0f, 1.0f}};
+
+	int currentColorId = 0;
+	int nextColorId = 1;
+
+	auto currentColor = clearColors[currentColorId];
+	auto nextColor = clearColors[nextColorId];
+
+	// Starts lerp at 0
+	float cosValue = glm::pi<float>();
 	float colorSpeed = 0.001f;
 
 	uint64_t frameId = 0;
@@ -161,24 +171,24 @@ int main()
 	{
 		auto begin = std::chrono::steady_clock::now();
 
-		auto frameIndex = frameId % frameContextCount;
-
-		auto lerpValue = (std::sin(sinValue) + 1) / 2.0f;
+		// range: [0, 1]
+		auto lerpValue = (std::cos(cosValue) + 1) / 2.0f;
 
 		if(glm::epsilonEqual(lerpValue, 1.0f, glm::epsilon<float>()))
 		{
-			sinValue = -glm::pi<float>() / 2.0f;
-			lerpValue = (std::sin(sinValue) + 1) / 2.0f;
+			cosValue = glm::pi<float>();
+			lerpValue = (std::sin(cosValue) + 1) / 2.0f;
 
-			previousId = currendId;
-			currendId = (currendId + 1) % (clearColors.size() - 1);
+			currentColorId = nextColorId;
+			nextColorId = (currentColorId + 1) % (clearColors.size() - 1);
 
-			previousColor = clearColors[previousId];
-			currentColor = clearColors[currendId];
+			currentColor = nextColor;
+			nextColor = clearColors[nextColorId];
 		}
 
-		glm::vec3 clearColor = glm::lerp(previousColor, currentColor, lerpValue);
+		glm::vec3 clearColor = glm::lerp(currentColor, nextColor, lerpValue);
 
+		auto frameIndex = frameId % frameContextCount;
 		FrameContext& frameContext = frameContexts[frameIndex];
 		frameContext.renderFrame(clearColor);
 
@@ -188,6 +198,6 @@ int main()
 
 		deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(end - begin).count();
 
-		sinValue += colorSpeed * deltaTime;
+		cosValue += colorSpeed * deltaTime;
 	}
 }

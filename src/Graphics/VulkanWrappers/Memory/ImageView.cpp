@@ -25,8 +25,8 @@ namespace trg
 		}
 	}  // namespace ImageViewPrivate
 
-	ImageView::ImageView(vk::Device& device, vk::ImageView imageView)
-	  : m_view(vk::UniqueImageView(imageView, vk::ObjectDestroy(device, nullptr, vk::defaultDispatchLoaderDynamic)))
+	ImageView::ImageView(vk::Device& device, vk::ImageView&& imageView)
+	  : m_view(vk::UniqueImageView(std::move(imageView), vk::ObjectDestroy(device, nullptr, vk::defaultDispatchLoaderDynamic)))
 	{
 	}
 

@@ -32,10 +32,6 @@ namespace trg
 
 		CommandQueue m_graphicsQueue;
 
-		union
-		{
-			SemaphorePool m_acquireNextImageSemaphores;
-		};
 		std::vector<vk::SwapchainKHR> m_swapchains;
 	};
 }  // namespace trg

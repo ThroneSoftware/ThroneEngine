@@ -20,10 +20,10 @@ namespace trg
 		vk::SwapchainKHR& getSwapchain();
 		const vk::SwapchainKHR& getSwapchain() const;
 
-		vk::Format getFormat() const;
-
 		std::span<ImageView> getImageViews();
 		std::span<const ImageView> getImageViews() const;
+
+		vk::Format getFormat() const;
 
 	private:
 		vk::UniqueSwapchainKHR m_swapchain;

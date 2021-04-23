@@ -35,11 +35,6 @@ namespace trg
 		return m_swapchain.get();
 	}
 
-	vk::Format Swapchain::getFormat() const
-	{
-		return m_imageFormat;
-	}
-
 	std::span<ImageView> Swapchain::getImageViews()
 	{
 		return m_imageViews;
@@ -48,5 +43,10 @@ namespace trg
 	std::span<const ImageView> Swapchain::getImageViews() const
 	{
 		return m_imageViews;
+	}
+
+	vk::Format Swapchain::getFormat() const
+	{
+		return m_imageFormat;
 	}
 }  // namespace trg
