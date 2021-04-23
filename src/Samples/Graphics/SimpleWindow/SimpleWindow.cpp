@@ -8,6 +8,9 @@
 #include <Graphics/VulkanWrappers/Memory/Image.h>
 #include <Graphics/VulkanWrappers/RenderPass.h>
 #include <Graphics/VulkanWrappers/Syncronization/FencePool.h>
+#include <fmt/format.h>
+#include <glm/glm.hpp>
+#include <glm/gtx/compatibility.hpp>
 #include <gsl/gsl>
 
 #include <iostream>
@@ -69,7 +72,7 @@ public:
 	{
 	}
 
-	void renderFrame()
+	void renderFrame(glm::vec3 clearColor)
 	{
 		m_submitCommandBufferFinishedFence.wait();
 		m_submitCommandBufferFinishedFence.reset();
@@ -85,10 +88,10 @@ public:
 
 			vk::SubpassContents subpassContents = vk::SubpassContents::eInline;
 
-			vk::ClearValue clearColor = vk::ClearValue(vk::ClearColorValue(std::array{1.0f, 0.0f, 0.0f, 1.0f}));
-			vk::ClearValue clearDepth = vk::ClearValue(vk::ClearDepthStencilValue(1.0f));
+			vk::ClearValue vkClearColor = vk::ClearValue(vk::ClearColorValue(std::array{clearColor.r, clearColor.g, clearColor.b, 1.0f}));
+			vk::ClearValue vlClearDepth = vk::ClearValue(vk::ClearDepthStencilValue(1.0f));
 
-			auto clearValues = std::vector<vk::ClearValue>{clearColor, clearDepth};
+			auto clearValues = std::vector<vk::ClearValue>{vkClearColor, vlClearDepth};
 			auto beginInfo =
 				vk::RenderPassBeginInfo(*m_renderPass, *m_frameBuffer, vk::Rect2D({0, 0}, m_vkContext.m_swapchainExtent), clearValues);
 
@@ -142,12 +145,27 @@ int main()
 										   vk::CommandBufferLevel::ePrimary);
 
 	std::vector<FrameContext> frameContexts;
+	frameContexts.reserve(frameContextCount);
 
 	for(size_t i = 0; i < frameContextCount; ++i)
 	{
 		frameContexts.emplace_back(instance, commandBuffers.getAll()[i], swapchainImageViews[i]);
 	}
 
+	auto clearColors = std::array<glm::vec3, 6>{glm::vec3{1.0f, 0.0f, 0.0f},
+												glm::vec3{1.0f, 1.0f, 0.0f},
+												glm::vec3{0.0f, 1.0f, 0.0f},
+												glm::vec3{0.0f, 1.0f, 1.0f},
+												glm::vec3{0.0f, 0.0f, 1.0f},
+												glm::vec3{1.0f, 0.0f, 1.0f}};
+
+	int previousId = gsl::narrow<int>(clearColors.size() - 1);
+	int currendId = 0;
+	auto previousColor = clearColors[previousId];
+	auto currentColor = clearColors[currendId];
+	float sinValue = -glm::pi<float>() / 2.0f;
+	float deltaTime = 0;
+	float colorSpeed = 0.001f;
 
 	uint64_t frameId = 0;
 	while(true)
@@ -156,14 +174,31 @@ int main()
 
 		auto frameIndex = frameId % frameContextCount;
 
+		auto lerpValue = (std::sin(sinValue) + 1) / 2.0f;
+
+		if(glm::epsilonEqual(lerpValue, 1.0f, glm::epsilon<float>()))
+		{
+			sinValue = -glm::pi<float>() / 2.0f;
+			lerpValue = (std::sin(sinValue) + 1) / 2.0f;
+
+			previousId = currendId;
+			currendId = (currendId + 1) % (clearColors.size() - 1);
+
+			previousColor = clearColors[previousId];
+			currentColor = clearColors[currendId];
+		}
+
+		glm::vec3 clearColor = glm::lerp(previousColor, currentColor, lerpValue);
+
 		FrameContext& frameContext = frameContexts[frameIndex];
-		frameContext.renderFrame();
+		frameContext.renderFrame(clearColor);
 
 		frameId++;
 
 		auto end = std::chrono::steady_clock::now();
 
-		std::cout << "Frame time: " << std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(end - begin).count() << "ms"
-				  << std::endl;
+		deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(end - begin).count();
+
+		sinValue += colorSpeed * deltaTime;
 	}
 }
