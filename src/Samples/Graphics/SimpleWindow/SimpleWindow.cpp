@@ -4,6 +4,7 @@
 #include <Graphics/VulkanContextFactory.h>
 #include <Graphics/VulkanWrappers/Commands/CommandBufferRecordScope.h>
 #include <Graphics/VulkanWrappers/Commands/CommandPool.h>
+#include <Graphics/VulkanWrappers/Commands/RenderPassRecordScope.h>
 #include <Graphics/VulkanWrappers/FrameBuffer.h>
 #include <Graphics/VulkanWrappers/Memory/Image.h>
 #include <Graphics/VulkanWrappers/RenderPass.h>
@@ -84,18 +85,7 @@ public:
 		{
 			auto cmdScope = trg::CommandBufferRecordScope(m_commandBuffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
 
-
-			vk::SubpassContents subpassContents = vk::SubpassContents::eInline;
-
-			vk::ClearValue vkClearColor = vk::ClearValue(vk::ClearColorValue(std::array{clearColor.r, clearColor.g, clearColor.b, 1.0f}));
-			vk::ClearValue vlClearDepth = vk::ClearValue(vk::ClearDepthStencilValue(1.0f));
-
-			auto clearValues = std::vector<vk::ClearValue>{vkClearColor, vlClearDepth};
-			auto beginInfo =
-				vk::RenderPassBeginInfo(*m_renderPass, *m_frameBuffer, vk::Rect2D({0, 0}, m_vkContext.m_swapchainExtent), clearValues);
-
-			m_commandBuffer->beginRenderPass(beginInfo, subpassContents);
-			m_commandBuffer->endRenderPass();
+			auto renderPassScope = trg::RenderPassRecordScope(m_commandBuffer, m_vkContext, m_renderPass, m_frameBuffer, clearColor);
 		}
 
 		std::vector submitWaitSemaphores = {*m_acquireNextImageSemaphore};
@@ -110,7 +100,7 @@ public:
 	}
 
 private:
-	// Order of variables is important for initialization.
+	// Order of variables is important for member initializer list.
 
 	trg::GraphicsInstance& m_graphicsInstance;
 	trg::VulkanContext& m_vkContext;
