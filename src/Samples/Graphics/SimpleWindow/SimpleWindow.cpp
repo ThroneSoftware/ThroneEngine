@@ -1,3 +1,5 @@
+#include "ColorCycle.h"
+
 #include <Graphics/GraphicsInstance.h>
 
 #include <Graphics/VulkanContext.h>
@@ -149,44 +151,14 @@ int main()
 
 	float deltaTime = 0;
 
-	auto clearColors = std::array{glm::vec3{1.0f, 0.0f, 0.0f},
-								  glm::vec3{1.0f, 1.0f, 0.0f},
-								  glm::vec3{0.0f, 1.0f, 0.0f},
-								  glm::vec3{0.0f, 1.0f, 1.0f},
-								  glm::vec3{0.0f, 0.0f, 1.0f},
-								  glm::vec3{1.0f, 0.0f, 1.0f}};
-
-	int currentColorId = 0;
-	int nextColorId = 1;
-
-	auto currentColor = clearColors[currentColorId];
-	auto nextColor = clearColors[nextColorId];
-
-	// Starts lerp at 0
-	float cosValue = glm::pi<float>();
-	float colorSpeed = 0.001f;
+	trg::ColorCycle colorCycle;
 
 	uint64_t frameId = 0;
 	while(true)
 	{
 		auto begin = std::chrono::steady_clock::now();
 
-		// range: [0, 1]
-		auto lerpValue = (std::cos(cosValue) + 1) / 2.0f;
-
-		if(cosValue > 2 * glm::pi<float>())
-		{
-			cosValue = glm::pi<float>();
-			lerpValue = (std::sin(cosValue) + 1) / 2.0f;
-
-			currentColorId = nextColorId;
-			nextColorId = (currentColorId + 1) % (clearColors.size() - 1);
-
-			currentColor = nextColor;
-			nextColor = clearColors[nextColorId];
-		}
-
-		glm::vec3 clearColor = glm::lerp(currentColor, nextColor, lerpValue);
+		auto clearColor = colorCycle.getClearColor(deltaTime);
 
 		auto frameIndex = frameId % frameContextCount;
 		FrameContext& frameContext = frameContexts[frameIndex];
@@ -197,7 +169,5 @@ int main()
 		auto end = std::chrono::steady_clock::now();
 
 		deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(end - begin).count();
-
-		cosValue += colorSpeed * deltaTime;
 	}
 }
