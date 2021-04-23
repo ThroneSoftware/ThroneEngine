@@ -40,7 +40,6 @@ trg::RenderPass makeRenderPass(trg::VulkanContext& vkContext)
 trg::FrameBuffer
 	makeFrameBuffer(trg::VulkanContext& vkContext, trg::ImageView& swapchainImageView, trg::Image& depthImage, trg::RenderPass& renderPass)
 {
-	auto imageViews = vkContext.m_swapchain.getImageViews();
 	std::vector<vk::ImageView> attachments = {*swapchainImageView, *depthImage.getImageView()};
 	return trg::FrameBuffer(vkContext.m_device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
 }
