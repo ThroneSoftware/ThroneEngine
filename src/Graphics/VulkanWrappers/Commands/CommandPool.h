@@ -20,6 +20,16 @@ namespace trg
 					int numberOfCommandBuffers,
 					vk::CommandBufferLevel commandBufferLevel);
 
+		CommandPool(const CommandPool& other) = delete;
+		CommandPool& operator=(const CommandPool & other) = delete;
+
+		// Moves are deleted because the auto generated version
+		// destroys the command pool before the command buffers.
+		CommandPool(CommandPool && other) = delete;
+		CommandPool& operator=(CommandPool && other) = delete;
+
+		~CommandPool() = default;
+
 		VkHandleType& getVkHandle();
 		const VkHandleType& getVkHandle() const;
 
@@ -35,7 +45,7 @@ namespace trg
 		std::span<const CommandBuffer> getAll() const;
 
 	private:
-		vk::Device& m_device;
+		std::reference_wrapper<vk::Device> m_device;
 
 		vk::UniqueCommandPool m_commandPool;
 

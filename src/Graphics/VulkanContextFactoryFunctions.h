@@ -147,8 +147,6 @@ namespace trg
 
 	void glfwFrameBufferResizeCallback(GLFWwindow* window, int width, int height)
 	{
-		std::cout << "Resize Event\n";
-
 		void* userPointer = glfwGetWindowUserPointer(window);
 		VulkanContext* vkContext = reinterpret_cast<VulkanContext*>(userPointer);
 
@@ -156,17 +154,10 @@ namespace trg
 
 		vkContext->m_device.waitIdle();
 
-		//VkSurfaceKHR surface = VK_NULL_HANDLE;
-		//VkResult result = glfwCreateWindowSurface(vkContext->m_instance, window, nullptr, &surface);
-		//vkContext->m_surface = vk::SurfaceKHR(surface);
-
-		//vkContext->m_vkbDevice->surface = surface;
-		//vkContext->m_vkbDevice->physical_device.surface = surface;
-
 		vkContext->m_swapchainExtent = vk::Extent2D(width, height);
 
 		auto swapchain = makeSwapchain(*vkContext->m_vkbDevice, vkContext->m_swapchain.getSwapchain());
-		//vkContext->m_swapchain.~Swapchain();
+		vkContext->m_swapchain.~Swapchain();
 		new(&vkContext->m_swapchain) Swapchain(vkContext->m_device, swapchain);
 	}
 }  // namespace trg
