@@ -162,31 +162,34 @@ int main()
 
 		instance.processGLFWEvents();
 
-		if(bool expected = true; instance.vulkanContext().hasWindowResizeEvent.compare_exchange_strong(expected, false))
+		if (!instance.vulkanContext().windowMinimized)
 		{
-			instance.vulkanContext().m_device.waitIdle();
-
-			frameContexts.clear();
-			for(size_t i = 0; i < frameContextCount; ++i)
+			if (bool expected = true; instance.vulkanContext().hasWindowResizeEvent.compare_exchange_strong(expected, false))
 			{
-				frameContexts.emplace_back(instance,
-										   commandBuffers.getAll()[i],
-										   instance.vulkanContext().m_swapchain.getImageViews()[i],
-										   renderPass);
+				instance.vulkanContext().m_device.waitIdle();
+
+				frameContexts.clear();
+				for (size_t i = 0; i < frameContextCount; ++i)
+				{
+					frameContexts.emplace_back(instance,
+						commandBuffers.getAll()[i],
+						instance.vulkanContext().m_swapchain.getImageViews()[i],
+						renderPass);
+				}
+
+				// very important
+				// Reset frameId to render to the correct frameBuffer after recreation.
+				// Without this, we sometime get validation errors because 
+				// frameId % frameContextCount is not equal to the result of acquireNextImageKHR.
+				frameId = 0;
 			}
 
-			// very important
-			// Reset frameId to render to the correct frameBuffer after recreation.
-			// Without this, we sometime get validation errors because 
-			// frameId % frameContextCount is not equal to the result of acquireNextImageKHR.
-			frameId = 0;
+			auto clearColor = colorCycle.getClearColor(deltaTime);
+
+			auto frameIndex = frameId % frameContextCount;
+			FrameContext& frameContext = frameContexts[frameIndex];
+			frameContext.renderFrame(clearColor);
 		}
-
-		auto clearColor = colorCycle.getClearColor(deltaTime);
-
-		auto frameIndex = frameId % frameContextCount;
-		FrameContext& frameContext = frameContexts[frameIndex];
-		frameContext.renderFrame(clearColor);
 
 		frameId++;
 
