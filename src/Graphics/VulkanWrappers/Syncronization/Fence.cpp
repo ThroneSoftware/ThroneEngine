@@ -51,12 +51,12 @@ namespace trg
 
 	void Fence::wait(uint64_t timeout)
 	{
-		auto result = m_device.waitForFences(getVkHandle(), true, timeout);
+		auto result = m_device.get().waitForFences(getVkHandle(), true, timeout);
 	}
 
 	void Fence::reset()
 	{
-		m_device.resetFences(getVkHandle());
+		m_device.get().resetFences(getVkHandle());
 	}
 
 	void Fence::waitForFences(vk::Device& device, std::span<Fence> fences, bool waitForAll, uint64_t timeout)

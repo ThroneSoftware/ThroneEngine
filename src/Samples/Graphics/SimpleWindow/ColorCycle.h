@@ -24,13 +24,9 @@ namespace trg
 
 			m_cosValue += m_colorSpeed * deltaTime;
 
-			// range: [0, 1]
-			auto lerpValue = (std::cos(m_cosValue) + 1) / 2.0f;
-
-			if(m_cosValue > 2 * glm::pi<float>())
+			if(m_cosValue > 2.0f * glm::pi<float>())
 			{
 				m_cosValue = glm::pi<float>();
-				lerpValue = (std::sin(m_cosValue) + 1) / 2.0f;
 
 				m_currentColorId = m_nextColorId;
 				m_nextColorId = (m_currentColorId + 1) % (clearColors.size() - 1);
@@ -38,6 +34,9 @@ namespace trg
 				m_currentColor = m_nextColor;
 				m_nextColor = clearColors[m_nextColorId];
 			}
+
+			// range: [0, 1]
+			auto lerpValue = (std::cos(m_cosValue) + 1.0f) / 2.0f;
 
 			return glm::lerp(m_currentColor, m_nextColor, lerpValue);
 		}

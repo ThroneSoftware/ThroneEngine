@@ -3,6 +3,9 @@
 #include "Utility.h"
 #include "Vulkan/vulkan.hpp"
 #include "VulkanContext.h"
+#include "VulkanContextFactoryFunctions.h"
+
+#include <GLFW/glfw3.h>
 
 namespace trg
 {
@@ -11,11 +14,16 @@ namespace trg
 	{
 	}
 
+	void GraphicsInstance::processGLFWEvents()
+	{
+		glfwPollEvents();
+	}
+
 	void GraphicsInstance::present(uint32_t imageIndex, std::vector<vk::Semaphore>& waitSemaphores)
 	{
-		auto indices = { imageIndex };
+		auto indices = {imageIndex};
 
-		auto presentInfo = vk::PresentInfoKHR(waitSemaphores, vulkanContext().m_swapchains, indices);
+		auto presentInfo = vk::PresentInfoKHR(waitSemaphores, vulkanContext().m_swapchain.getSwapchain(), indices);
 
 		auto result = vulkanContext().m_graphicsQueue->presentKHR(presentInfo);
 	}

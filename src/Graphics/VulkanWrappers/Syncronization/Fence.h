@@ -26,11 +26,14 @@ namespace trg
 		void wait(uint64_t timeout = std::numeric_limits<uint64_t>::max());
 		void reset();
 
-		static void waitForFences(vk::Device& device, std::span<Fence> fences, bool waitForAll, uint64_t timeout = std::numeric_limits<uint64_t>::max());
+		static void waitForFences(vk::Device& device,
+								  std::span<Fence> fences,
+								  bool waitForAll,
+								  uint64_t timeout = std::numeric_limits<uint64_t>::max());
 		static void resetFences(vk::Device& device, std::span<Fence> fences);
 
 	private:
-		vk::Device& m_device;
+		std::reference_wrapper<vk::Device> m_device;
 
 		vk::UniqueFence m_fence;
 	};

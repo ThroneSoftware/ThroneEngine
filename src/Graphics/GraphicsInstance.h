@@ -12,6 +12,8 @@ namespace trg
 	public:
 		GraphicsInstance(std::unique_ptr<GraphicsContext> context);
 
+		void processGLFWEvents();
+
 		void present(uint32_t imageIndex, std::vector<vk::Semaphore>& waitSemaphores);
 
 		VulkanContext& vulkanContext();

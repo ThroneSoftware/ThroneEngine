@@ -8,6 +8,11 @@
 
 struct GLFWwindow;
 
+namespace vkb
+{
+	struct Device;
+}
+
 namespace trg
 {
 	class VulkanContext
@@ -24,14 +29,18 @@ namespace trg
 
 		vk::PhysicalDevice m_physicalDevice;
 		vk::Device m_device;
+
+		std::unique_ptr<vkb::Device> m_vkbDevice;
+
+		vk::SurfaceKHR m_surface;
+
 		union
 		{
 			Swapchain m_swapchain;
 		};
-		vk::SurfaceKHR m_surface;
 
 		CommandQueue m_graphicsQueue;
 
-		std::vector<vk::SwapchainKHR> m_swapchains;
+		std::atomic_bool hasWindowResizeEvent = false;
 	};
 }  // namespace trg

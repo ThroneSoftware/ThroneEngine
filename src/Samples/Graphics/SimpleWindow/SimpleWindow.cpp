@@ -130,8 +130,7 @@ int main()
 {
 	auto instance = trg::GraphicsInstance(std::make_unique<trg::GraphicsContext>(trg::VulkanContextFactory()));
 
-	auto swapchainImageViews = instance.vulkanContext().m_swapchain.getImageViews();
-	auto frameContextCount = swapchainImageViews.size();
+	auto frameContextCount = instance.vulkanContext().m_swapchain.getImageViews().size();
 
 	auto commandBuffers = trg::CommandPool(instance.vulkanContext().m_device,
 										   instance.vulkanContext().m_graphicsQueue,
@@ -146,7 +145,10 @@ int main()
 
 	for(size_t i = 0; i < frameContextCount; ++i)
 	{
-		frameContexts.emplace_back(instance, commandBuffers.getAll()[i], swapchainImageViews[i], renderPass);
+		frameContexts.emplace_back(instance,
+								   commandBuffers.getAll()[i],
+								   instance.vulkanContext().m_swapchain.getImageViews()[i],
+								   renderPass);
 	}
 
 	float deltaTime = 0;
@@ -157,6 +159,22 @@ int main()
 	while(true)
 	{
 		auto begin = std::chrono::steady_clock::now();
+
+		instance.processGLFWEvents();
+
+		if(bool expected = true; instance.vulkanContext().hasWindowResizeEvent.compare_exchange_strong(expected, false))
+		{
+			instance.vulkanContext().m_device.waitIdle();
+
+			frameContexts.clear();
+			for(size_t i = 0; i < frameContextCount; ++i)
+			{
+				frameContexts.emplace_back(instance,
+										   commandBuffers.getAll()[i],
+										   instance.vulkanContext().m_swapchain.getImageViews()[i],
+										   renderPass);
+			}
+		}
 
 		auto clearColor = colorCycle.getClearColor(deltaTime);
 
