@@ -152,7 +152,7 @@ namespace trg
 
 		vkContext->hasWindowResizeEvent = true;
 
-		if (width == 0 || height == 0)
+		if(width == 0 || height == 0)
 		{
 			vkContext->windowMinimized = true;
 		}
@@ -164,9 +164,9 @@ namespace trg
 
 			vkContext->m_swapchainExtent = vk::Extent2D(width, height);
 
-			auto swapchain = makeSwapchain(*vkContext->m_vkbDevice, vkContext->m_swapchain.getSwapchain());
+			auto swapchain = makeSwapchain(*vkContext->m_vkbDevice, *vkContext->m_swapchain);
 			vkContext->m_swapchain.~Swapchain();
 			new(&vkContext->m_swapchain) Swapchain(vkContext->m_device, swapchain);
-		}	
+		}
 	}
 }  // namespace trg

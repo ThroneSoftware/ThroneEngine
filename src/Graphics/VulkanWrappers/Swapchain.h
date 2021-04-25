@@ -14,11 +14,20 @@ namespace trg
 	class Swapchain
 	{
 	public:
+		using VkHandleType = vk::SwapchainKHR;
+
+	public:
 		Swapchain() = default;
 		Swapchain(vk::Device& device, vkb::Swapchain& swapchain);
 
-		vk::SwapchainKHR& getSwapchain();
-		const vk::SwapchainKHR& getSwapchain() const;
+		VkHandleType& getVkHandle();
+		const VkHandleType& getVkHandle() const;
+
+		VkHandleType& operator*();
+		const VkHandleType& operator*() const;
+
+		VkHandleType* operator->();
+		const VkHandleType* operator->() const;
 
 		std::span<ImageView> getImageViews();
 		std::span<const ImageView> getImageViews() const;

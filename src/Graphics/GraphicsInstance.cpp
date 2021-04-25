@@ -14,7 +14,7 @@ namespace trg
 	{
 	}
 
-	void GraphicsInstance::processGLFWEvents()
+	void GraphicsInstance::processWindowEvents()
 	{
 		glfwPollEvents();
 	}
@@ -23,7 +23,7 @@ namespace trg
 	{
 		auto indices = {imageIndex};
 
-		auto presentInfo = vk::PresentInfoKHR(waitSemaphores, vulkanContext().m_swapchain.getSwapchain(), indices);
+		auto presentInfo = vk::PresentInfoKHR(waitSemaphores, *vulkanContext().m_swapchain, indices);
 
 		auto result = vulkanContext().m_graphicsQueue->presentKHR(presentInfo);
 	}

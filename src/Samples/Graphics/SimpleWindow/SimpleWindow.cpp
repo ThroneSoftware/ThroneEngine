@@ -82,7 +82,7 @@ public:
 		m_submitCommandBufferFinishedFence.wait();
 		m_submitCommandBufferFinishedFence.reset();
 
-		auto imageIndex = m_vkContext.m_device.acquireNextImageKHR(m_vkContext.m_swapchain.getSwapchain(),
+		auto imageIndex = m_vkContext.m_device.acquireNextImageKHR(*m_vkContext.m_swapchain,
 																   std::numeric_limits<std::uint64_t>::max(),
 																   *m_acquireNextImageSemaphore,
 																   vk::Fence());
@@ -160,26 +160,26 @@ int main()
 	{
 		auto begin = std::chrono::steady_clock::now();
 
-		instance.processGLFWEvents();
+		instance.processWindowEvents();
 
-		if (!instance.vulkanContext().windowMinimized)
+		if(!instance.vulkanContext().windowMinimized)
 		{
-			if (bool expected = true; instance.vulkanContext().hasWindowResizeEvent.compare_exchange_strong(expected, false))
+			if(bool expected = true; instance.vulkanContext().hasWindowResizeEvent.compare_exchange_strong(expected, false))
 			{
 				instance.vulkanContext().m_device.waitIdle();
 
 				frameContexts.clear();
-				for (size_t i = 0; i < frameContextCount; ++i)
+				for(size_t i = 0; i < frameContextCount; ++i)
 				{
 					frameContexts.emplace_back(instance,
-						commandBuffers.getAll()[i],
-						instance.vulkanContext().m_swapchain.getImageViews()[i],
-						renderPass);
+											   commandBuffers.getAll()[i],
+											   instance.vulkanContext().m_swapchain.getImageViews()[i],
+											   renderPass);
 				}
 
 				// very important
 				// Reset frameId to render to the correct frameBuffer after recreation.
-				// Without this, we sometime get validation errors because 
+				// Without this, we sometime get validation errors because
 				// frameId % frameContextCount is not equal to the result of acquireNextImageKHR.
 				frameId = 0;
 			}

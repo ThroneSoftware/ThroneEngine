@@ -12,7 +12,7 @@ namespace trg
 	public:
 		GraphicsInstance(std::unique_ptr<GraphicsContext> context);
 
-		void processGLFWEvents();
+		void processWindowEvents();
 
 		void present(uint32_t imageIndex, std::vector<vk::Semaphore>& waitSemaphores);
 

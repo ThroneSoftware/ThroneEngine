@@ -25,14 +25,34 @@ namespace trg
 	{
 	}
 
-	vk::SwapchainKHR& Swapchain::getSwapchain()
+	Swapchain::VkHandleType& Swapchain::getVkHandle()
 	{
 		return m_swapchain.get();
 	}
 
-	const vk::SwapchainKHR& Swapchain::getSwapchain() const
+	const Swapchain::VkHandleType& Swapchain::getVkHandle() const
 	{
 		return m_swapchain.get();
+	}
+
+	Swapchain::VkHandleType& Swapchain::operator*()
+	{
+		return getVkHandle();
+	}
+
+	const Swapchain::VkHandleType& Swapchain::operator*() const
+	{
+		return getVkHandle();
+	}
+
+	Swapchain::VkHandleType* Swapchain::operator->()
+	{
+		return &getVkHandle();
+	}
+
+	const Swapchain::VkHandleType* Swapchain::operator->() const
+	{
+		return &getVkHandle();
 	}
 
 	std::span<ImageView> Swapchain::getImageViews()
