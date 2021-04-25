@@ -156,7 +156,7 @@ int main()
 	trg::ColorCycle colorCycle;
 
 	uint64_t frameId = 0;
-	while(true)
+	while(!instance.windowShouldClose())
 	{
 		auto begin = std::chrono::steady_clock::now();
 
@@ -194,4 +194,6 @@ int main()
 
 		deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(end - begin).count();
 	}
+
+	instance.vulkanContext().m_device.waitIdle();
 }

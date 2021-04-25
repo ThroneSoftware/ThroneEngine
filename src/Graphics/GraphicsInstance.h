@@ -18,6 +18,8 @@ namespace trg
 
 		VulkanContext& vulkanContext();
 
+		bool windowShouldClose();
+
 	private:
 		std::unique_ptr<GraphicsContext> m_context;
 	};

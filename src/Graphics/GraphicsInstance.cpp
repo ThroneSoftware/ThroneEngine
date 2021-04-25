@@ -32,4 +32,9 @@ namespace trg
 	{
 		return *m_context->m_vulkanContext;
 	}
+
+	bool GraphicsInstance::windowShouldClose()
+	{
+		return glfwWindowShouldClose(m_context->m_vulkanContext->m_window);
+	}
 }  // namespace trg
