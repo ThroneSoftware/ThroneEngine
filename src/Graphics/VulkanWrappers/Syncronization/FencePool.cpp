@@ -7,13 +7,13 @@ namespace trg
 	{
 	}
 
-	FencePool::FencePool(vk::Device& device, int numberOfFences)
+	FencePool::FencePool(vk::Device& device, std::size_t numberOfFences)
 	  : m_device(device)
 	{
 		addFences(numberOfFences);
 	}
 
-	void FencePool::addFences(int numberOfFences)
+	void FencePool::addFences(std::size_t numberOfFences)
 	{
 		assert(numberOfFences != 0);
 

@@ -71,21 +71,15 @@ public:
 	  , m_renderPass(renderPass)
 	  , m_depthImage(makeDepthImage(m_vkContext))
 	  , m_frameBuffer(makeFrameBuffer(m_vkContext, m_swapchainImageView, m_depthImage, m_renderPass))
-	  , m_acquireNextImageSemaphore(makeSemaphore(m_vkContext))
 	  , m_submitCommandBufferFinishedFence(makeFence(m_vkContext))
 	  , m_submitCommandBufferFinishedSemaphore(makeSemaphore(m_vkContext))
 	{
 	}
 
-	void renderFrame(glm::vec3 clearColor)
+	void renderFrame(glm::vec3 clearColor, std::uint32_t imageIndex, trg::Semaphore& acquireNextImageSemaphore)
 	{
 		m_submitCommandBufferFinishedFence.wait();
 		m_submitCommandBufferFinishedFence.reset();
-
-		auto imageIndex = m_vkContext.m_device.acquireNextImageKHR(*m_vkContext.m_swapchain,
-																   std::numeric_limits<std::uint64_t>::max(),
-																   *m_acquireNextImageSemaphore,
-																   vk::Fence());
 
 		{
 			auto cmdScope = trg::CommandBufferRecordScope(m_commandBuffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
@@ -93,7 +87,7 @@ public:
 			auto renderPassScope = trg::RenderPassRecordScope(m_commandBuffer, m_vkContext, m_renderPass, m_frameBuffer, clearColor);
 		}
 
-		std::vector submitWaitSemaphores = {*m_acquireNextImageSemaphore};
+		std::vector submitWaitSemaphores = {*acquireNextImageSemaphore};
 		m_vkContext.m_graphicsQueue.submitCommandBuffer(submitWaitSemaphores,
 														{vk::PipelineStageFlagBits::eAllGraphics},
 														m_commandBuffer,
@@ -101,7 +95,7 @@ public:
 														m_submitCommandBufferFinishedFence);
 
 		std::vector presentWaitSemaphores = {*m_submitCommandBufferFinishedSemaphore};
-		m_graphicsInstance.present(imageIndex.value, presentWaitSemaphores);
+		m_graphicsInstance.present(imageIndex, presentWaitSemaphores);
 	}
 
 private:
@@ -120,26 +114,15 @@ private:
 
 	trg::FrameBuffer m_frameBuffer;
 
-	trg::Semaphore m_acquireNextImageSemaphore;
-
 	trg::Fence m_submitCommandBufferFinishedFence;
 	trg::Semaphore m_submitCommandBufferFinishedSemaphore;
 };
 
-int main()
+auto makeFrameContexts(std::size_t frameContextCount,
+					   trg::GraphicsInstance& instance,
+					   trg::CommandPool& commandBuffers,
+					   trg::RenderPass& renderPass)
 {
-	auto instance = trg::GraphicsInstance(std::make_unique<trg::GraphicsContext>(trg::VulkanContextFactory()));
-
-	auto frameContextCount = instance.vulkanContext().m_swapchain.getImageViews().size();
-
-	auto commandBuffers = trg::CommandPool(instance.vulkanContext().m_device,
-										   instance.vulkanContext().m_graphicsQueue,
-										   vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
-										   gsl::narrow<int>(frameContextCount),
-										   vk::CommandBufferLevel::ePrimary);
-
-	auto renderPass = makeRenderPass(instance.vulkanContext());
-
 	std::vector<FrameContext> frameContexts;
 	frameContexts.reserve(frameContextCount);
 
@@ -151,6 +134,28 @@ int main()
 								   renderPass);
 	}
 
+	return frameContexts;
+}
+
+int main()
+{
+	auto instance = trg::GraphicsInstance(std::make_unique<trg::GraphicsContext>(trg::VulkanContextFactory()));
+	auto& vkContext = instance.vulkanContext();
+
+	auto frameContextCount = vkContext.m_swapchain.getImageViews().size();
+
+	auto commandBuffers = trg::CommandPool(vkContext.m_device,
+										   vkContext.m_graphicsQueue,
+										   vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
+										   frameContextCount,
+										   vk::CommandBufferLevel::ePrimary);
+
+	auto renderPass = makeRenderPass(vkContext);
+
+	auto acquireNextImageSemaphores = trg::SemaphorePool(vkContext.m_device, frameContextCount);
+
+	std::vector<FrameContext> frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass);
+
 	float deltaTime = 0;
 
 	trg::ColorCycle colorCycle;
@@ -158,37 +163,28 @@ int main()
 	uint64_t frameId = 0;
 	while(!instance.windowShouldClose())
 	{
+		auto currentResourceIndex = frameId % frameContextCount;
+
 		auto begin = std::chrono::steady_clock::now();
 
 		instance.processWindowEvents();
 
-		if(!instance.vulkanContext().windowMinimized)
+		if(!vkContext.windowMinimized)
 		{
-			if(bool expected = true; instance.vulkanContext().hasWindowResizeEvent.compare_exchange_strong(expected, false))
+			if(bool expected = true; vkContext.hasWindowResizeEvent.compare_exchange_strong(expected, false))
 			{
-				instance.vulkanContext().m_device.waitIdle();
+				vkContext.m_device.waitIdle();
 
-				frameContexts.clear();
-				for(size_t i = 0; i < frameContextCount; ++i)
-				{
-					frameContexts.emplace_back(instance,
-											   commandBuffers.getAll()[i],
-											   instance.vulkanContext().m_swapchain.getImageViews()[i],
-											   renderPass);
-				}
-
-				// very important
-				// Reset frameId to render to the correct frameBuffer after recreation.
-				// Without this, we sometime get validation errors because
-				// frameId % frameContextCount is not equal to the result of acquireNextImageKHR.
-				frameId = 0;
+				frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass);
 			}
 
 			auto clearColor = colorCycle.getClearColor(deltaTime);
 
-			auto frameIndex = frameId % frameContextCount;
-			FrameContext& frameContext = frameContexts[frameIndex];
-			frameContext.renderFrame(clearColor);
+			auto& acquireNextImageSemaphore = acquireNextImageSemaphores.getAll()[currentResourceIndex];
+			auto imageIndex = vkContext.m_swapchain.acquireImage(acquireNextImageSemaphore);
+
+			FrameContext& frameContext = frameContexts[imageIndex];
+			frameContext.renderFrame(clearColor, imageIndex, acquireNextImageSemaphore);
 		}
 
 		frameId++;
@@ -198,5 +194,5 @@ int main()
 		deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(end - begin).count();
 	}
 
-	instance.vulkanContext().m_device.waitIdle();
+	vkContext.m_device.waitIdle();
 }

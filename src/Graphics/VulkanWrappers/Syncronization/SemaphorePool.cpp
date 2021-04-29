@@ -7,13 +7,13 @@ namespace trg
 	{
 	}
 
-	SemaphorePool::SemaphorePool(vk::Device& device, int numberOfSemaphores)
+	SemaphorePool::SemaphorePool(vk::Device& device, std::size_t numberOfSemaphores)
 	  : m_device(device)
 	{
 		addSemaphores(numberOfSemaphores);
 	}
 
-	void SemaphorePool::addSemaphores(int numberOfSemaphores)
+	void SemaphorePool::addSemaphores(std::size_t numberOfSemaphores)
 	{
 		assert(numberOfSemaphores != 0);
 

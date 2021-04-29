@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Memory/ImageView.h"
+#include "Syncronization/Semaphore.h"
 
 #include <Vulkan/vulkan.hpp>
 
@@ -34,7 +35,11 @@ namespace trg
 
 		vk::Format getFormat() const;
 
+		std::uint32_t acquireImage(Semaphore& acquireNextImageSemaphore);
+
 	private:
+		vk::Device& m_device;
+
 		vk::UniqueSwapchainKHR m_swapchain;
 		std::vector<ImageView> m_imageViews;
 

@@ -18,7 +18,7 @@ namespace trg
 	CommandPool::CommandPool(vk::Device& device,
 							 const CommandQueue& commandQueue,
 							 vk::CommandPoolCreateFlagBits flags,
-							 int numberOfCommandBuffers,
+							 std::size_t numberOfCommandBuffers,
 							 vk::CommandBufferLevel commandBufferLevel)
 	  : m_device(device)
 	  , m_commandPool(CommandPoolPrivate::makeCommandPool(device, commandQueue, flags))
@@ -56,7 +56,7 @@ namespace trg
 		return &getVkHandle();
 	}
 
-	void CommandPool::addCommandBuffers(int numberOfCommandBuffers, vk::CommandBufferLevel commandBufferLevel)
+	void CommandPool::addCommandBuffers(std::size_t numberOfCommandBuffers, vk::CommandBufferLevel commandBufferLevel)
 	{
 		assert(numberOfCommandBuffers != 0);
 
