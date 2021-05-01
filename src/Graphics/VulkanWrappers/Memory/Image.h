@@ -36,7 +36,7 @@ namespace trg
 		std::span<const ImageView> getImageViews() const;
 
 	private:
-		vk::Device& m_device;
+		std::reference_wrapper<vk::Device> m_device;
 
 		VmaUnique<vk::Image> m_image;
 		std::vector<ImageView> m_imageViews;

@@ -10,9 +10,9 @@ namespace trg
 	{
 	public:
 		explicit FencePool(vk::Device& device);
-		FencePool(vk::Device& device, int numberOfFences);
+		FencePool(vk::Device& device, std::size_t numberOfFences);
 
-		void addFences(int numberOfFences);
+		void addFences(std::size_t numberOfFences);
 		void wait(uint64_t timeout = std::numeric_limits<uint64_t>::max());
 		void reset();
 

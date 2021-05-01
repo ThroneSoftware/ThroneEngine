@@ -10,9 +10,9 @@ namespace trg
 	{
 	public:
 		explicit SemaphorePool(vk::Device& device);
-		SemaphorePool(vk::Device& device, int numberOfSemaphores);
+		SemaphorePool(vk::Device& device, std::size_t numberOfSemaphores);
 
-		void addSemaphores(int numberOfSemaphores);
+		void addSemaphores(std::size_t numberOfSemaphores);
 
 		std::span<Semaphore> getAll();
 		std::span<const Semaphore> getAll() const;
