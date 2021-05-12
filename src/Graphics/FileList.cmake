@@ -19,6 +19,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Commands/CommandQueue.h
 	VulkanWrappers/Commands/RenderPassRecordScope.cpp
 	VulkanWrappers/Commands/RenderPassRecordScope.h
+	VulkanWrappers/Descriptors/Descriptor.cpp
+	VulkanWrappers/Descriptors/Descriptor.h
 	VulkanWrappers/FrameBuffer.cpp
 	VulkanWrappers/FrameBuffer.h
 	VulkanWrappers/Memory/Buffer.cpp
