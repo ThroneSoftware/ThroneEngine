@@ -21,6 +21,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Commands/RenderPassRecordScope.h
 	VulkanWrappers/Descriptors/Descriptor.cpp
 	VulkanWrappers/Descriptors/Descriptor.h
+	VulkanWrappers/Descriptors/DescriptorSetLayout.cpp
+	VulkanWrappers/Descriptors/DescriptorSetLayout.h
 	VulkanWrappers/FrameBuffer.cpp
 	VulkanWrappers/FrameBuffer.h
 	VulkanWrappers/Memory/Buffer.cpp
