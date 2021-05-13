@@ -50,7 +50,6 @@ namespace trg
 
 	vk::DescriptorSetLayoutBinding Descriptor::getDescriptorSetLayoutBinding(uint32_t binding) const
 	{
-		auto binding = vk::DescriptorSetLayoutBinding(binding, m_descriptorType, m_descriptorCount, m_shaderStage);
-		return binding;
+		return vk::DescriptorSetLayoutBinding(binding, m_descriptorType, m_descriptorCount, m_shaderStage);
 	}
 }  // namespace trg
