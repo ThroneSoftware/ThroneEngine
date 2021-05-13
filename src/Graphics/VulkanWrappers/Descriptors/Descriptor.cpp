@@ -4,35 +4,52 @@
 
 namespace trg
 {
+	namespace DescriptorPrivate
+	{
+		uint32_t getDescriptorCount(const DescriptorInfo& descriptorInfo)
+		{
+			return std::visit(
+				[](const auto& info) {
+					return vk::ArrayProxyNoTemporaries(info).size();
+				},
+				descriptorInfo);
+		}
+	}  // namespace DescriptorPrivate
+
+
 	Descriptor::Descriptor(DescriptorInfo descriptorInfo, vk::DescriptorType descriptorType, vk::ShaderStageFlagBits shaderStage)
 	  : m_descriptorInfo(std::move(descriptorInfo))
 	  , m_descriptorType(descriptorType)
 	  , m_shaderStage(shaderStage)
+	  , m_descriptorCount(DescriptorPrivate::getDescriptorCount(m_descriptorInfo))
 	{
 	}
 
-	vk::WriteDescriptorSet Descriptor::getWriteDescriptorSet(vk::DescriptorSet& descriptorSet, uint32_t binding)
+	vk::WriteDescriptorSet Descriptor::getWriteDescriptorSet(vk::DescriptorSet& descriptorSet, uint32_t binding) const
 	{
 		constexpr auto dstArrayElement = 0;
-		// The real value for descriptorCount is set by the std::visit
-		constexpr auto descriptorCount = 0;
-		auto writeDescriptorSet = vk::WriteDescriptorSet(descriptorSet, binding, dstArrayElement, descriptorCount, m_descriptorType);
+		auto writeDescriptorSet = vk::WriteDescriptorSet(descriptorSet, binding, dstArrayElement, m_descriptorCount, m_descriptorType);
 
 		std::visit(tru::Overload(
-					   [&writeDescriptorSet](vk::DescriptorImageInfo& info) {
+					   [&writeDescriptorSet](const vk::DescriptorImageInfo& info) {
 						   writeDescriptorSet.setImageInfo(info);
 					   },
-					   [&writeDescriptorSet](std::vector<vk::DescriptorImageInfo>& infos) {
+					   [&writeDescriptorSet](const std::vector<vk::DescriptorImageInfo>& infos) {
 						   writeDescriptorSet.setImageInfo(infos);
 					   },
-					   [&writeDescriptorSet](vk::DescriptorBufferInfo& info) {
+					   [&writeDescriptorSet](const vk::DescriptorBufferInfo& info) {
 						   writeDescriptorSet.setBufferInfo(info);
 					   },
-					   [&writeDescriptorSet](TexelBufferView& view) {
+					   [&writeDescriptorSet](const TexelBufferView& view) {
 						   writeDescriptorSet.setTexelBufferView(view);
 					   }),
 				   m_descriptorInfo);
 
 		return writeDescriptorSet;
+	}
+
+	vk::DescriptorSetLayoutBinding Descriptor::getDescriptorSetLayoutBinding(uint32_t binding) const
+	{
+		return vk::DescriptorSetLayoutBinding(binding, m_descriptorType, m_descriptorCount, m_shaderStage);
 	}
 }  // namespace trg

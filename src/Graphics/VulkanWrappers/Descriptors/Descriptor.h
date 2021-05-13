@@ -15,11 +15,13 @@ namespace trg
 	public:
 		Descriptor(DescriptorInfo descriptorInfo, vk::DescriptorType descriptorType, vk::ShaderStageFlagBits shaderStage);
 
-		vk::WriteDescriptorSet getWriteDescriptorSet(vk::DescriptorSet& descriptorSet, uint32_t binding);
+		vk::WriteDescriptorSet getWriteDescriptorSet(vk::DescriptorSet& descriptorSet, uint32_t binding) const;
+		vk::DescriptorSetLayoutBinding getDescriptorSetLayoutBinding(uint32_t binding) const;
 
 	private:
 		DescriptorInfo m_descriptorInfo;
 		vk::DescriptorType m_descriptorType;
 		vk::ShaderStageFlagBits m_shaderStage;
+		uint32_t m_descriptorCount;
 	};
 }  // namespace trg
