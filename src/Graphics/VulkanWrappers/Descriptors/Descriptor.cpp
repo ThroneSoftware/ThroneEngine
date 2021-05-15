@@ -57,4 +57,14 @@ namespace trg
 	{
 		return vk::DescriptorSetLayoutBinding(binding, m_descriptorType, m_descriptorCount, m_shaderStage);
 	}
+
+	vk::DescriptorType Descriptor::getDescriptorType() const
+	{
+		return m_descriptorType;
+	}
+
+	uint32_t Descriptor::getDescriptorCount() const
+	{
+		return m_descriptorCount;
+	}
 }  // namespace trg
