@@ -2,17 +2,22 @@
 
 #include <Utilities/Overload.h>
 
+#include <gsl/gsl>
+
 namespace trg
 {
 	namespace DescriptorPrivate
 	{
 		uint32_t getDescriptorCount(const DescriptorInfo& descriptorInfo)
 		{
-			return std::visit(
-				[](const auto& info) {
-					return vk::ArrayProxyNoTemporaries(info).size();
-				},
-				descriptorInfo);
+			return std::visit(tru::Overload(
+								  [](const std::vector<vk::DescriptorImageInfo>& infos) {
+									  return gsl::narrow<uint32_t>(infos.size());
+								  },
+								  [](const auto&) {
+									  return uint32_t(1);
+								  }),
+							  descriptorInfo);
 		}
 	}  // namespace DescriptorPrivate
 
@@ -51,5 +56,15 @@ namespace trg
 	vk::DescriptorSetLayoutBinding Descriptor::getDescriptorSetLayoutBinding(uint32_t binding) const
 	{
 		return vk::DescriptorSetLayoutBinding(binding, m_descriptorType, m_descriptorCount, m_shaderStage);
+	}
+
+	vk::DescriptorType Descriptor::getDescriptorType() const
+	{
+		return m_descriptorType;
+	}
+
+	uint32_t Descriptor::getDescriptorCount() const
+	{
+		return m_descriptorCount;
 	}
 }  // namespace trg

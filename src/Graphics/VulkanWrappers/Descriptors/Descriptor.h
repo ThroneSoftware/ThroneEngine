@@ -18,6 +18,9 @@ namespace trg
 		vk::WriteDescriptorSet getWriteDescriptorSet(vk::DescriptorSet& descriptorSet, uint32_t binding) const;
 		vk::DescriptorSetLayoutBinding getDescriptorSetLayoutBinding(uint32_t binding) const;
 
+		vk::DescriptorType getDescriptorType() const;
+		uint32_t getDescriptorCount() const;
+
 	private:
 		DescriptorInfo m_descriptorInfo;
 		vk::DescriptorType m_descriptorType;
