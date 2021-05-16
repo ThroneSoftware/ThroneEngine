@@ -1,5 +1,6 @@
 #include "DescriptorSet.h"
 
+#include <gsl/gsl>
 
 namespace trg
 {
@@ -78,7 +79,7 @@ namespace trg
 
 		for(size_t i = 0; i < descriptors.size(); ++i)
 		{
-			writeDescriptorSets.emplace_back(descriptors[i].get().getWriteDescriptorSet(*m_descriptorSet, i));
+			writeDescriptorSets.emplace_back(descriptors[i].get().getWriteDescriptorSet(*m_descriptorSet, gsl::narrow<uint32_t>(i)));
 		}
 
 		m_device.updateDescriptorSets(writeDescriptorSets, {});
