@@ -38,6 +38,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Memory/VmaUnique.h
 	VulkanWrappers/RenderPass.cpp
 	VulkanWrappers/RenderPass.h
+	VulkanWrappers/Shaders/Shader.cpp
+	VulkanWrappers/Shaders/Shader.h
 	VulkanWrappers/Swapchain.cpp
 	VulkanWrappers/Swapchain.h
 	VulkanWrappers/Syncronization/Fence.cpp
