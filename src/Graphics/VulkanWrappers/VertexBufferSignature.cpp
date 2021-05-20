@@ -42,7 +42,7 @@ namespace trg
 				totalSize += offset;
 			}
 
-			inputDescriptions.m_bindingDescription.emplace_back(signature.m_bindingIndex, signature.m_inputRate, totalSize);
+			inputDescriptions.m_bindingDescription.emplace_back(signature.m_bindingIndex, totalSize, signature.m_inputRate);
 		}
 
 		return inputDescriptions;

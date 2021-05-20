@@ -58,7 +58,7 @@ namespace trg
 			auto cacheCreateInfo = vk::PipelineCacheCreateInfo();
 			auto cache = device.createPipelineCache(cacheCreateInfo);
 
-			return device.createGraphicsPipelineUnique(cache, createInfo);
+			return device.createGraphicsPipelineUnique(cache, createInfo).value;
 		}
 	}  // namespace GraphicsPipelinePrivate
 
