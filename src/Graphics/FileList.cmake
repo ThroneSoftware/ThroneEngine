@@ -36,6 +36,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Memory/VmaAllocator.cpp
 	VulkanWrappers/Memory/VmaAllocator.h
 	VulkanWrappers/Memory/VmaUnique.h
+	VulkanWrappers/Pipelines/GraphicsPipeline.cpp
+	VulkanWrappers/Pipelines/GraphicsPipeline.h
 	VulkanWrappers/RenderPass.cpp
 	VulkanWrappers/RenderPass.h
 	VulkanWrappers/Shaders/Shader.cpp
@@ -50,4 +52,6 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Syncronization/Semaphore.h
 	VulkanWrappers/Syncronization/SemaphorePool.cpp
 	VulkanWrappers/Syncronization/SemaphorePool.h
+	VulkanWrappers/VertexBufferSignature.cpp
+	VulkanWrappers/VertexBufferSignature.h
 )
