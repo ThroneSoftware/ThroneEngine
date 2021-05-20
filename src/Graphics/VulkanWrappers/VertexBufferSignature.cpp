@@ -27,7 +27,7 @@ namespace trg
 		{
 			uint32_t totalSize = 0;
 
-			for(auto& block: signature.m_blocks)
+			for(const auto& block: signature.m_blocks)
 			{
 				uint32_t offset = 0;
 				for(size_t i = 0; i < block.m_count; ++i)
