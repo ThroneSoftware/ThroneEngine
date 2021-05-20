@@ -6,13 +6,13 @@
 
 namespace trg
 {
-	std::vector<uint32_t> readShaderCode(const std::filesystem::path& shaderPath);
+	std::vector<std::byte> readShaderCode(const std::filesystem::path& shaderPath);
 
 	class Shader
 	{
 	public:
 		Shader(vk::Device& device,
-			   std::span<const uint32_t> shaderCode,
+			   std::span<const std::byte> shaderCode,
 			   vk::ShaderStageFlagBits shaderStage,
 			   const std::string& entryPoint = "main");
 		Shader(vk::Device& device,

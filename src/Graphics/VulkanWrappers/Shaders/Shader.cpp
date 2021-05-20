@@ -8,25 +8,28 @@ namespace trg
 {
 	namespace ShaderPrivate
 	{
-		auto makeShaderModule(vk::Device& device, std::span<const uint32_t> shaderCode)
+		auto makeShaderModule(vk::Device& device, std::span<const std::byte> shaderCode)
 		{
-			auto createInfo = vk::ShaderModuleCreateInfo({}, shaderCode);
+			// The spirv shaders are read as 8 bits, but vulkan expect the pointer to be of 32 bits for some reason
+			const uint32_t* shaderCodePtr = reinterpret_cast<const uint32_t*>(shaderCode.data());
+
+			auto createInfo = vk::ShaderModuleCreateInfo({}, shaderCode.size(), shaderCodePtr);
 
 			return device.createShaderModuleUnique(createInfo);
 		}
 	}  // namespace ShaderPrivate
 
-	std::vector<uint32_t> readShaderCode(const std::filesystem::path& shaderPath)
+	std::vector<std::byte> readShaderCode(const std::filesystem::path& shaderPath)
 	{
 		if(shaderPath.has_filename() && shaderPath.has_extension() && shaderPath.extension() == ".spv")
 		{
 			if(std::filesystem::exists(shaderPath))
 			{
-				auto ifstream = std::basic_ifstream<uint32_t>(shaderPath, std::ios::binary);
+				auto ifstream = std::basic_ifstream<std::byte>(shaderPath, std::ios::binary);
 
 				auto bufferIterator = std::istreambuf_iterator(ifstream);
 
-				return std::vector<uint32_t>(bufferIterator, {});
+				return std::vector<std::byte>(bufferIterator, {});
 			}
 			else
 			{
@@ -40,7 +43,7 @@ namespace trg
 	}
 
 	Shader::Shader(vk::Device& device,
-				   std::span<const uint32_t> shaderCode,
+				   std::span<const std::byte> shaderCode,
 				   vk::ShaderStageFlagBits shaderStage,
 				   const std::string& entryPoint)
 	  : m_shaderModule(ShaderPrivate::makeShaderModule(device, shaderCode))
