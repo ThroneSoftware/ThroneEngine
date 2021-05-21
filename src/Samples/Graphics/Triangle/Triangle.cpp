@@ -54,7 +54,7 @@ trg::GraphicsPipeline makeGraphicsPipeline(trg::VulkanContext& vkContext, trg::R
 
 	std::vector<trg::VertexBufferSignature> vertexBufferSignatures;
 	vertexBufferSignatures.emplace_back(
-		trg::VertexBufferSignature(0,
+		trg::VertexBufferSignature(0 /*bindingIndex*/,
 								   vk::VertexInputRate::eVertex,
 								   {trg::VertexBufferBlock(sizeof(glm::vec3), 1 /*count*/, 0 /*location*/, vk::Format::eR32G32B32Sfloat),
 									trg::VertexBufferBlock(sizeof(glm::vec3), 1 /*count*/, 1 /*location*/, vk::Format::eR32G32B32Sfloat)}));
