@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Bindable/Bindable.h"
 #include "../Descriptors/DescriptorSetLayout.h"
 #include "../RenderPass.h"
 #include "../Shaders/Shader.h"
@@ -27,6 +28,7 @@ namespace trg
 						 vk::PipelineDynamicStateCreateInfo* dynamicState,
 						 const trg::RenderPass& renderPass);
 
+		void bind(BindableBindInfo& bindInfo);
 
 	private:
 		vk::UniquePipelineLayout m_layout;

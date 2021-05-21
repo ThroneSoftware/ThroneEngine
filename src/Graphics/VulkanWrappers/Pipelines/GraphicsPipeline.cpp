@@ -56,9 +56,9 @@ namespace trg
 															 *renderPass);
 
 			auto cacheCreateInfo = vk::PipelineCacheCreateInfo();
-			auto cache = device.createPipelineCache(cacheCreateInfo);
+			auto cache = device.createPipelineCacheUnique(cacheCreateInfo);
 
-			return device.createGraphicsPipelineUnique(cache, createInfo).value;
+			return device.createGraphicsPipelineUnique(*cache, createInfo).value;
 		}
 	}  // namespace GraphicsPipelinePrivate
 
@@ -92,5 +92,10 @@ namespace trg
 														 *m_layout,
 														 renderPass))
 	{
+	}
+
+	void GraphicsPipeline::bind(BindableBindInfo& bindInfo)
+	{
+		bindInfo.commandBuffer->bindPipeline(vk::PipelineBindPoint::eGraphics, *m_pipeline);
 	}
 }  // namespace trg

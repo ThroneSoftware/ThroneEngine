@@ -10,7 +10,17 @@ namespace trg
 	class Buffer
 	{
 	public:
-		Buffer(vk::DeviceSize bufferSize, vk::BufferUsageFlagBits bufferUsage);
+		using VkHandleType = vk::Buffer;
+
+	public:
+		Buffer(vk::DeviceSize bufferSize, vk::BufferUsageFlagBits bufferUsage, vma::MemoryUsage memoryUsage);
+		virtual ~Buffer() = default;
+
+		void updateWithHostMemory(vk::DeviceSize dataSize, void* srcData);
+
+	protected:
+		VkHandleType& getVkHandle();
+		const VkHandleType& getVkHandle() const;
 
 	private:
 		VmaUnique<vk::Buffer> m_buffer;
