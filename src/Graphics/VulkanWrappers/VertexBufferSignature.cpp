@@ -25,11 +25,9 @@ namespace trg
 
 		for(const auto& signature: signatures)
 		{
-			uint32_t totalSize = 0;
-
+			uint32_t offset = 0;
 			for(const auto& block: signature.m_blocks)
 			{
-				uint32_t offset = 0;
 				for(size_t i = 0; i < block.m_count; ++i)
 				{
 					inputDescriptions.m_attributeDescription.emplace_back(block.m_shaderLocation,
@@ -39,10 +37,9 @@ namespace trg
 
 					offset += block.m_typeSize;
 				}
-				totalSize += offset;
 			}
 
-			inputDescriptions.m_bindingDescription.emplace_back(signature.m_bindingIndex, totalSize, signature.m_inputRate);
+			inputDescriptions.m_bindingDescription.emplace_back(signature.m_bindingIndex, offset, signature.m_inputRate);
 		}
 
 		return inputDescriptions;

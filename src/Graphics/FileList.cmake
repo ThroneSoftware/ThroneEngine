@@ -9,6 +9,7 @@ target_sources(Graphics PRIVATE
 	VulkanContextFactory.cpp
 	VulkanContextFactory.h
 	VulkanContextFactoryFunctions.h
+	VulkanWrappers/Bindable/Bindable.h
 	VulkanWrappers/Commands/CommandBuffer.cpp
 	VulkanWrappers/Commands/CommandBuffer.h
 	VulkanWrappers/Commands/CommandBufferRecordScope.cpp
@@ -33,6 +34,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Memory/Image.h
 	VulkanWrappers/Memory/ImageView.cpp
 	VulkanWrappers/Memory/ImageView.h
+	VulkanWrappers/Memory/VertexBuffer.cpp
+	VulkanWrappers/Memory/VertexBuffer.h
 	VulkanWrappers/Memory/VmaAllocator.cpp
 	VulkanWrappers/Memory/VmaAllocator.h
 	VulkanWrappers/Memory/VmaUnique.h
