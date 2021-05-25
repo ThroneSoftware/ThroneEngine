@@ -1,4 +1,5 @@
 target_sources(Graphics PRIVATE 
+	BufferLayout.h
 	GraphicsContext.cpp
 	GraphicsContext.h
 	GraphicsInstance.cpp

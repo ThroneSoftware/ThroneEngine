@@ -1,5 +1,5 @@
 target_sources(TestGraphics PRIVATE 
-	TestGraphicsMain.cpp
 	TestGltfLoader.cpp
+	TestGraphicsMain.cpp
 	TestShader.cpp
 )

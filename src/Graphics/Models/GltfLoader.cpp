@@ -56,18 +56,34 @@ namespace trg
 
 	void GltfLoader::loadFromFile(const std::filesystem::path& path)
 	{
+		namespace glTF = Microsoft::glTF;
+
 		// validate path
 
 
 		auto streamReader = std::make_shared<GltfLoaderPrivate::StreamReader>(path.parent_path());
 
-		auto resourceReader = Microsoft::glTF::GLTFResourceReader(streamReader);
+		auto resourceReader = glTF::GLTFResourceReader(streamReader);
 
 		auto stream = streamReader->GetInputStream(path.filename().string());
 
 		auto bufferIterator = std::istreambuf_iterator(*stream);
 		auto fileContent = std::string(bufferIterator, {});
 
-		auto document = Microsoft::glTF::Deserialize(fileContent);
+		auto document = glTF::Deserialize(fileContent);
+
+		for(const auto& mesh: document.meshes.Elements())
+		{
+			for(const auto& meshPrimitive: mesh.primitives)
+			{
+				if(meshPrimitive.HasAttribute(glTF::ACCESSOR_POSITION))
+				{
+					auto accessorId = meshPrimitive.GetAttributeAccessorId(glTF::ACCESSOR_POSITION);
+					const auto& accessor = document.accessors.Get(accessorId);
+
+					const auto data = resourceReader.ReadBinaryData<float>(document, accessor);
+				}
+			}
+		}
 	}
 }  // namespace trg
