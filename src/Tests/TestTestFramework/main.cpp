@@ -1,20 +1,6 @@
-#define CATCH_CONFIG_RUNNER
-
-#include <Tests/ProxyGmock.h>
-#include <gtest/gtest.h>
-
-#include <Vendors/Utility/Tests/GMockCatchInterceptor.hpp>
-#include <catch.hpp>
+#include <Tests/CatchRunner/CatchRunner.h>
 
 int main(int argc, char* argv[])
 {
-	testing::InitGoogleMock(&argc, argv);
-
-	::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
-	listeners.Append(new Tests::GMockCatchInterceptor());
-	delete listeners.Release(listeners.default_result_printer());
-
-	int result = Catch::Session().run(argc, argv);
-
-	return result;
+	return CatchRunner::runCatch(argc, argv);
 }

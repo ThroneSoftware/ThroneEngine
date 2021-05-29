@@ -49,14 +49,45 @@ namespace trg
 			std::filesystem::path m_pathBase;
 		};
 
-		std::optional<std::string> getAccessorId(const Microsoft::glTF::MeshPrimitive& meshPrimitive, const std::string& accessorName)
+		class DataReader
 		{
-			if(meshPrimitive.HasAttribute(accessorName))
+		public:
+			DataReader(const Microsoft::glTF::GLTFResourceReader& resourceReader,
+					   const Microsoft::glTF::Document& document,
+					   const Microsoft::glTF::MeshPrimitive& meshPrimitive)
+			  : m_resourceReader(resourceReader)
+			  , m_document(document)
+			  , m_meshPrimitive(meshPrimitive)
 			{
-				return meshPrimitive.GetAttributeAccessorId(accessorName);
 			}
-			return std::nullopt;
-		}
+
+			std::optional<std::string> getAccessorId(const std::string& accessorName)
+			{
+				if(m_meshPrimitive.HasAttribute(accessorName))
+				{
+					return m_meshPrimitive.GetAttributeAccessorId(accessorName);
+				}
+				return std::nullopt;
+			}
+
+			template <typename T>
+			std::optional<std::vector<T>> readData(const std::string& accessorName)
+			{
+				if(auto accessorId = getAccessorId(accessorName))
+				{
+					const auto& accessor = m_document.accessors.Get(*accessorId);
+
+					return m_resourceReader.ReadBinaryData<T>(m_document, accessor);
+				}
+				return std::nullopt;
+			}
+
+		private:
+			const Microsoft::glTF::GLTFResourceReader& m_resourceReader;
+			const Microsoft::glTF::Document& m_document;
+			const Microsoft::glTF::MeshPrimitive& m_meshPrimitive;
+		};
+
 	}  // namespace GltfLoaderPrivate
 
 
@@ -86,21 +117,12 @@ namespace trg
 		{
 			for(const auto& meshPrimitive: mesh.primitives)
 			{
-				if(auto accessorId = GltfLoaderPrivate::getAccessorId(meshPrimitive, glTF::ACCESSOR_POSITION))
-				{
-					const auto& accessor = document.accessors.Get(*accessorId);
+				auto dataReader = GltfLoaderPrivate::DataReader(resourceReader, document, meshPrimitive);
 
-					const auto data = resourceReader.ReadBinaryData<float>(document, accessor);
-				}
-				if(auto accessorId = GltfLoaderPrivate::getAccessorId(meshPrimitive, glTF::ACCESSOR_NORMAL))
-				{
-				}
-				if (auto accessorId = GltfLoaderPrivate::getAccessorId(meshPrimitive, glTF::ACCESSOR_COLOR_0))
-				{
-				}
-				if (auto accessorId = GltfLoaderPrivate::getAccessorId(meshPrimitive, glTF::ACCESSOR_TEXCOORD_0))
-				{
-				}
+				auto positionData = dataReader.readData<float>(glTF::ACCESSOR_POSITION);
+				auto normalData = dataReader.readData<float>(glTF::ACCESSOR_NORMAL);
+				auto colorData = dataReader.readData<float>(glTF::ACCESSOR_COLOR_0);
+				auto textCoordData = dataReader.readData<float>(glTF::ACCESSOR_TEXCOORD_0);
 			}
 		}
 	}

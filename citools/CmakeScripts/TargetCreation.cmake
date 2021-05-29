@@ -26,11 +26,13 @@ function(addTestTarget target_name)
 
     configTestTarget(${target_name})
 
+    configTestRunner(${target_name})
+
     configTargetToUsePch(${target_name})
 endfunction()
 
 function(addTestLibrary target_name)
-    add_library(${target_name})
+    add_library(${target_name} STATIC)
 
     configTestTarget(${target_name})
 

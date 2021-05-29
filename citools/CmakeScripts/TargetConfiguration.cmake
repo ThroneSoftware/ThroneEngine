@@ -111,6 +111,10 @@ function(configTestTarget target_name)
     add_dependencies(BuildTests ${target_name})
 endfunction()
 
+function(configTestRunner target_name)
+    target_link_libraries(${target_name} PRIVATE CatchRunner)
+endfunction()
+
 function(configSampleTarget target_name)
     configTarget(${target_name})
 endfunction()
