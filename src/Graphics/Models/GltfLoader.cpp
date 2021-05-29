@@ -6,6 +6,7 @@
 #include <GLTFSDK/GLTFResourceReader.h>
 
 #include <fstream>
+#include <optional>
 
 namespace trg
 {
@@ -47,6 +48,15 @@ namespace trg
 		private:
 			std::filesystem::path m_pathBase;
 		};
+
+		std::optional<std::string> getAccessorId(const Microsoft::glTF::MeshPrimitive& meshPrimitive, const std::string& accessorName)
+		{
+			if(meshPrimitive.HasAttribute(accessorName))
+			{
+				return meshPrimitive.GetAttributeAccessorId(accessorName);
+			}
+			return std::nullopt;
+		}
 	}  // namespace GltfLoaderPrivate
 
 
@@ -76,12 +86,20 @@ namespace trg
 		{
 			for(const auto& meshPrimitive: mesh.primitives)
 			{
-				if(meshPrimitive.HasAttribute(glTF::ACCESSOR_POSITION))
+				if(auto accessorId = GltfLoaderPrivate::getAccessorId(meshPrimitive, glTF::ACCESSOR_POSITION))
 				{
-					auto accessorId = meshPrimitive.GetAttributeAccessorId(glTF::ACCESSOR_POSITION);
-					const auto& accessor = document.accessors.Get(accessorId);
+					const auto& accessor = document.accessors.Get(*accessorId);
 
 					const auto data = resourceReader.ReadBinaryData<float>(document, accessor);
+				}
+				if(auto accessorId = GltfLoaderPrivate::getAccessorId(meshPrimitive, glTF::ACCESSOR_NORMAL))
+				{
+				}
+				if (auto accessorId = GltfLoaderPrivate::getAccessorId(meshPrimitive, glTF::ACCESSOR_COLOR_0))
+				{
+				}
+				if (auto accessorId = GltfLoaderPrivate::getAccessorId(meshPrimitive, glTF::ACCESSOR_TEXCOORD_0))
+				{
 				}
 			}
 		}
