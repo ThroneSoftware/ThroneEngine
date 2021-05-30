@@ -1,15 +1,18 @@
 #pragma once
 
+#include "ModelLoader.h"
+
 #include <filesystem>
 
 namespace trg
 {
-	class GltfLoader
+	class GltfLoader : public ModelLoader
 	{
 	public:
 		GltfLoader();
 
-		void loadFromFile(const std::filesystem::path& path);
+		Model loadFromFile(const std::filesystem::path& path) override;
+
 	private:
 	};
-}
+}  // namespace trg

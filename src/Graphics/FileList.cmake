@@ -6,6 +6,11 @@ target_sources(Graphics PRIVATE
 	GraphicsInstance.h
 	Models/GltfLoader.cpp
 	Models/GltfLoader.h
+	Models/Mesh.cpp
+	Models/Mesh.h
+	Models/Model.cpp
+	Models/Model.h
+	Models/ModelLoader.h
 	Utility.h
 	VulkanContext.cpp
 	VulkanContext.h
