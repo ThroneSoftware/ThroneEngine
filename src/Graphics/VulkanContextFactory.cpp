@@ -52,10 +52,10 @@ namespace trg
 			context->m_device = vk::Device(context->m_vkbDevice->device);
 			vk::defaultDispatchLoaderDynamic.init(context->m_device);
 
-			initializeVmaDefaultAllocator(context->m_physicalDevice, context->m_device);
+			vkwrappers::initializeVmaDefaultAllocator(context->m_physicalDevice, context->m_device);
 
 			auto swapchain = makeSwapchain(*context->m_vkbDevice);
-			new(&context->m_swapchain) Swapchain(context->m_device, swapchain);
+			new(&context->m_swapchain) vkwrappers::Swapchain(context->m_device, swapchain);
 
 			context->m_graphicsQueue = makeGraphicsQueue(*context->m_vkbDevice);
 

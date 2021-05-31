@@ -22,33 +22,30 @@ namespace trg
 		Mat4
 	};
 
-	bool isMatrice(BufferBlockComponentType componentType)
+	inline bool isMatrice(BufferBlockComponentType componentType)
 	{
 		return componentType == BufferBlockComponentType::Mat2 || componentType == BufferBlockComponentType::Mat3 ||
 			   componentType == BufferBlockComponentType::Mat4;
 	}
 
-	uint32_t componentTypeLocationSize(BufferBlockComponentType componentType)
+	inline uint32_t componentTypeLocationSize(BufferBlockComponentType componentType)
 	{
 		switch(componentType)
 		{
-			case trg::BufferBlockComponentType::Scalar:
-			case trg::BufferBlockComponentType::Vec2:
-			case trg::BufferBlockComponentType::Vec3:
-			case trg::BufferBlockComponentType::Vec4:
+			case BufferBlockComponentType::Scalar:
+			case BufferBlockComponentType::Vec2:
+			case BufferBlockComponentType::Vec3:
+			case BufferBlockComponentType::Vec4:
 				return 1;
-				break;
-			case trg::BufferBlockComponentType::Mat2:
+			case BufferBlockComponentType::Mat2:
 				return 2;
-				break;
-			case trg::BufferBlockComponentType::Mat3:
+			case BufferBlockComponentType::Mat3:
 				return 3;
-				break;
-			case trg::BufferBlockComponentType::Mat4:
+			case BufferBlockComponentType::Mat4:
 				return 4;
-				break;
 			default:
 				assert(false);
+				throw std::runtime_error("Invalid range");
 				break;
 		}
 	}
@@ -134,12 +131,12 @@ namespace trg
 		StandardAttributes m_attribute = StandardAttributes::NonStandard;
 	};
 
-	bool operator==(const BufferBlock& lhs, const BufferBlock& rhs)
+	inline bool operator==(const BufferBlock& lhs, const BufferBlock& rhs)
 	{
 		return lhs.m_componentType == rhs.m_componentType && lhs.m_valueType == rhs.m_valueType && lhs.m_attribute == rhs.m_attribute;
 	}
 
-	bool operator!=(const BufferBlock& lhs, const BufferBlock& rhs)
+	inline bool operator!=(const BufferBlock& lhs, const BufferBlock& rhs)
 	{
 		return !(lhs == rhs);
 	}
@@ -149,12 +146,12 @@ namespace trg
 		std::vector<BufferBlock> m_blocks;
 	};
 
-	bool operator==(const BufferLayout& lhs, const BufferLayout& rhs)
+	inline bool operator==(const BufferLayout& lhs, const BufferLayout& rhs)
 	{
 		return lhs.m_blocks == rhs.m_blocks;
 	}
 
-	bool operator!=(const BufferLayout& lhs, const BufferLayout& rhs)
+	inline bool operator!=(const BufferLayout& lhs, const BufferLayout& rhs)
 	{
 		return !(lhs == rhs);
 	}

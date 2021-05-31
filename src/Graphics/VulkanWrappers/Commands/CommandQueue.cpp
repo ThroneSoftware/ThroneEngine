@@ -2,7 +2,7 @@
 
 #include "../../Utility.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	CommandQueue::CommandQueue(vk::Queue&& queue, uint32_t familyIndex)
 	  : m_queue(std::move(queue))
@@ -56,4 +56,4 @@ namespace trg
 		auto submitInfo = vk::SubmitInfo(waitSemaphores, waitingStages, *commandBuffer, vkSemaphoresToSignal);
 		m_queue.submit(submitInfo, *signalFence);
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

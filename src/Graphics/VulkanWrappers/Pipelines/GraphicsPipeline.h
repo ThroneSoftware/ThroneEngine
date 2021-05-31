@@ -8,13 +8,13 @@
 
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class GraphicsPipeline
 	{
 	public:
 		GraphicsPipeline(vk::Device& device,
-						 std::span<const trg::DescriptorSetLayout> descriptorSetLayouts,
+						 std::span<const DescriptorSetLayout> descriptorSetLayouts,
 						 std::vector<vk::PushConstantRange> pushContants,
 						 std::span<const Shader> shaders,
 						 std::span<const VertexBufferSignature> bufferSignatures,
@@ -26,7 +26,7 @@ namespace trg
 						 vk::PipelineDepthStencilStateCreateInfo* depthStencilState,
 						 vk::PipelineColorBlendStateCreateInfo* colorBlendState,
 						 vk::PipelineDynamicStateCreateInfo* dynamicState,
-						 const trg::RenderPass& renderPass);
+						 const RenderPass& renderPass);
 
 		void bind(BindableBindInfo& bindInfo);
 
@@ -34,4 +34,4 @@ namespace trg
 		vk::UniquePipelineLayout m_layout;
 		vk::UniquePipeline m_pipeline;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

@@ -4,7 +4,7 @@
 
 #include <span>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace CommandPoolPrivate
 	{
@@ -77,4 +77,4 @@ namespace trg
 	{
 		return m_commandBuffers;
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

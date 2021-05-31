@@ -4,7 +4,7 @@
 
 #include <gsl/gsl>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	CommandBuffer::CommandBuffer(vk::UniqueCommandBuffer commandBuffer)
 	  : m_commandBuffer(std::move(commandBuffer))
@@ -56,4 +56,4 @@ namespace trg
 	{
 		return &getVkHandle();
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

@@ -2,7 +2,7 @@
 
 #include "../Utility.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace FrameBufferPrivate
 	{
@@ -59,4 +59,4 @@ namespace trg
 	{
 		return &getVkHandle();
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

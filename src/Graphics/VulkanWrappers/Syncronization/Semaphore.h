@@ -2,7 +2,7 @@
 
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class Semaphore
 	{
@@ -24,4 +24,4 @@ namespace trg
 	private:
 		vk::UniqueSemaphore m_semaphore;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

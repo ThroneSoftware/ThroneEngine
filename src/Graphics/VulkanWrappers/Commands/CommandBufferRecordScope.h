@@ -2,7 +2,7 @@
 
 #include "CommandBuffer.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class CommandBufferRecordScope
 	{
@@ -20,4 +20,4 @@ namespace trg
 	private:
 		CommandBuffer& m_commandBuffer;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

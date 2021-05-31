@@ -4,10 +4,14 @@ target_sources(Graphics PRIVATE
 	GraphicsContext.h
 	GraphicsInstance.cpp
 	GraphicsInstance.h
+	Images/Image.cpp
+	Images/Image.h
+	Materials/Material.cpp
+	Materials/Material.h
+	Meshes/Mesh.cpp
+	Meshes/Mesh.h
 	Models/GltfLoader.cpp
 	Models/GltfLoader.h
-	Models/Mesh.cpp
-	Models/Mesh.h
 	Models/Model.cpp
 	Models/Model.h
 	Models/ModelLoader.h

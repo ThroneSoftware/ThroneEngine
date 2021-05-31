@@ -2,7 +2,7 @@
 
 #include "Vulkan/vulkan.hpp"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class ImageView
 	{
@@ -31,4 +31,4 @@ namespace trg
 	private:
 		vk::UniqueImageView m_view;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

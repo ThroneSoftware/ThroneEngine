@@ -1,6 +1,6 @@
 #include "DescriptorSetLayout.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace DescriptorSetLayoutPrivate
 	{
@@ -52,4 +52,4 @@ namespace trg
 	{
 		return &getVkHandle();
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

@@ -2,7 +2,7 @@
 
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class VertexBufferBlock
 	{
@@ -36,4 +36,4 @@ namespace trg
 		vk::VertexInputRate m_inputRate;
 		std::vector<VertexBufferBlock> m_blocks;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

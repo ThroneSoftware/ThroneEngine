@@ -5,7 +5,7 @@
 #include <Vendors/VulkanMemoryAllocator/vk_mem_alloc.hpp>
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class Buffer
 	{
@@ -25,4 +25,4 @@ namespace trg
 	private:
 		VmaUnique<vk::Buffer> m_buffer;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

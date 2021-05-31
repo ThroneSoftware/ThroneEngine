@@ -4,7 +4,7 @@
 
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class CommandQueue;
 
@@ -51,4 +51,4 @@ namespace trg
 
 		std::vector<CommandBuffer> m_commandBuffers;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

@@ -4,7 +4,7 @@
 
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class DescriptorSetLayout
 	{
@@ -26,4 +26,4 @@ namespace trg
 	private:
 		vk::UniqueDescriptorSetLayout m_descriptorSetLayout;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

@@ -1,6 +1,6 @@
 #include "CommandBufferRecordScope.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	CommandBufferRecordScope::CommandBufferRecordScope(CommandBuffer& commandBuffer, vk::CommandBufferUsageFlagBits usage)
 	  : m_commandBuffer(commandBuffer)
@@ -14,4 +14,4 @@ namespace trg
 		m_commandBuffer->end();
 	}
 
-}  // namespace trg
+}  // namespace trg::vkwrappers

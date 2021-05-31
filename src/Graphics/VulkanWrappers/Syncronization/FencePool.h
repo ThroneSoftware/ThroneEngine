@@ -4,7 +4,7 @@
 
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class FencePool
 	{
@@ -24,4 +24,4 @@ namespace trg
 
 		std::vector<Fence> m_fences;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

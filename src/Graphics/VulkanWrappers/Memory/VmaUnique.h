@@ -6,7 +6,7 @@
 
 #include <Vendors/VulkanMemoryAllocator/vk_mem_alloc.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	template <typename T>
 	concept IsMemoryResource = trs::isOneOf<T, vk::Buffer, vk::Image>();
@@ -94,4 +94,4 @@ namespace trg
 			g_vmaDefaultAllocator.destroyImage(image, allocation);
 		}
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

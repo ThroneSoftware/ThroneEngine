@@ -1,8 +1,9 @@
 #include "Image.h"
 
 #include "VmaAllocator.h"
+#include "..\..\Images\Image.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace ImagePrivate
 	{
@@ -79,4 +80,4 @@ namespace trg
 	{
 		return m_imageViews;
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

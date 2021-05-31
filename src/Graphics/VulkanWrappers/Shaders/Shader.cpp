@@ -4,7 +4,7 @@
 
 #include <fstream>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace ShaderPrivate
 	{
@@ -64,4 +64,4 @@ namespace trg
 	{
 		return vk::PipelineShaderStageCreateInfo({}, m_shaderStage, *m_shaderModule, m_entryPoint.c_str(), nullptr);
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

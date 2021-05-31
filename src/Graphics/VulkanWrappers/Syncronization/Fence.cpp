@@ -2,7 +2,7 @@
 
 #include "../../Utility.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace FencePrivate
 	{
@@ -70,4 +70,4 @@ namespace trg
 		auto vkHandles = toVkHandle(fences);
 		device.resetFences(vkHandles);
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

@@ -1,6 +1,6 @@
 #include "Semaphore.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace SemaphorePrivate
 	{
@@ -45,4 +45,4 @@ namespace trg
 	{
 		return &getVkHandle();
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

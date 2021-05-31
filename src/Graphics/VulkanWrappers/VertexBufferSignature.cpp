@@ -1,6 +1,6 @@
 #include "VertexBufferSignature.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	VertexBufferBlock::VertexBufferBlock(uint32_t typeSize, uint32_t count, uint32_t shaderLocation, vk::Format format)
 	  : m_typeSize(typeSize)
@@ -44,4 +44,4 @@ namespace trg
 
 		return inputDescriptions;
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

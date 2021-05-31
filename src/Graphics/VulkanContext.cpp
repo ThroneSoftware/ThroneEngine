@@ -17,7 +17,7 @@ namespace trg
 		m_instance.destroySurfaceKHR(m_surface);
 		m_instance.destroyDebugUtilsMessengerEXT(m_messenger);
 
-		g_vmaDefaultAllocator.destroy();
+		vkwrappers::g_vmaDefaultAllocator.destroy();
 
 		m_device.destroy();
 		m_instance.destroy();

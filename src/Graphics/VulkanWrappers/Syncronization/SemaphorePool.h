@@ -4,7 +4,7 @@
 
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class SemaphorePool
 	{
@@ -22,4 +22,4 @@ namespace trg
 
 		std::vector<Semaphore> m_semaphores;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

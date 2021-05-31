@@ -5,7 +5,7 @@
 
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class DescriptorSet
 	{
@@ -34,4 +34,4 @@ namespace trg
 
 		uint32_t m_setLocation;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

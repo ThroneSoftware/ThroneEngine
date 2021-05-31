@@ -8,7 +8,7 @@
 
 #include <span>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class Image
 	{
@@ -41,4 +41,4 @@ namespace trg
 		VmaUnique<vk::Image> m_image;
 		std::vector<ImageView> m_imageViews;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

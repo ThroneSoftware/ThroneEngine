@@ -19,45 +19,49 @@
 
 #include <iostream>
 
-trg::Image makeDepthImage(trg::VulkanContext& vkContext)
+trg::vkwrappers::Image makeDepthImage(trg::VulkanContext& vkContext)
 {
-	auto depthImage = trg::Image(vkContext.m_device,
-								 vk::ImageType::e2D,
-								 vk::Format::eD32Sfloat,
-								 vk::Extent3D(vkContext.m_swapchainExtent, 1),
-								 1,
-								 1,
-								 vk::SampleCountFlagBits::e1,
-								 vk::ImageUsageFlagBits::eDepthStencilAttachment,
-								 vk::ImageLayout::eUndefined);
+	auto depthImage = trg::vkwrappers::Image(vkContext.m_device,
+											 vk::ImageType::e2D,
+											 vk::Format::eD32Sfloat,
+											 vk::Extent3D(vkContext.m_swapchainExtent, 1),
+											 1,
+											 1,
+											 vk::SampleCountFlagBits::e1,
+											 vk::ImageUsageFlagBits::eDepthStencilAttachment,
+											 vk::ImageLayout::eUndefined);
 
 	depthImage.addImageView(vk::ImageAspectFlagBits::eDepth, vk::ImageViewType::e2D, vk::Format::eD32Sfloat, 0, 1);
 
 	return depthImage;
 }
 
-trg::RenderPass makeRenderPass(trg::VulkanContext& vkContext)
+trg::vkwrappers::RenderPass makeRenderPass(trg::VulkanContext& vkContext)
 {
-	return trg::RenderPass(vkContext.m_device, vkContext.m_swapchain.getFormat());
+	return trg::vkwrappers::RenderPass(vkContext.m_device, vkContext.m_swapchain.getFormat());
 }
 
-trg::FrameBuffer
-	makeFrameBuffer(trg::VulkanContext& vkContext, trg::ImageView& swapchainImageView, trg::Image& depthImage, trg::RenderPass& renderPass)
+trg::vkwrappers::FrameBuffer makeFrameBuffer(trg::VulkanContext& vkContext,
+											 trg::vkwrappers::ImageView& swapchainImageView,
+											 trg::vkwrappers::Image& depthImage,
+											 trg::vkwrappers::RenderPass& renderPass)
 {
 	std::vector<vk::ImageView> attachments = {*swapchainImageView, *depthImage.getImageView()};
-	return trg::FrameBuffer(vkContext.m_device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
+	return trg::vkwrappers::FrameBuffer(vkContext.m_device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
 }
 
-trg::GraphicsPipeline makeGraphicsPipeline(trg::VulkanContext& vkContext, trg::RenderPass& renderPass, std::span<const trg::Shader> shaders)
+trg::vkwrappers::GraphicsPipeline makeGraphicsPipeline(trg::VulkanContext& vkContext,
+													   trg::vkwrappers::RenderPass& renderPass,
+													   std::span<const trg::vkwrappers::Shader> shaders)
 {
-	std::vector<trg::DescriptorSetLayout> descriptorSetLayouts;
+	std::vector<trg::vkwrappers::DescriptorSetLayout> descriptorSetLayouts;
 
-	std::vector<trg::VertexBufferSignature> vertexBufferSignatures;
-	vertexBufferSignatures.emplace_back(
-		trg::VertexBufferSignature(0 /*bindingIndex*/,
-								   vk::VertexInputRate::eVertex,
-								   {trg::VertexBufferBlock(sizeof(glm::vec3), 1 /*count*/, 0 /*location*/, vk::Format::eR32G32B32Sfloat),
-									trg::VertexBufferBlock(sizeof(glm::vec3), 1 /*count*/, 1 /*location*/, vk::Format::eR32G32B32Sfloat)}));
+	std::vector<trg::vkwrappers::VertexBufferSignature> vertexBufferSignatures;
+	vertexBufferSignatures.emplace_back(trg::vkwrappers::VertexBufferSignature(
+		0 /*bindingIndex*/,
+		vk::VertexInputRate::eVertex,
+		{trg::vkwrappers::VertexBufferBlock(sizeof(glm::vec3), 1 /*count*/, 0 /*location*/, vk::Format::eR32G32B32Sfloat),
+		 trg::vkwrappers::VertexBufferBlock(sizeof(glm::vec3), 1 /*count*/, 1 /*location*/, vk::Format::eR32G32B32Sfloat)}));
 
 	auto inputAssemblyState =
 		vk::PipelineInputAssemblyStateCreateInfo({}, vk::PrimitiveTopology::eTriangleList, false /*primitiveRestartEnable*/);
@@ -127,41 +131,41 @@ trg::GraphicsPipeline makeGraphicsPipeline(trg::VulkanContext& vkContext, trg::R
 																 attachmentBlendStates,
 																 std::array{0.0f, 0.0f, 0.0f, 0.0f});
 
-	return trg::GraphicsPipeline(vkContext.m_device,
-								 descriptorSetLayouts,
-								 {} /*pushConstants*/,
-								 shaders,
-								 vertexBufferSignatures,
-								 &inputAssemblyState,
-								 nullptr /*tesselationState*/,
-								 &viewportState,
-								 &rasterizationState,
-								 &multisampleState,
-								 &depthStencilState,
-								 &colorBlendState,
-								 nullptr /*dynamicState*/,
-								 renderPass);
+	return trg::vkwrappers::GraphicsPipeline(vkContext.m_device,
+											 descriptorSetLayouts,
+											 {} /*pushConstants*/,
+											 shaders,
+											 vertexBufferSignatures,
+											 &inputAssemblyState,
+											 nullptr /*tesselationState*/,
+											 &viewportState,
+											 &rasterizationState,
+											 &multisampleState,
+											 &depthStencilState,
+											 &colorBlendState,
+											 nullptr /*dynamicState*/,
+											 renderPass);
 }
 
-trg::Fence makeFence(trg::VulkanContext& vkContext)
+trg::vkwrappers::Fence makeFence(trg::VulkanContext& vkContext)
 {
-	return trg::Fence(vkContext.m_device);
+	return trg::vkwrappers::Fence(vkContext.m_device);
 }
 
-trg::Semaphore makeSemaphore(trg::VulkanContext& vkContext)
+trg::vkwrappers::Semaphore makeSemaphore(trg::VulkanContext& vkContext)
 {
-	return trg::Semaphore(vkContext.m_device);
+	return trg::vkwrappers::Semaphore(vkContext.m_device);
 }
 
 class FrameContext
 {
 public:
 	FrameContext(trg::GraphicsInstance& graphicsInstance,
-				 trg::CommandBuffer& commandBuffer,
-				 trg::ImageView& swapchainImageView,
-				 trg::RenderPass& renderPass,
-				 trg::GraphicsPipeline& graphicsPipeline,
-				 trg::VertexBuffer& vertexBuffer)
+				 trg::vkwrappers::CommandBuffer& commandBuffer,
+				 trg::vkwrappers::ImageView& swapchainImageView,
+				 trg::vkwrappers::RenderPass& renderPass,
+				 trg::vkwrappers::GraphicsPipeline& graphicsPipeline,
+				 trg::vkwrappers::VertexBuffer& vertexBuffer)
 	  : m_graphicsInstance(graphicsInstance)
 	  , m_vkContext(m_graphicsInstance.vulkanContext())
 	  , m_commandBuffer(commandBuffer)
@@ -176,17 +180,18 @@ public:
 	{
 	}
 
-	void renderFrame(glm::vec3 clearColor, std::uint32_t imageIndex, trg::Semaphore& acquireNextImageSemaphore)
+	void renderFrame(glm::vec3 clearColor, std::uint32_t imageIndex, trg::vkwrappers::Semaphore& acquireNextImageSemaphore)
 	{
 		m_submitCommandBufferFinishedFence.wait();
 		m_submitCommandBufferFinishedFence.reset();
 
 		{
-			auto cmdScope = trg::CommandBufferRecordScope(m_commandBuffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
+			auto cmdScope = trg::vkwrappers::CommandBufferRecordScope(m_commandBuffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
 
-			auto renderPassScope = trg::RenderPassRecordScope(m_commandBuffer, m_vkContext, m_renderPass, m_frameBuffer, clearColor);
+			auto renderPassScope =
+				trg::vkwrappers::RenderPassRecordScope(m_commandBuffer, m_vkContext, m_renderPass, m_frameBuffer, clearColor);
 
-			trg::BindableBindInfo bindableBindInfo = {.commandBuffer = m_commandBuffer};
+			trg::vkwrappers::BindableBindInfo bindableBindInfo = {.commandBuffer = m_commandBuffer};
 
 			m_graphicsPipeline.bind(bindableBindInfo);
 
@@ -212,30 +217,30 @@ private:
 	trg::GraphicsInstance& m_graphicsInstance;
 	trg::VulkanContext& m_vkContext;
 
-	trg::CommandBuffer& m_commandBuffer;
+	trg::vkwrappers::CommandBuffer& m_commandBuffer;
 
-	trg::ImageView& m_swapchainImageView;
+	trg::vkwrappers::ImageView& m_swapchainImageView;
 
-	trg::RenderPass& m_renderPass;
+	trg::vkwrappers::RenderPass& m_renderPass;
 
-	trg::GraphicsPipeline& m_graphicsPipeline;
+	trg::vkwrappers::GraphicsPipeline& m_graphicsPipeline;
 
-	trg::VertexBuffer& m_vertexBuffer;
+	trg::vkwrappers::VertexBuffer& m_vertexBuffer;
 
-	trg::Image m_depthImage;
+	trg::vkwrappers::Image m_depthImage;
 
-	trg::FrameBuffer m_frameBuffer;
+	trg::vkwrappers::FrameBuffer m_frameBuffer;
 
-	trg::Fence m_submitCommandBufferFinishedFence;
-	trg::Semaphore m_submitCommandBufferFinishedSemaphore;
+	trg::vkwrappers::Fence m_submitCommandBufferFinishedFence;
+	trg::vkwrappers::Semaphore m_submitCommandBufferFinishedSemaphore;
 };
 
 auto makeFrameContexts(std::size_t frameContextCount,
 					   trg::GraphicsInstance& instance,
-					   trg::CommandPool& commandBuffers,
-					   trg::RenderPass& renderPass,
-					   trg::GraphicsPipeline& graphicsPipeline,
-					   trg::VertexBuffer& vertexBuffer)
+					   trg::vkwrappers::CommandPool& commandBuffers,
+					   trg::vkwrappers::RenderPass& renderPass,
+					   trg::vkwrappers::GraphicsPipeline& graphicsPipeline,
+					   trg::vkwrappers::VertexBuffer& vertexBuffer)
 {
 	std::vector<FrameContext> frameContexts;
 	frameContexts.reserve(frameContextCount);
@@ -262,17 +267,17 @@ int main()
 
 	auto frameContextCount = vkContext.m_swapchain.getImageViews().size();
 
-	auto commandBuffers = trg::CommandPool(vkContext.m_device,
-										   vkContext.m_graphicsQueue,
-										   vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
-										   frameContextCount,
-										   vk::CommandBufferLevel::ePrimary);
+	auto commandBuffers = trg::vkwrappers::CommandPool(vkContext.m_device,
+													   vkContext.m_graphicsQueue,
+													   vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
+													   frameContextCount,
+													   vk::CommandBufferLevel::ePrimary);
 
 	auto renderPass = makeRenderPass(vkContext);
 
-	auto acquireNextImageSemaphores = trg::SemaphorePool(vkContext.m_device, frameContextCount);
+	auto acquireNextImageSemaphores = trg::vkwrappers::SemaphorePool(vkContext.m_device, frameContextCount);
 
-	std::vector<trg::Shader> shaders;
+	std::vector<trg::vkwrappers::Shader> shaders;
 	shaders.emplace_back(vkContext.m_device, "TriangleVert.spv", vk::ShaderStageFlagBits::eVertex);
 	shaders.emplace_back(vkContext.m_device, "TriangleFrag.spv", vk::ShaderStageFlagBits::eFragment);
 
@@ -284,7 +289,7 @@ int main()
 
 	auto dataSize = triangleVertices.size() * sizeof(glm::vec3);
 	auto vertexBuffer =
-		trg::VertexBuffer(dataSize, vk::BufferUsageFlagBits::eVertexBuffer, vma::MemoryUsage::eCpuToGpu, 0 /*bindingIndex*/);
+		trg::vkwrappers::VertexBuffer(dataSize, vk::BufferUsageFlagBits::eVertexBuffer, vma::MemoryUsage::eCpuToGpu, 0 /*bindingIndex*/);
 	vertexBuffer.updateWithHostMemory(dataSize, triangleVertices.data());
 
 	std::vector<FrameContext> frameContexts =

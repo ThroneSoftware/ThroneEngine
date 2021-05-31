@@ -72,7 +72,7 @@ namespace trg
 					return BufferBlockComponentType::Mat4;
 				default:
 					assert(false);
-					break;
+					throw std::runtime_error("");
 			}
 		}
 
@@ -93,7 +93,7 @@ namespace trg
 					return BufferBlockValueType::Float;
 				default:
 					assert(false);
-					break;
+					throw std::runtime_error("Invalid Range");
 			}
 		}
 

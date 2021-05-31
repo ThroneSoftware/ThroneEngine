@@ -1,6 +1,6 @@
 #include "ImageView.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace ImageViewPrivate
 	{
@@ -70,4 +70,4 @@ namespace trg
 	{
 		return &getVkHandle();
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

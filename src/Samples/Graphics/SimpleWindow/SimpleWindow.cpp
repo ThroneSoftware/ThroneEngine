@@ -18,52 +18,54 @@
 
 #include <iostream>
 
-trg::Image makeDepthImage(trg::VulkanContext& vkContext)
+trg::vkwrappers::Image makeDepthImage(trg::VulkanContext& vkContext)
 {
-	auto depthImage = trg::Image(vkContext.m_device,
-								 vk::ImageType::e2D,
-								 vk::Format::eD32Sfloat,
-								 vk::Extent3D(vkContext.m_swapchainExtent, 1),
-								 1,
-								 1,
-								 vk::SampleCountFlagBits::e1,
-								 vk::ImageUsageFlagBits::eDepthStencilAttachment,
-								 vk::ImageLayout::eUndefined);
+	auto depthImage = trg::vkwrappers::Image(vkContext.m_device,
+											 vk::ImageType::e2D,
+											 vk::Format::eD32Sfloat,
+											 vk::Extent3D(vkContext.m_swapchainExtent, 1),
+											 1,
+											 1,
+											 vk::SampleCountFlagBits::e1,
+											 vk::ImageUsageFlagBits::eDepthStencilAttachment,
+											 vk::ImageLayout::eUndefined);
 
 	depthImage.addImageView(vk::ImageAspectFlagBits::eDepth, vk::ImageViewType::e2D, vk::Format::eD32Sfloat, 0, 1);
 
 	return depthImage;
 }
 
-trg::RenderPass makeRenderPass(trg::VulkanContext& vkContext)
+trg::vkwrappers::RenderPass makeRenderPass(trg::VulkanContext& vkContext)
 {
-	return trg::RenderPass(vkContext.m_device, vkContext.m_swapchain.getFormat());
+	return trg::vkwrappers::RenderPass(vkContext.m_device, vkContext.m_swapchain.getFormat());
 }
 
-trg::FrameBuffer
-	makeFrameBuffer(trg::VulkanContext& vkContext, trg::ImageView& swapchainImageView, trg::Image& depthImage, trg::RenderPass& renderPass)
+trg::vkwrappers::FrameBuffer makeFrameBuffer(trg::VulkanContext& vkContext,
+											 trg::vkwrappers::ImageView& swapchainImageView,
+											 trg::vkwrappers::Image& depthImage,
+											 trg::vkwrappers::RenderPass& renderPass)
 {
 	std::vector<vk::ImageView> attachments = {*swapchainImageView, *depthImage.getImageView()};
-	return trg::FrameBuffer(vkContext.m_device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
+	return trg::vkwrappers::FrameBuffer(vkContext.m_device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
 }
 
-trg::Fence makeFence(trg::VulkanContext& vkContext)
+trg::vkwrappers::Fence makeFence(trg::VulkanContext& vkContext)
 {
-	return trg::Fence(vkContext.m_device);
+	return trg::vkwrappers::Fence(vkContext.m_device);
 }
 
-trg::Semaphore makeSemaphore(trg::VulkanContext& vkContext)
+trg::vkwrappers::Semaphore makeSemaphore(trg::VulkanContext& vkContext)
 {
-	return trg::Semaphore(vkContext.m_device);
+	return trg::vkwrappers::Semaphore(vkContext.m_device);
 }
 
 class FrameContext
 {
 public:
 	FrameContext(trg::GraphicsInstance& graphicsInstance,
-				 trg::CommandBuffer& commandBuffer,
-				 trg::ImageView& swapchainImageView,
-				 trg::RenderPass& renderPass)
+				 trg::vkwrappers::CommandBuffer& commandBuffer,
+				 trg::vkwrappers::ImageView& swapchainImageView,
+				 trg::vkwrappers::RenderPass& renderPass)
 	  : m_graphicsInstance(graphicsInstance)
 	  , m_vkContext(m_graphicsInstance.vulkanContext())
 	  , m_commandBuffer(commandBuffer)
@@ -76,15 +78,16 @@ public:
 	{
 	}
 
-	void renderFrame(glm::vec3 clearColor, std::uint32_t imageIndex, trg::Semaphore& acquireNextImageSemaphore)
+	void renderFrame(glm::vec3 clearColor, std::uint32_t imageIndex, trg::vkwrappers::Semaphore& acquireNextImageSemaphore)
 	{
 		m_submitCommandBufferFinishedFence.wait();
 		m_submitCommandBufferFinishedFence.reset();
 
 		{
-			auto cmdScope = trg::CommandBufferRecordScope(m_commandBuffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
+			auto cmdScope = trg::vkwrappers::CommandBufferRecordScope(m_commandBuffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
 
-			auto renderPassScope = trg::RenderPassRecordScope(m_commandBuffer, m_vkContext, m_renderPass, m_frameBuffer, clearColor);
+			auto renderPassScope =
+				trg::vkwrappers::RenderPassRecordScope(m_commandBuffer, m_vkContext, m_renderPass, m_frameBuffer, clearColor);
 		}
 
 		std::vector submitWaitSemaphores = {*acquireNextImageSemaphore};
@@ -104,24 +107,24 @@ private:
 	trg::GraphicsInstance& m_graphicsInstance;
 	trg::VulkanContext& m_vkContext;
 
-	trg::CommandBuffer& m_commandBuffer;
+	trg::vkwrappers::CommandBuffer& m_commandBuffer;
 
-	trg::ImageView& m_swapchainImageView;
+	trg::vkwrappers::ImageView& m_swapchainImageView;
 
-	trg::RenderPass& m_renderPass;
+	trg::vkwrappers::RenderPass& m_renderPass;
 
-	trg::Image m_depthImage;
+	trg::vkwrappers::Image m_depthImage;
 
-	trg::FrameBuffer m_frameBuffer;
+	trg::vkwrappers::FrameBuffer m_frameBuffer;
 
-	trg::Fence m_submitCommandBufferFinishedFence;
-	trg::Semaphore m_submitCommandBufferFinishedSemaphore;
+	trg::vkwrappers::Fence m_submitCommandBufferFinishedFence;
+	trg::vkwrappers::Semaphore m_submitCommandBufferFinishedSemaphore;
 };
 
 auto makeFrameContexts(std::size_t frameContextCount,
 					   trg::GraphicsInstance& instance,
-					   trg::CommandPool& commandBuffers,
-					   trg::RenderPass& renderPass)
+					   trg::vkwrappers::CommandPool& commandBuffers,
+					   trg::vkwrappers::RenderPass& renderPass)
 {
 	std::vector<FrameContext> frameContexts;
 	frameContexts.reserve(frameContextCount);
@@ -144,15 +147,15 @@ int main()
 
 	auto frameContextCount = vkContext.m_swapchain.getImageViews().size();
 
-	auto commandBuffers = trg::CommandPool(vkContext.m_device,
-										   vkContext.m_graphicsQueue,
-										   vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
-										   frameContextCount,
-										   vk::CommandBufferLevel::ePrimary);
+	auto commandBuffers = trg::vkwrappers::CommandPool(vkContext.m_device,
+													   vkContext.m_graphicsQueue,
+													   vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
+													   frameContextCount,
+													   vk::CommandBufferLevel::ePrimary);
 
 	auto renderPass = makeRenderPass(vkContext);
 
-	auto acquireNextImageSemaphores = trg::SemaphorePool(vkContext.m_device, frameContextCount);
+	auto acquireNextImageSemaphores = trg::vkwrappers::SemaphorePool(vkContext.m_device, frameContextCount);
 
 	std::vector<FrameContext> frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass);
 
