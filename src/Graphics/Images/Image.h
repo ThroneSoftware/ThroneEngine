@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 namespace trg
@@ -7,9 +8,11 @@ namespace trg
 	class Image
 	{
 	public:
-		Image(std::vector<float> data);
+		Image(const std::string& name, std::vector<uint8_t> data);
 
 	private:
-		std::vector<float> m_data;
+		std::string m_name;
+
+		std::vector<uint8_t> m_data;
 	};
 }  // namespace trg

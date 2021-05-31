@@ -72,7 +72,7 @@ namespace trg
 					return BufferBlockComponentType::Mat4;
 				default:
 					assert(false);
-					throw std::runtime_error("");
+					throw std::runtime_error("Invalid Range");
 			}
 		}
 
@@ -218,6 +218,20 @@ namespace trg
 				auto indices = dataReader.readIndices();
 
 				model.addMesh(Mesh(mesh.name, std::move(attributes), std::move(indices)));
+
+				//
+
+				const auto& material = document.materials.Get(meshPrimitive.materialId);
+				auto textureId = material.metallicRoughness.baseColorTexture.textureId;
+
+				if(!textureId.empty())
+				{
+					const auto& texture = document.textures.Get(textureId);
+
+					const auto& image = document.images.Get(texture.imageId);
+
+					resourceReader.ReadBinaryData(document, image);
+				}
 			}
 		}
 

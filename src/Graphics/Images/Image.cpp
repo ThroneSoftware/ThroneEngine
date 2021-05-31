@@ -2,7 +2,9 @@
 
 namespace trg
 {
-	Image::Image(std::vector<float> data)
+	Image::Image(const std::string& name, std::vector<uint8_t> data)
+	  : m_name(name)
+	  , m_data(std::move(data))
 	{
 	}
-}
+}  // namespace trg
