@@ -142,6 +142,27 @@ namespace trg
 				return readAccessor<uint16_t>(m_meshPrimitive.indicesAccessorId);
 			}
 
+			std::unique_ptr<Material> readMaterial()
+			{
+				const auto& gltgMaterial = m_document.materials.Get(m_meshPrimitive.materialId);
+				auto textureId = gltgMaterial.metallicRoughness.baseColorTexture.textureId;
+
+				auto material = std::make_unique<Material>(gltgMaterial.name, gltgMaterial.metallicRoughness.baseColorFactor);
+
+				if(!textureId.empty())
+				{
+					const auto& texture = m_document.textures.Get(textureId);
+
+					const auto& image = m_document.images.Get(texture.imageId);
+
+					auto data = m_resourceReader.ReadBinaryData(m_document, image);
+
+					material->setBaseColorTexture(std::make_unique<Image>(image.name, std::move(data)));
+				}
+
+				return material;
+			}
+
 		private:
 			std::optional<std::string> getAccessorId(const std::string& accessorName)
 			{
@@ -217,21 +238,9 @@ namespace trg
 
 				auto indices = dataReader.readIndices();
 
-				model.addMesh(Mesh(mesh.name, std::move(attributes), std::move(indices)));
+				auto material = dataReader.readMaterial();
 
-				//
-
-				const auto& material = document.materials.Get(meshPrimitive.materialId);
-				auto textureId = material.metallicRoughness.baseColorTexture.textureId;
-
-				if(!textureId.empty())
-				{
-					const auto& texture = document.textures.Get(textureId);
-
-					const auto& image = document.images.Get(texture.imageId);
-
-					resourceReader.ReadBinaryData(document, image);
-				}
+				model.addMesh(Mesh(mesh.name, std::move(attributes), std::move(indices), std::move(material)));
 			}
 		}
 

@@ -12,6 +12,10 @@ namespace trg
 	class Material
 	{
 	public:
+		Material(const std::string& name, glm::vec4 baseColorFactor);
+
+		void setBaseColorTexture(std::unique_ptr<Image> baseColorTexture);
+
 	private:
 		std::string m_name;
 

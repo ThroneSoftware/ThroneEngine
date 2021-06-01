@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Materials/Material.h"
 #include "../Meshes/Mesh.h"
 
 #include <string>

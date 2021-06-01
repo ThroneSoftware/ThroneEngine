@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../BufferLayout.h"
+#include "../Materials/Material.h"
 
 #include <optional>
 #include <string>
@@ -17,7 +18,10 @@ namespace trg
 	class Mesh
 	{
 	public:
-		Mesh(const std::string& name, std::vector<MeshAttribute> attributes, std::vector<uint16_t> indices);
+		Mesh(const std::string& name,
+			 std::vector<MeshAttribute> attributes,
+			 std::vector<uint16_t> indices,
+			 std::unique_ptr<Material> material);
 
 	private:
 		std::string m_name;
@@ -25,5 +29,7 @@ namespace trg
 		std::vector<MeshAttribute> m_attributes;
 
 		std::vector<uint16_t> m_indices;
+
+		std::unique_ptr<Material> m_material;
 	};
 }  // namespace trg
