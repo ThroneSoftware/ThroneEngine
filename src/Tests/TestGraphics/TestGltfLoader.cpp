@@ -11,6 +11,8 @@ namespace Tests
 		std::filesystem::current_path(std::filesystem::path(__FILE__).parent_path());
 
 		trg::GltfLoader loader;
-		loader.loadFromFile("./TestData/cube.gltf");
+		auto cubeModel = loader.loadFromFile("./TestData/cube.gltf");
+
+		auto voyagerModel = loader.loadFromFile("./TestData/voyager.gltf");
 	}
 }  // namespace Tests

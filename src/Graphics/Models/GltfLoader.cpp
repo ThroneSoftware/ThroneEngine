@@ -147,7 +147,10 @@ namespace trg
 				const auto& gltgMaterial = m_document.materials.Get(m_meshPrimitive.materialId);
 				auto textureId = gltgMaterial.metallicRoughness.baseColorTexture.textureId;
 
-				auto material = std::make_unique<Material>(gltgMaterial.name, gltgMaterial.metallicRoughness.baseColorFactor);
+				auto baseColorFactor = gltgMaterial.metallicRoughness.baseColorFactor;
+				auto material =
+					std::make_unique<Material>(gltgMaterial.name,
+											   glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
 
 				if(!textureId.empty())
 				{
