@@ -2,12 +2,12 @@
 
 #include "../../Utility.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace GraphicsPipelinePrivate
 	{
 		auto makePipelineLayout(vk::Device& device,
-								std::span<const trg::DescriptorSetLayout> descriptorSetLayouts,
+								std::span<const DescriptorSetLayout> descriptorSetLayouts,
 								std::vector<vk::PushConstantRange> pushContants)
 		{
 			auto layouts = toVkHandle(descriptorSetLayouts);
@@ -29,7 +29,7 @@ namespace trg
 						  vk::PipelineColorBlendStateCreateInfo* colorBlendState,
 						  vk::PipelineDynamicStateCreateInfo* dynamicState,
 						  vk::PipelineLayout& pipelineLayout,
-						  const trg::RenderPass& renderPass)
+						  const RenderPass& renderPass)
 		{
 			std::vector<vk::PipelineShaderStageCreateInfo> shaderStageCreateInfos;
 			for(const auto& shader: shaders)
@@ -64,7 +64,7 @@ namespace trg
 
 
 	GraphicsPipeline::GraphicsPipeline(vk::Device& device,
-									   std::span<const trg::DescriptorSetLayout> descriptorSetLayouts,
+									   std::span<const DescriptorSetLayout> descriptorSetLayouts,
 									   std::vector<vk::PushConstantRange> pushContants,
 									   std::span<const Shader> shaders,
 									   std::span<const VertexBufferSignature> bufferSignatures,
@@ -76,7 +76,7 @@ namespace trg
 									   vk::PipelineDepthStencilStateCreateInfo* depthStencilState,
 									   vk::PipelineColorBlendStateCreateInfo* colorBlendState,
 									   vk::PipelineDynamicStateCreateInfo* dynamicState,
-									   const trg::RenderPass& renderPass)
+									   const RenderPass& renderPass)
 	  : m_layout(GraphicsPipelinePrivate::makePipelineLayout(device, descriptorSetLayouts, pushContants))
 	  , m_pipeline(GraphicsPipelinePrivate::makePipeline(device,
 														 shaders,
@@ -98,4 +98,4 @@ namespace trg
 	{
 		bindInfo.commandBuffer->bindPipeline(vk::PipelineBindPoint::eGraphics, *m_pipeline);
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

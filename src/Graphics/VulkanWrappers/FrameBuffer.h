@@ -7,7 +7,7 @@
 
 #include <span>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class FrameBuffer
 	{
@@ -33,4 +33,4 @@ namespace trg
 	private:
 		vk::UniqueFramebuffer m_frameBuffer;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

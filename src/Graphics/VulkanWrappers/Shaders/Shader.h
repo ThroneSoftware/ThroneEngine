@@ -4,7 +4,7 @@
 
 #include <filesystem>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	std::vector<std::byte> readShaderCode(const std::filesystem::path& shaderPath);
 
@@ -28,4 +28,4 @@ namespace trg
 		vk::ShaderStageFlagBits m_shaderStage;
 		std::string m_entryPoint;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

@@ -10,7 +10,7 @@ namespace vkb
 	struct Swapchain;
 }
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class Swapchain
 	{
@@ -45,4 +45,4 @@ namespace trg
 
 		vk::Format m_imageFormat;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

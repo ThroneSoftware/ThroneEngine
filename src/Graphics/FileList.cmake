@@ -1,8 +1,20 @@
 target_sources(Graphics PRIVATE 
+	BufferLayout.h
 	GraphicsContext.cpp
 	GraphicsContext.h
 	GraphicsInstance.cpp
 	GraphicsInstance.h
+	Images/Image.cpp
+	Images/Image.h
+	Materials/Material.cpp
+	Materials/Material.h
+	Meshes/Mesh.cpp
+	Meshes/Mesh.h
+	Models/GltfLoader.cpp
+	Models/GltfLoader.h
+	Models/Model.cpp
+	Models/Model.h
+	Models/ModelLoader.h
 	Utility.h
 	VulkanContext.cpp
 	VulkanContext.h

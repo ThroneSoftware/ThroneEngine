@@ -4,7 +4,7 @@
 
 #include <variant>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	using TexelBufferView = vk::BufferView;
 	using DescriptorInfo =
@@ -27,4 +27,4 @@ namespace trg
 		vk::ShaderStageFlagBits m_shaderStage;
 		uint32_t m_descriptorCount;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

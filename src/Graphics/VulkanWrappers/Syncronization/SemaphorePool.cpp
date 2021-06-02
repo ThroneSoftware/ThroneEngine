@@ -1,6 +1,6 @@
 #include "SemaphorePool.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	SemaphorePool::SemaphorePool(vk::Device& device)
 	  : m_device(device)
@@ -34,4 +34,4 @@ namespace trg
 	{
 		return m_semaphores;
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

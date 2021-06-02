@@ -1,6 +1,6 @@
 #include "VertexBuffer.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	VertexBuffer::VertexBuffer(vk::DeviceSize bufferSize,
 							   vk::BufferUsageFlagBits bufferUsage,
@@ -16,4 +16,4 @@ namespace trg
 		vk::DeviceSize offset = {0};
 		bindInfo.commandBuffer->bindVertexBuffers(m_bindingIndex, getVkHandle(), offset);
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

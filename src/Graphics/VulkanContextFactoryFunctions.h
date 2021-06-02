@@ -131,7 +131,7 @@ namespace trg
 		return swapChainResult.value();
 	}
 
-	CommandQueue makeGraphicsQueue(const vkb::Device& device)
+	vkwrappers::CommandQueue makeGraphicsQueue(const vkb::Device& device)
 	{
 		auto queueResult = device.get_queue(vkb::QueueType::graphics);
 
@@ -142,7 +142,7 @@ namespace trg
 												 queueResult.error().message()));
 		}
 
-		return CommandQueue(vk::Queue(queueResult.value()), device.get_queue_index(vkb::QueueType::graphics).value());
+		return vkwrappers::CommandQueue(vk::Queue(queueResult.value()), device.get_queue_index(vkb::QueueType::graphics).value());
 	}
 
 	void glfwFrameBufferResizeCallback(GLFWwindow* window, int width, int height)
@@ -166,7 +166,7 @@ namespace trg
 
 			auto swapchain = makeSwapchain(*vkContext->m_vkbDevice, *vkContext->m_swapchain);
 			vkContext->m_swapchain.~Swapchain();
-			new(&vkContext->m_swapchain) Swapchain(vkContext->m_device, swapchain);
+			new(&vkContext->m_swapchain) vkwrappers::Swapchain(vkContext->m_device, swapchain);
 		}
 	}
 }  // namespace trg

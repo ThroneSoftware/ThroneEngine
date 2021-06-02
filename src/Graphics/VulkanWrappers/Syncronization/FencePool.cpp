@@ -1,6 +1,6 @@
 #include "FencePool.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	FencePool::FencePool(vk::Device& device)
 	  : m_device(device)
@@ -44,4 +44,4 @@ namespace trg
 	{
 		return m_fences;
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

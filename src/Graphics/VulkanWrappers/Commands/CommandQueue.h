@@ -6,7 +6,7 @@
 
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class CommandQueue
 	{
@@ -46,4 +46,4 @@ namespace trg
 		vk::Queue m_queue;
 		uint32_t m_familyIndex = 0;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

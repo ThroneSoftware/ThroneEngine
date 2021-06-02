@@ -1,6 +1,6 @@
 #include "RenderPassRecordScope.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	RenderPassRecordScope::RenderPassRecordScope(CommandBuffer& commandBuffer,
 												 VulkanContext& vkContext,
@@ -25,4 +25,4 @@ namespace trg
 		m_commandBuffer->endRenderPass();
 	}
 
-}  // namespace trg
+}  // namespace trg::vkwrappers

@@ -2,7 +2,7 @@
 
 #include "VmaAllocator.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace BufferPrivate
 	{
@@ -44,4 +44,4 @@ namespace trg
 	{
 		return m_buffer.m_value;
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

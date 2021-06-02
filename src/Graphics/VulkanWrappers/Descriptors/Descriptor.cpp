@@ -4,7 +4,7 @@
 
 #include <gsl/gsl>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace DescriptorPrivate
 	{
@@ -67,4 +67,4 @@ namespace trg
 	{
 		return m_descriptorCount;
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

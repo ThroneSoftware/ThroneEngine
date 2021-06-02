@@ -1,6 +1,6 @@
 #include "VmaAllocator.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	vma::Allocator g_vmaDefaultAllocator;
 
@@ -45,4 +45,4 @@ namespace trg
 
 		g_vmaDefaultAllocator = vma::createAllocator(allocatorCreateInfo);
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

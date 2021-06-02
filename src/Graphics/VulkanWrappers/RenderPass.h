@@ -2,7 +2,7 @@
 
 #include <Vulkan/vulkan.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class RenderPass
 	{
@@ -24,4 +24,4 @@ namespace trg
 	private:
 		vk::UniqueRenderPass m_renderPass;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

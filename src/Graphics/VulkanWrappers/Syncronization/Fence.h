@@ -4,7 +4,7 @@
 
 #include <span>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class Fence
 	{
@@ -37,4 +37,4 @@ namespace trg
 
 		vk::UniqueFence m_fence;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

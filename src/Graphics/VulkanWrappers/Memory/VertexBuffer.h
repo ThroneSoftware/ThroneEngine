@@ -1,7 +1,7 @@
 #include "../Bindable/Bindable.h"
 #include "Buffer.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class VertexBuffer : public Buffer
 	{
@@ -13,4 +13,4 @@ namespace trg
 	private:
 		uint32_t m_bindingIndex;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

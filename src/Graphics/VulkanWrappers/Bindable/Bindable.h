@@ -2,12 +2,12 @@
 
 #include "../Commands/CommandBuffer.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	// concept IsBindable
 
 	struct BindableBindInfo
 	{
-		trg::CommandBuffer& commandBuffer;
+		CommandBuffer& commandBuffer;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

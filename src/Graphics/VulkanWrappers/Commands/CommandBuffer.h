@@ -4,7 +4,7 @@
 
 #include <span>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class CommandPool;
 
@@ -34,4 +34,4 @@ namespace trg
 	private:
 		vk::UniqueCommandBuffer m_commandBuffer;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

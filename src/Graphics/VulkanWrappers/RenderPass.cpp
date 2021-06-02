@@ -1,6 +1,6 @@
 #include "RenderPass.h"
 
-namespace trg
+namespace trg::vkwrappers
 {
 	RenderPass::RenderPass(vk::Device& device, vk::Format swapchainFormat)
 	{
@@ -94,4 +94,4 @@ namespace trg
 	{
 		return &getVkHandle();
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

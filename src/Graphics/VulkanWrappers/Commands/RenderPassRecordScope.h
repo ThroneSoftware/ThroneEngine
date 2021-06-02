@@ -7,7 +7,7 @@
 
 #include <glm/glm.hpp>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	class RenderPassRecordScope
 	{
@@ -29,4 +29,4 @@ namespace trg
 	private:
 		CommandBuffer& m_commandBuffer;
 	};
-}  // namespace trg
+}  // namespace trg::vkwrappers

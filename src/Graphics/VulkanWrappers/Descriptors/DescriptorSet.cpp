@@ -2,7 +2,7 @@
 
 #include <gsl/gsl>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace DescriptorSetPrivate
 	{
@@ -84,4 +84,4 @@ namespace trg
 
 		m_device.updateDescriptorSets(writeDescriptorSets, {});
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers

@@ -4,7 +4,7 @@
 
 #include <VkBootstrap.h>
 
-namespace trg
+namespace trg::vkwrappers
 {
 	namespace SwapchainPrivate
 	{
@@ -79,4 +79,4 @@ namespace trg
 			m_device.acquireNextImageKHR(*m_swapchain, std::numeric_limits<std::uint64_t>::max(), *acquireNextImageSemaphore, vk::Fence());
 		return imageIndex.value;
 	}
-}  // namespace trg
+}  // namespace trg::vkwrappers
