@@ -2,7 +2,7 @@ include(${PROJECT_SOURCE_DIR}/citools/CMakeScripts/TargetCreation.cmake)
 
 addStaticLibrary(Graphics)
 
-target_link_libraries(Graphics PUBLIC Core)
+target_link_libraries(Graphics PUBLIC Utilities Core)
 target_link_libraries(Graphics PRIVATE vk-bootstrap glfw VulkanMemoryAllocator)
 
 target_link_libraries(Graphics PRIVATE debug "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/GLTFSDK.lib") 
