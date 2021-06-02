@@ -1,8 +1,11 @@
 #include "Shader.h"
 
+#include <Utilities/Files.h>
+
 #include <fmt/format.h>
 
 #include <fstream>
+
 
 namespace trg::vkwrappers
 {
@@ -21,25 +24,13 @@ namespace trg::vkwrappers
 
 	std::vector<std::byte> readShaderCode(const std::filesystem::path& shaderPath)
 	{
-		if(shaderPath.has_filename() && shaderPath.has_extension() && shaderPath.extension() == ".spv")
-		{
-			if(std::filesystem::exists(shaderPath))
-			{
-				auto ifstream = std::basic_ifstream<std::byte>(shaderPath, std::ios::binary);
+		tru::validateFile(shaderPath, ".spv");
 
-				auto bufferIterator = std::istreambuf_iterator(ifstream);
+		auto ifstream = std::basic_ifstream<std::byte>(shaderPath, std::ios::binary);
 
-				return std::vector<std::byte>(bufferIterator, {});
-			}
-			else
-			{
-				throw std::runtime_error(fmt::format("File does not exist. Path: {}", shaderPath.string()));
-			}
-		}
-		else
-		{
-			throw std::runtime_error(fmt::format("Path is not a .spv file. Path: {}", shaderPath.string()));
-		}
+		auto bufferIterator = std::istreambuf_iterator(ifstream);
+
+		return std::vector<std::byte>(bufferIterator, {});
 	}
 
 	Shader::Shader(vk::Device& device,

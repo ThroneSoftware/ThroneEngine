@@ -53,7 +53,7 @@ namespace trg
 	enum class BufferBlockValueType
 	{
 		Float,
-		Uint,
+		Uint32,
 	};
 
 	enum class StandardAttributes : uint32_t

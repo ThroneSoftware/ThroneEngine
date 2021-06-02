@@ -9,7 +9,7 @@ namespace trg
 	class GltfLoader : public ModelLoader
 	{
 	public:
-		GltfLoader();
+		GltfLoader() = default;
 
 		Model loadFromFile(const std::filesystem::path& path) override;
 

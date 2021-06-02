@@ -4,6 +4,7 @@
 #include <GLTFSDK/GLBResourceReader.h>
 #include <GLTFSDK/GLTF.h>
 #include <GLTFSDK/GLTFResourceReader.h>
+#include <Utilities/Files.h>
 
 #include <fstream>
 #include <map>
@@ -88,7 +89,7 @@ namespace trg
 				case Microsoft::glTF::COMPONENT_UNSIGNED_SHORT:
 					throw std::runtime_error(fmt::format("Unsuported mapping. Microsoft::glTF::ComponentType: {}", componentType));
 				case Microsoft::glTF::COMPONENT_UNSIGNED_INT:
-					return BufferBlockValueType::Uint;
+					return BufferBlockValueType::Uint32;
 				case Microsoft::glTF::COMPONENT_FLOAT:
 					return BufferBlockValueType::Float;
 				default:
@@ -111,7 +112,7 @@ namespace trg
 
 			std::vector<MeshAttribute> readMeshAttributes()
 			{
-				static std::map<std::string, StandardAttributes> supportedAttributes = {
+				static const std::map<std::string, StandardAttributes> supportedAttributes = {
 					{Microsoft::glTF::ACCESSOR_POSITION, StandardAttributes::Position},
 					{Microsoft::glTF::ACCESSOR_NORMAL, StandardAttributes::Normal},
 					{Microsoft::glTF::ACCESSOR_COLOR_0, StandardAttributes::Color},
@@ -144,12 +145,12 @@ namespace trg
 
 			std::unique_ptr<Material> readMaterial()
 			{
-				const auto& gltgMaterial = m_document.materials.Get(m_meshPrimitive.materialId);
-				auto textureId = gltgMaterial.metallicRoughness.baseColorTexture.textureId;
+				const auto& gltfMaterial = m_document.materials.Get(m_meshPrimitive.materialId);
+				auto textureId = gltfMaterial.metallicRoughness.baseColorTexture.textureId;
 
-				auto baseColorFactor = gltgMaterial.metallicRoughness.baseColorFactor;
+				auto baseColorFactor = gltfMaterial.metallicRoughness.baseColorFactor;
 				auto material =
-					std::make_unique<Material>(gltgMaterial.name,
+					std::make_unique<Material>(gltfMaterial.name,
 											   glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
 
 				if(!textureId.empty())
@@ -207,16 +208,11 @@ namespace trg
 	}  // namespace GltfLoaderPrivate
 
 
-	GltfLoader::GltfLoader()
-	{
-	}
-
 	Model GltfLoader::loadFromFile(const std::filesystem::path& path)
 	{
 		namespace glTF = Microsoft::glTF;
 
-		// validate path
-
+		tru::validateFile(path, ".gltf");
 
 		auto streamReader = std::make_shared<GltfLoaderPrivate::StreamReader>(path.parent_path());
 
