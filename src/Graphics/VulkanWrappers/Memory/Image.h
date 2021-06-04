@@ -35,10 +35,14 @@ namespace trg::vkwrappers
 		std::span<ImageView> getImageViews();
 		std::span<const ImageView> getImageViews() const;
 
+		vk::ImageLayout getImageLayout() const;
+
 	private:
 		std::reference_wrapper<vk::Device> m_device;
 
 		VmaUnique<vk::Image> m_image;
 		std::vector<ImageView> m_imageViews;
+
+		vk::ImageLayout m_imageLayout;
 	};
 }  // namespace trg::vkwrappers
