@@ -84,6 +84,6 @@ namespace trg::vkwrappers
 
 	vk::ImageLayout Image::getImageLayout() const
 	{
-		m_imageLayout;
+		return m_imageLayout;
 	}
 }  // namespace trg::vkwrappers
