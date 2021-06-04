@@ -38,6 +38,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Descriptors/DescriptorSet.h
 	VulkanWrappers/Descriptors/DescriptorSetLayout.cpp
 	VulkanWrappers/Descriptors/DescriptorSetLayout.h
+	VulkanWrappers/Descriptors/ImageSampler.cpp
+	VulkanWrappers/Descriptors/ImageSampler.h
 	VulkanWrappers/FrameBuffer.cpp
 	VulkanWrappers/FrameBuffer.h
 	VulkanWrappers/Memory/Buffer.cpp
