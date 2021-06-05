@@ -8,9 +8,11 @@ namespace trg
 	{
 		std::vector<float> zipAttributes(const std::vector<MeshAttribute>& attributes)
 		{
-			assert(std::adjacent_find(values.cbegin(), values.cend(), [](const MeshAttribute& attribute1, const MeshAttribute& attribute2) {
-					   return attribute1.m_data.size() != attribute2.m_data.size();
-				   }) == values.end());
+			assert(std::adjacent_find(attributes.cbegin(),
+									  attributes.cend(),
+									  [](const MeshAttribute& attribute1, const MeshAttribute& attribute2) {
+										  return attribute1.m_data.size() != attribute2.m_data.size();
+									  }) == attributes.end());
 
 			std::vector<float> zippedData;
 
