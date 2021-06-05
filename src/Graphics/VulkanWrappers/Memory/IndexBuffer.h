@@ -5,14 +5,13 @@
 
 namespace trg::vkwrappers
 {
-	class VertexBuffer : public Buffer
+	class IndexBuffer : public Buffer
 	{
 	public:
-		VertexBuffer(vk::DeviceSize bufferSize, vk::BufferUsageFlagBits bufferUsage, vma::MemoryUsage memoryUsage, uint32_t bindingIndex);
+		IndexBuffer(vk::DeviceSize bufferSize, vk::BufferUsageFlagBits bufferUsage, vma::MemoryUsage memoryUsage);
 
 		void bind(BindableBindInfo& bindInfo);
 
 	private:
-		uint32_t m_bindingIndex;
 	};
 }  // namespace trg::vkwrappers
