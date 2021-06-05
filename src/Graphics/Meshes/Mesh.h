@@ -14,6 +14,11 @@ namespace trg
 	{
 		std::vector<float> m_data;
 		BufferBlock m_bufferBlock;
+
+		auto getVertexCount() const
+		{
+			return m_data.size() / componentTypeFullLength(m_bufferBlock.getComponentType());
+		}
 	};
 
 	class Mesh

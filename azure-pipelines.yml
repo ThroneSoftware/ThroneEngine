@@ -19,7 +19,7 @@ jobs:
     - task: Cache@2
       displayName: Vcpkg cache
       inputs:
-        key: 'vcpkg cache | "$(Agent.OS)"'
+        key: 'vcpkg cache | "$(Agent.OS)" | requirements.txt'
         path: 'c:\vcpkg\installed\'            
     - task: CmdLine@2
       displayName: Generate project files
