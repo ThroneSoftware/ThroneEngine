@@ -50,6 +50,31 @@ namespace trg
 		}
 	}
 
+	inline uint32_t componentTypeFullLength(BufferBlockComponentType componentType)
+	{
+		switch(componentType)
+		{
+			case BufferBlockComponentType::Scalar:
+				return 1;
+			case BufferBlockComponentType::Vec2:
+				return 2;
+			case BufferBlockComponentType::Vec3:
+				return 3;
+			case BufferBlockComponentType::Vec4:
+				return 4;
+			case BufferBlockComponentType::Mat2:
+				return 2 * 2;
+			case BufferBlockComponentType::Mat3:
+				return 3 * 3;
+			case BufferBlockComponentType::Mat4:
+				return 4 * 4;
+			default:
+				assert(false);
+				throw std::runtime_error("Invalid range");
+				break;
+		}
+	}
+
 	enum class BufferBlockValueType
 	{
 		Float,
@@ -95,6 +120,11 @@ namespace trg
 		  , m_attribute(attribute)
 		{
 			validateTypeSize();
+		}
+
+		BufferBlockComponentType getComponentType() const
+		{
+			return m_componentType;
 		}
 
 	private:

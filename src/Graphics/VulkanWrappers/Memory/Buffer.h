@@ -14,9 +14,16 @@ namespace trg::vkwrappers
 
 	public:
 		Buffer(vk::DeviceSize bufferSize, vk::BufferUsageFlagBits bufferUsage, vma::MemoryUsage memoryUsage);
+
+		Buffer(const Buffer& other) = delete;
+		Buffer& operator=(const Buffer& other) = delete;
+
+		Buffer(Buffer&& other) = default;
+		Buffer& operator=(Buffer&& other) = default;
+
 		virtual ~Buffer() = default;
 
-		void updateWithHostMemory(vk::DeviceSize dataSize, void* srcData);
+		void updateWithHostMemory(vk::DeviceSize dataSize, const void* srcData);
 
 	protected:
 		VkHandleType& getVkHandle();

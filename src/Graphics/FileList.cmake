@@ -10,6 +10,9 @@ target_sources(Graphics PRIVATE
 	Materials/Material.h
 	Meshes/Mesh.cpp
 	Meshes/Mesh.h
+	Meshes/MeshFilter.h
+	Meshes/MeshRenderer.cpp
+	Meshes/MeshRenderer.h
 	Models/GltfLoader.cpp
 	Models/GltfLoader.h
 	Models/Model.cpp
@@ -48,6 +51,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Memory/Image.h
 	VulkanWrappers/Memory/ImageView.cpp
 	VulkanWrappers/Memory/ImageView.h
+	VulkanWrappers/Memory/IndexBuffer.cpp
+	VulkanWrappers/Memory/IndexBuffer.h
 	VulkanWrappers/Memory/VertexBuffer.cpp
 	VulkanWrappers/Memory/VertexBuffer.h
 	VulkanWrappers/Memory/VmaAllocator.cpp

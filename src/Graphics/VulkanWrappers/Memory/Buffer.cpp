@@ -22,7 +22,7 @@ namespace trg::vkwrappers
 	{
 	}
 
-	void Buffer::updateWithHostMemory(vk::DeviceSize dataSize, void* srcData)
+	void Buffer::updateWithHostMemory(vk::DeviceSize dataSize, const void* srcData)
 	{
 		assert(dataSize > 0 && srcData != nullptr);
 
