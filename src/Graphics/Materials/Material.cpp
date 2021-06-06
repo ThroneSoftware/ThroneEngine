@@ -17,7 +17,7 @@ namespace trg
 	  , m_baseColorTexture(vkwrappers::ImageSampler(device, m_baseColorImage, vk::ShaderStageFlagBits::eAllGraphics))
 	  , m_descriptorSet(device, getDescriptors(), static_cast<uint32_t>(vkwrappers::StandardDescriptorSetLocations::Material))
 	{
-		m_baseColorImage.updateWithHostMemory(m_materialInfo.m_baseColorTexture->getData().size() * sizeof(uint8_t),
+		m_baseColorImage.updateWithHostMemory(m_materialInfo.m_baseColorTexture->getData().size_bytes(),
 											  m_materialInfo.m_baseColorTexture->getData().data());
 	}
 

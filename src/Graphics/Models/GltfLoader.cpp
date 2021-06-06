@@ -176,13 +176,21 @@ namespace trg
 					}
 					else
 					{
+						constexpr int desiredChannels = 4;
+
 						int channelsInFile = 0;
 						auto stbiProcessedData = stbi_load_from_memory(rawData.data(),
 																	   gsl::narrow<int>(rawData.size()),
 																	   &width,
 																	   &height,
 																	   &channelsInFile,
-																	   4 /*desired_channels*/);
+																	   desiredChannels);
+
+						if(channelsInFile != desiredChannels)
+						{
+							throw std::runtime_error("Images must have 4 channel (r,g,b,a).");
+						}
+
 						auto span = std::span(stbiProcessedData, width * height * channelsInFile);
 						processedData.reserve(span.size());
 						processedData.insert(processedData.begin(), span.begin(), span.end());

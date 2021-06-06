@@ -1,6 +1,6 @@
 target_sources(Graphics PRIVATE 
 	BufferLayout.h
-	BuildDependencies/stbi_image.cpp
+	BuildDependencies/stb_image.cpp
 	GraphicsContext.cpp
 	GraphicsContext.h
 	GraphicsInstance.cpp
