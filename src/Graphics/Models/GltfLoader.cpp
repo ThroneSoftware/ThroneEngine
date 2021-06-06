@@ -6,9 +6,13 @@
 #include <GLTFSDK/GLTFResourceReader.h>
 #include <Utilities/Files.h>
 
+#include <gsl/gsl>
+#include <stb_image.h>
+
 #include <fstream>
 #include <map>
 #include <optional>
+#include <span>
 
 namespace trg
 {
@@ -143,15 +147,15 @@ namespace trg
 				return readAccessor<uint16_t>(m_meshPrimitive.indicesAccessorId);
 			}
 
-			std::unique_ptr<Material> readMaterial()
+			std::unique_ptr<MaterialInfo> readMaterial()
 			{
 				const auto& gltfMaterial = m_document.materials.Get(m_meshPrimitive.materialId);
 				auto textureId = gltfMaterial.metallicRoughness.baseColorTexture.textureId;
 
 				auto baseColorFactor = gltfMaterial.metallicRoughness.baseColorFactor;
 				auto material =
-					std::make_unique<Material>(gltfMaterial.name,
-											   glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
+					std::make_unique<MaterialInfo>(gltfMaterial.name,
+												   glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
 
 				if(!textureId.empty())
 				{
@@ -159,9 +163,32 @@ namespace trg
 
 					const auto& image = m_document.images.Get(texture.imageId);
 
-					auto data = m_resourceReader.ReadBinaryData(m_document, image);
+					auto rawData = m_resourceReader.ReadBinaryData(m_document, image);
 
-					material->setBaseColorTexture(std::make_unique<Image>(image.name, std::move(data)));
+					std::vector<std::uint8_t> processedData;
+
+					int width = 0;
+					int height = 0;
+
+					if(stbi_is_16_bit_from_memory(rawData.data(), gsl::narrow<int>(rawData.size())))
+					{
+						throw std::runtime_error("16 bits images are not supported.");
+					}
+					else
+					{
+						int channelsInFile = 0;
+						auto stbiProcessedData = stbi_load_from_memory(rawData.data(),
+																	   gsl::narrow<int>(rawData.size()),
+																	   &width,
+																	   &height,
+																	   &channelsInFile,
+																	   4 /*desired_channels*/);
+						auto span = std::span(stbiProcessedData, width * height * channelsInFile);
+						processedData.reserve(span.size());
+						processedData.insert(processedData.begin(), span.begin(), span.end());
+					}
+
+					material->m_baseColorTexture = std::make_unique<Image>(image.name, width, height, std::move(processedData));
 				}
 
 				return material;

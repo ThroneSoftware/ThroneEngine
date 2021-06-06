@@ -1,26 +1,19 @@
 #pragma once
 
-#include "../Images/Image.h"
-
-#include <glm/glm.hpp>
-
-#include <memory>
-#include <string>
+#include "../VulkanWrappers/Descriptors/ImageSampler.h"
+#include "MaterialInfo.h"
 
 namespace trg
 {
 	class Material
 	{
 	public:
-		Material(const std::string& name, glm::vec4 baseColorFactor);
-
-		void setBaseColorTexture(std::unique_ptr<Image> baseColorTexture);
+		Material(vk::Device& device, MaterialInfo&& materialInfo);
 
 	private:
-		std::string m_name;
+		MaterialInfo m_materialInfo;
 
-		// value in linear space.
-		glm::vec4 m_baseColorFactor;
-		std::unique_ptr<Image> m_baseColorTexture;
+		vkwrappers::Image m_baseColorImage;
+		vkwrappers::ImageSampler m_baseColorTexture;
 	};
 }  // namespace trg

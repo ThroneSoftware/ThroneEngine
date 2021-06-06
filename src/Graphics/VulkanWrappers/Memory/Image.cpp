@@ -86,4 +86,9 @@ namespace trg::vkwrappers
 	{
 		return m_imageLayout;
 	}
+
+	void Image::updateWithHostMemory(vk::DeviceSize dataSize, const void* srcData)
+	{
+		allocateHostMemory(dataSize, srcData, m_image.m_allocation);
+	}
 }  // namespace trg::vkwrappers

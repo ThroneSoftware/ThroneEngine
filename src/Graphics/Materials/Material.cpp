@@ -2,15 +2,21 @@
 
 namespace trg
 {
-	Material::Material(const std::string& name, glm::vec4 baseColorFactor)
-	  : m_name(name)
-	  , m_baseColorFactor(baseColorFactor)
-
+	Material::Material(vk::Device& device, MaterialInfo&& materialInfo)
+	  : m_materialInfo(std::move(materialInfo))
+	  , m_baseColorImage(
+			vkwrappers::Image(device,
+							  vk::ImageType::e2D,
+							  vk::Format::eR8G8B8A8Unorm,
+							  vk::Extent3D(m_materialInfo.m_baseColorTexture->getWidth(), m_materialInfo.m_baseColorTexture->getHeight()),
+							  1 /*mipmapCount*/,
+							  1 /*layerCount*/,
+							  vk::SampleCountFlagBits::e1,
+							  vk::ImageUsageFlagBits::eSampled,
+							  vk::ImageLayout::eShaderReadOnlyOptimal))
+	  , m_baseColorTexture(vkwrappers::ImageSampler(device, m_baseColorImage, vk::ShaderStageFlagBits::eAllGraphics))
 	{
-	}
-
-	void Material::setBaseColorTexture(std::unique_ptr<Image> baseColorTexture)
-	{
-		m_baseColorTexture = std::move(baseColorTexture);
+		m_baseColorImage.updateWithHostMemory(m_materialInfo.m_baseColorTexture->getData().size() * sizeof(uint8_t),
+											  m_materialInfo.m_baseColorTexture->getData().data());
 	}
 }  // namespace trg

@@ -37,6 +37,8 @@ namespace trg::vkwrappers
 
 		vk::ImageLayout getImageLayout() const;
 
+		void updateWithHostMemory(vk::DeviceSize dataSize, const void* srcData);
+
 	private:
 		std::reference_wrapper<vk::Device> m_device;
 

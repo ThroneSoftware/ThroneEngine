@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../BufferLayout.h"
-#include "../Materials/Material.h"
+#include "../Materials/MaterialInfo.h"
 
 #include <optional>
 #include <span>
@@ -27,7 +27,7 @@ namespace trg
 		Mesh(const std::string& name,
 			 std::vector<MeshAttribute> attributes,
 			 std::vector<uint16_t> indices,
-			 std::unique_ptr<Material> material);
+			 std::unique_ptr<MaterialInfo> material);
 
 		std::span<const float> getAttributeData() const;
 		std::span<const uint16_t> getIndexData() const;
@@ -40,6 +40,6 @@ namespace trg
 
 		std::vector<uint16_t> m_indices;
 
-		std::unique_ptr<Material> m_material;
+		std::unique_ptr<MaterialInfo> m_material;
 	};
 }  // namespace trg
