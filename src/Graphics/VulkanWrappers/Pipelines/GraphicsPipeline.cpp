@@ -96,6 +96,11 @@ namespace trg::vkwrappers
 
 	void GraphicsPipeline::bind(BindableBindInfo& bindInfo)
 	{
-		bindInfo.commandBuffer->bindPipeline(vk::PipelineBindPoint::eGraphics, *m_pipeline);
+		bindInfo.m_commandBuffer->bindPipeline(vk::PipelineBindPoint::eGraphics, *m_pipeline);
+	}
+
+	vk::PipelineLayout& GraphicsPipeline::getLayout()
+	{
+		return *m_layout;
 	}
 }  // namespace trg::vkwrappers

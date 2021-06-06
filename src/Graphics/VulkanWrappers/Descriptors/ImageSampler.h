@@ -22,6 +22,8 @@ namespace trg::vkwrappers
 		VkHandleType* operator->();
 		const VkHandleType* operator->() const;
 
+		const Descriptor& getDescriptor() const;
+
 	private:
 		vk::UniqueSampler m_sampler;
 

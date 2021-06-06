@@ -14,6 +14,6 @@ namespace trg::vkwrappers
 	void VertexBuffer::bind(BindableBindInfo& bindInfo)
 	{
 		vk::DeviceSize offset = {0};
-		bindInfo.commandBuffer->bindVertexBuffers(m_bindingIndex, getVkHandle(), offset);
+		bindInfo.m_commandBuffer->bindVertexBuffers(m_bindingIndex, getVkHandle(), offset);
 	}
 }  // namespace trg::vkwrappers

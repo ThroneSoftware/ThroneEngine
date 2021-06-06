@@ -15,8 +15,19 @@ namespace trg
 							  vk::ImageUsageFlagBits::eSampled,
 							  vk::ImageLayout::eShaderReadOnlyOptimal))
 	  , m_baseColorTexture(vkwrappers::ImageSampler(device, m_baseColorImage, vk::ShaderStageFlagBits::eAllGraphics))
+	  , m_descriptorSet(device, getDescriptors(), static_cast<uint32_t>(vkwrappers::StandardDescriptorSetLocations::Material))
 	{
 		m_baseColorImage.updateWithHostMemory(m_materialInfo.m_baseColorTexture->getData().size() * sizeof(uint8_t),
 											  m_materialInfo.m_baseColorTexture->getData().data());
+	}
+
+	void Material::bind(vkwrappers::BindableBindInfo& bindInfo)
+	{
+		m_descriptorSet.bind(bindInfo);
+	}
+
+	std::span<const vkwrappers::Descriptor> Material::getDescriptors() const
+	{
+		return std::span(&m_baseColorTexture.getDescriptor(), 1);
 	}
 }  // namespace trg

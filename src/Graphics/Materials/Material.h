@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../VulkanWrappers/Bindable/Bindable.h"
+#include "../VulkanWrappers/Descriptors/DescriptorSet.h"
 #include "../VulkanWrappers/Descriptors/ImageSampler.h"
 #include "MaterialInfo.h"
 
@@ -10,10 +12,17 @@ namespace trg
 	public:
 		Material(vk::Device& device, MaterialInfo&& materialInfo);
 
+		void bind(vkwrappers::BindableBindInfo& bindInfo);
+
 	private:
+		std::span<const vkwrappers::Descriptor> getDescriptors() const;
+
+		// Do not change the order of the members because of the member initializer list.
 		MaterialInfo m_materialInfo;
 
 		vkwrappers::Image m_baseColorImage;
 		vkwrappers::ImageSampler m_baseColorTexture;
+
+		vkwrappers::DescriptorSet m_descriptorSet;
 	};
 }  // namespace trg
