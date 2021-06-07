@@ -51,7 +51,7 @@ namespace trg
 	Mesh::Mesh(const std::string& name,
 			   std::vector<MeshAttribute> attributes,
 			   std::vector<uint16_t> indices,
-			   std::unique_ptr<Material> material)
+			   std::unique_ptr<MaterialInfo> material)
 	  : m_name(name)
 	  , m_attributes(std::move(attributes))
 	  , m_zippedAttributes(MeshPrivate::zipAttributes(m_attributes))

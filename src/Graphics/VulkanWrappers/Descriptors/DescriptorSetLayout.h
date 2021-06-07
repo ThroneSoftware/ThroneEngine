@@ -12,7 +12,7 @@ namespace trg::vkwrappers
 		using VkHandleType = vk::DescriptorSetLayout;
 
 	public:
-		DescriptorSetLayout(vk::Device& device, std::span<std::reference_wrapper<const Descriptor>> descriptors);
+		DescriptorSetLayout(vk::Device& device, std::span<const Descriptor> descriptors);
 
 		VkHandleType& getVkHandle();
 		const VkHandleType& getVkHandle() const;

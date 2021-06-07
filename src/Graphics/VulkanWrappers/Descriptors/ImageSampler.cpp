@@ -65,4 +65,9 @@ namespace trg::vkwrappers
 	{
 		return &getVkHandle();
 	}
+
+	const Descriptor& ImageSampler::getDescriptor() const
+	{
+		return m_descriptor;
+	}
 }  // namespace trg::vkwrappers

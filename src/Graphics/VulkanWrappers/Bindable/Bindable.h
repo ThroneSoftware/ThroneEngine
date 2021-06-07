@@ -8,6 +8,7 @@ namespace trg::vkwrappers
 
 	struct BindableBindInfo
 	{
-		CommandBuffer& commandBuffer;
+		CommandBuffer& m_commandBuffer;
+		vk::PipelineLayout& m_pipelineLayout;
 	};
 }  // namespace trg::vkwrappers

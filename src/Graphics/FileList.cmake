@@ -1,5 +1,6 @@
 target_sources(Graphics PRIVATE 
 	BufferLayout.h
+	BuildDependencies/stb_image.cpp
 	GraphicsContext.cpp
 	GraphicsContext.h
 	GraphicsInstance.cpp
@@ -8,6 +9,7 @@ target_sources(Graphics PRIVATE
 	Images/Image.h
 	Materials/Material.cpp
 	Materials/Material.h
+	Materials/MaterialInfo.h
 	Meshes/Mesh.cpp
 	Meshes/Mesh.h
 	Meshes/MeshFilter.h

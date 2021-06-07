@@ -48,7 +48,7 @@ namespace trg
 		m_vertexBuffer.bind(bindInfo);
 		m_indexBuffer.bind(bindInfo);
 
-		bindInfo.commandBuffer->drawIndexed(gsl::narrow<uint32_t>(m_meshFilter.m_mesh.getIndexData().size()),
+		bindInfo.m_commandBuffer->drawIndexed(gsl::narrow<uint32_t>(m_meshFilter.m_mesh.getIndexData().size()),
 											1 /*instanceCount*/,
 											0 /*firstIndex*/,
 											0 /*vertexOffset*/,

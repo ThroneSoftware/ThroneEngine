@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../Images/Image.h"
 #include "ImageView.h"
 #include "VmaUnique.h"
 
@@ -37,6 +38,8 @@ namespace trg::vkwrappers
 
 		vk::ImageLayout getImageLayout() const;
 
+		void updateWithHostMemory(vk::DeviceSize dataSize, const void* srcData);
+
 	private:
 		std::reference_wrapper<vk::Device> m_device;
 
@@ -45,4 +48,19 @@ namespace trg::vkwrappers
 
 		vk::ImageLayout m_imageLayout;
 	};
+
+	inline vk::Format imageLayoutToVkFormat(ImageLayout layout)
+	{
+		switch(layout)
+		{
+			case trg::ImageLayout::RgbaU8:
+				return vk::Format::eR8G8B8A8Unorm;
+			case trg::ImageLayout::RgbU8:
+				return vk::Format::eR8G8B8Unorm;
+			default:
+				assert(false);
+				throw std::runtime_error("Invalid Range.");
+				break;
+		}
+	}
 }  // namespace trg::vkwrappers

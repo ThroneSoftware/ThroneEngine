@@ -6,9 +6,13 @@
 #include <GLTFSDK/GLTFResourceReader.h>
 #include <Utilities/Files.h>
 
+#include <gsl/gsl>
+#include <stb_image.h>
+
 #include <fstream>
 #include <map>
 #include <optional>
+#include <span>
 
 namespace trg
 {
@@ -101,10 +105,12 @@ namespace trg
 		class DataReader
 		{
 		public:
-			DataReader(const Microsoft::glTF::GLTFResourceReader& resourceReader,
+			DataReader(const std::string& filename,
+					   const Microsoft::glTF::GLTFResourceReader& resourceReader,
 					   const Microsoft::glTF::Document& document,
 					   const Microsoft::glTF::MeshPrimitive& meshPrimitive)
-			  : m_resourceReader(resourceReader)
+			  : m_filename(filename)
+			  , m_resourceReader(resourceReader)
 			  , m_document(document)
 			  , m_meshPrimitive(meshPrimitive)
 			{
@@ -143,15 +149,15 @@ namespace trg
 				return readAccessor<uint16_t>(m_meshPrimitive.indicesAccessorId);
 			}
 
-			std::unique_ptr<Material> readMaterial()
+			std::unique_ptr<MaterialInfo> readMaterial()
 			{
 				const auto& gltfMaterial = m_document.materials.Get(m_meshPrimitive.materialId);
 				auto textureId = gltfMaterial.metallicRoughness.baseColorTexture.textureId;
 
 				auto baseColorFactor = gltfMaterial.metallicRoughness.baseColorFactor;
 				auto material =
-					std::make_unique<Material>(gltfMaterial.name,
-											   glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
+					std::make_unique<MaterialInfo>(gltfMaterial.name,
+												   glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
 
 				if(!textureId.empty())
 				{
@@ -159,9 +165,53 @@ namespace trg
 
 					const auto& image = m_document.images.Get(texture.imageId);
 
-					auto data = m_resourceReader.ReadBinaryData(m_document, image);
+					auto rawData = m_resourceReader.ReadBinaryData(m_document, image);
 
-					material->setBaseColorTexture(std::make_unique<Image>(image.name, std::move(data)));
+					std::vector<std::uint8_t> processedData;
+
+					int width = 0;
+					int height = 0;
+					int channelsInFile = 0;
+
+					if(stbi_is_16_bit_from_memory(rawData.data(), gsl::narrow<int>(rawData.size())))
+					{
+						throw std::runtime_error(
+							fmt::format("16 bits images are not supported. File name: {}, Image name: {}", m_filename, image.name));
+					}
+					else
+					{
+						constexpr int desiredChannels = 4;
+
+						auto stbiDeleter = [](stbi_uc* data) {
+							stbi_image_free(data);
+						};
+						auto stbiProcessedData =
+							std::unique_ptr<stbi_uc, decltype(stbiDeleter)>(stbi_load_from_memory(rawData.data(),
+																								  gsl::narrow<int>(rawData.size()),
+																								  &width,
+																								  &height,
+																								  &channelsInFile,
+																								  desiredChannels),
+																			stbiDeleter);
+
+						if(width < 0 || height < 0)
+						{
+							throw std::runtime_error(fmt::format("width or heigh of an image cannot be 0. File name: {}, Image name: {}",
+																 m_filename,
+																 image.name));
+						}
+
+						auto span = std::span(stbiProcessedData.get(), width * height * channelsInFile);
+						processedData.reserve(span.size());
+						processedData.insert(processedData.begin(), span.begin(), span.end());
+					}
+
+					material->m_baseColorTexture =
+						std::make_unique<Image>(image.name,
+												getImageLayoutFromChannels(gsl::narrow<uint32_t>(channelsInFile)),
+												width,
+												height,
+												std::move(processedData));
 				}
 
 				return material;
@@ -199,6 +249,7 @@ namespace trg
 				return m_resourceReader.ReadBinaryData<T>(m_document, accessor);
 			}
 
+			std::string m_filename;
 
 			const Microsoft::glTF::GLTFResourceReader& m_resourceReader;
 			const Microsoft::glTF::Document& m_document;
@@ -231,7 +282,7 @@ namespace trg
 		{
 			for(const auto& meshPrimitive: mesh.primitives)
 			{
-				auto dataReader = GltfLoaderPrivate::DataReader(resourceReader, document, meshPrimitive);
+				auto dataReader = GltfLoaderPrivate::DataReader(path.filename().string(), resourceReader, document, meshPrimitive);
 
 				auto attributes = dataReader.readMeshAttributes();
 

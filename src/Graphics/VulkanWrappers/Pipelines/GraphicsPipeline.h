@@ -30,6 +30,8 @@ namespace trg::vkwrappers
 
 		void bind(BindableBindInfo& bindInfo);
 
+		vk::PipelineLayout& getLayout();
+
 	private:
 		vk::UniquePipelineLayout m_layout;
 		vk::UniquePipeline m_pipeline;

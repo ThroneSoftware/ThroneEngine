@@ -4,13 +4,13 @@ namespace trg::vkwrappers
 {
 	namespace DescriptorSetLayoutPrivate
 	{
-		auto makeDescriptorSetLayout(vk::Device& device, std::span<std::reference_wrapper<const Descriptor>> descriptors)
+		auto makeDescriptorSetLayout(vk::Device& device, std::span<const Descriptor> descriptors)
 		{
 			std::vector<vk::DescriptorSetLayoutBinding> bindings;
 			bindings.reserve(descriptors.size());
 			for(uint32_t i = 0; i < descriptors.size(); ++i)
 			{
-				bindings.emplace_back(descriptors[i].get().getDescriptorSetLayoutBinding(i));
+				bindings.emplace_back(descriptors[i].getDescriptorSetLayoutBinding(i));
 			}
 
 			auto createInfo = vk::DescriptorSetLayoutCreateInfo({}, bindings);
@@ -18,7 +18,7 @@ namespace trg::vkwrappers
 		}
 	}  // namespace DescriptorSetLayoutPrivate
 
-	DescriptorSetLayout::DescriptorSetLayout(vk::Device& device, std::span<std::reference_wrapper<const Descriptor>> descriptors)
+	DescriptorSetLayout::DescriptorSetLayout(vk::Device& device, std::span<const Descriptor> descriptors)
 	  : m_descriptorSetLayout(DescriptorSetLayoutPrivate::makeDescriptorSetLayout(device, descriptors))
 	{
 	}

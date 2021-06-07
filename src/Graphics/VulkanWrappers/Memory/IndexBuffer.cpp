@@ -10,6 +10,6 @@ namespace trg::vkwrappers
 	void IndexBuffer::bind(BindableBindInfo& bindInfo)
 	{
 		vk::DeviceSize offset = {0};
-		bindInfo.commandBuffer->bindIndexBuffer(getVkHandle(), offset, vk::IndexType::eUint16);
+		bindInfo.m_commandBuffer->bindIndexBuffer(getVkHandle(), offset, vk::IndexType::eUint16);
 	}
 }  // namespace trg::vkwrappers
