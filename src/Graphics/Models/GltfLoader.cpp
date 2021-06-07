@@ -176,31 +176,34 @@ namespace trg
 					if(stbi_is_16_bit_from_memory(rawData.data(), gsl::narrow<int>(rawData.size())))
 					{
 						throw std::runtime_error(
-							fmt::format("16 bits images are not supported. File name: {}, Image name: {}", image.name, m_filename));
+							fmt::format("16 bits images are not supported. File name: {}, Image name: {}", m_filename, image.name));
 					}
 					else
 					{
 						constexpr int desiredChannels = 4;
 
-						auto stbiProcessedData = stbi_load_from_memory(rawData.data(),
-																	   gsl::narrow<int>(rawData.size()),
-																	   &width,
-																	   &height,
-																	   &channelsInFile,
-																	   desiredChannels);
+						auto stbiDeleter = [](stbi_uc* data) {
+							stbi_image_free(data);
+						};
+						auto stbiProcessedData =
+							std::unique_ptr<stbi_uc, decltype(stbiDeleter)>(stbi_load_from_memory(rawData.data(),
+																								  gsl::narrow<int>(rawData.size()),
+																								  &width,
+																								  &height,
+																								  &channelsInFile,
+																								  desiredChannels),
+																			stbiDeleter);
 
 						if(width < 0 || height < 0)
 						{
 							throw std::runtime_error(fmt::format("width or heigh of an image cannot be 0. File name: {}, Image name: {}",
-																 image.name,
-																 m_filename));
+																 m_filename,
+																 image.name));
 						}
 
-						auto span = std::span(stbiProcessedData, width * height * channelsInFile);
+						auto span = std::span(stbiProcessedData.get(), width * height * channelsInFile);
 						processedData.reserve(span.size());
 						processedData.insert(processedData.begin(), span.begin(), span.end());
-
-						stbi_image_free(stbiProcessedData);
 					}
 
 					material->m_baseColorTexture =
