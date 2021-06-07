@@ -7,7 +7,7 @@ namespace trg
 	  , m_baseColorImage(
 			vkwrappers::Image(device,
 							  vk::ImageType::e2D,
-							  vk::Format::eR8G8B8A8Unorm,
+							  vkwrappers::imageLayoutToVkFormat(m_materialInfo.m_baseColorTexture->getLayout()),
 							  vk::Extent3D(m_materialInfo.m_baseColorTexture->getWidth(), m_materialInfo.m_baseColorTexture->getHeight()),
 							  1 /*mipmapCount*/,
 							  1 /*layerCount*/,

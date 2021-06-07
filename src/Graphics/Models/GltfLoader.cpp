@@ -105,10 +105,12 @@ namespace trg
 		class DataReader
 		{
 		public:
-			DataReader(const Microsoft::glTF::GLTFResourceReader& resourceReader,
+			DataReader(const std::string& filename,
+					   const Microsoft::glTF::GLTFResourceReader& resourceReader,
 					   const Microsoft::glTF::Document& document,
 					   const Microsoft::glTF::MeshPrimitive& meshPrimitive)
-			  : m_resourceReader(resourceReader)
+			  : m_filename(filename)
+			  , m_resourceReader(resourceReader)
 			  , m_document(document)
 			  , m_meshPrimitive(meshPrimitive)
 			{
@@ -169,16 +171,17 @@ namespace trg
 
 					int width = 0;
 					int height = 0;
+					int channelsInFile = 0;
 
 					if(stbi_is_16_bit_from_memory(rawData.data(), gsl::narrow<int>(rawData.size())))
 					{
-						throw std::runtime_error("16 bits images are not supported.");
+						throw std::runtime_error(
+							fmt::format("16 bits images are not supported. File name: {}, Image name: {}", image.name, m_filename));
 					}
 					else
 					{
 						constexpr int desiredChannels = 4;
 
-						int channelsInFile = 0;
 						auto stbiProcessedData = stbi_load_from_memory(rawData.data(),
 																	   gsl::narrow<int>(rawData.size()),
 																	   &width,
@@ -186,17 +189,26 @@ namespace trg
 																	   &channelsInFile,
 																	   desiredChannels);
 
-						if(channelsInFile != desiredChannels)
+						if(width < 0 || height < 0)
 						{
-							throw std::runtime_error("Images must have 4 channel (r,g,b,a).");
+							throw std::runtime_error(fmt::format("width or heigh of an image cannot be 0. File name: {}, Image name: {}",
+																 image.name,
+																 m_filename));
 						}
 
 						auto span = std::span(stbiProcessedData, width * height * channelsInFile);
 						processedData.reserve(span.size());
 						processedData.insert(processedData.begin(), span.begin(), span.end());
+
+						stbi_image_free(stbiProcessedData);
 					}
 
-					material->m_baseColorTexture = std::make_unique<Image>(image.name, width, height, std::move(processedData));
+					material->m_baseColorTexture =
+						std::make_unique<Image>(image.name,
+												getImageLayoutFromChannels(gsl::narrow<uint32_t>(channelsInFile)),
+												width,
+												height,
+												std::move(processedData));
 				}
 
 				return material;
@@ -234,6 +246,7 @@ namespace trg
 				return m_resourceReader.ReadBinaryData<T>(m_document, accessor);
 			}
 
+			std::string m_filename;
 
 			const Microsoft::glTF::GLTFResourceReader& m_resourceReader;
 			const Microsoft::glTF::Document& m_document;
@@ -266,7 +279,7 @@ namespace trg
 		{
 			for(const auto& meshPrimitive: mesh.primitives)
 			{
-				auto dataReader = GltfLoaderPrivate::DataReader(resourceReader, document, meshPrimitive);
+				auto dataReader = GltfLoaderPrivate::DataReader(path.filename().string(), resourceReader, document, meshPrimitive);
 
 				auto attributes = dataReader.readMeshAttributes();
 
