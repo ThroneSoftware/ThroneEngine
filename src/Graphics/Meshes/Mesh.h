@@ -27,7 +27,7 @@ namespace trg
 		Mesh(const std::string& name,
 			 std::vector<MeshAttribute> attributes,
 			 std::vector<uint16_t> indices,
-			 std::unique_ptr<MaterialInfo> material);
+			 const MaterialInfo& materialInfo);
 
 		std::span<const float> getAttributeData() const;
 		std::span<const uint16_t> getIndexData() const;
@@ -40,6 +40,6 @@ namespace trg
 
 		std::vector<uint16_t> m_indices;
 
-		std::unique_ptr<MaterialInfo> m_material;
+		const MaterialInfo& m_materialInfo;
 	};
 }  // namespace trg

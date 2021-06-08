@@ -102,56 +102,54 @@ namespace trg
 			}
 		}
 
-		class DataReader
+		struct Materials
+		{
+			std::vector<std::unique_ptr<MaterialInfo>> m_materials;
+			std::vector<std::string> m_materialIds;
+
+			MaterialInfo& findMaterialInfo(const std::string& materialId)
+			{
+				assert(m_materials.size() == m_materialIds.size());
+
+				auto found = std::find_if(m_materialIds.begin(), m_materialIds.end(), [&materialId](const std::string& value) {
+					return value == materialId;
+				});
+
+				assert(found != m_materialIds.end());
+
+				auto index = std::distance(m_materialIds.begin(), found);
+
+				return *m_materials[index];
+			}
+		};
+
+		class MaterialReader
 		{
 		public:
-			DataReader(const std::string& filename,
-					   const Microsoft::glTF::GLTFResourceReader& resourceReader,
-					   const Microsoft::glTF::Document& document,
-					   const Microsoft::glTF::MeshPrimitive& meshPrimitive)
+			MaterialReader(const std::string& filename,
+						   const Microsoft::glTF::GLTFResourceReader& resourceReader,
+						   const Microsoft::glTF::Document& document)
 			  : m_filename(filename)
 			  , m_resourceReader(resourceReader)
 			  , m_document(document)
-			  , m_meshPrimitive(meshPrimitive)
 			{
 			}
 
-			std::vector<MeshAttribute> readMeshAttributes()
+			Materials readAllMaterials()
 			{
-				static const std::map<std::string, StandardAttributes> supportedAttributes = {
-					{Microsoft::glTF::ACCESSOR_POSITION, StandardAttributes::Position},
-					{Microsoft::glTF::ACCESSOR_NORMAL, StandardAttributes::Normal},
-					{Microsoft::glTF::ACCESSOR_COLOR_0, StandardAttributes::Color},
-					{Microsoft::glTF::ACCESSOR_TEXCOORD_0, StandardAttributes::TexCoords}};
+				Materials materials;
 
-				std::vector<MeshAttribute> attributes;
-
-				for(auto& attribute: supportedAttributes)
+				for(const auto& material: m_document.materials.Elements())
 				{
-					readAttribute(attributes, attribute.first, attribute.second);
+					materials.m_materials.emplace_back(readMaterial(material));
+					materials.m_materialIds.emplace_back(material.id);
 				}
 
-				return attributes;
+				return materials;
 			}
 
-			template <typename T>
-			std::optional<std::vector<T>> readData(const std::string& accessorName)
+			std::unique_ptr<MaterialInfo> readMaterial(const Microsoft::glTF::Material& gltfMaterial)
 			{
-				if(auto accessorId = getAccessorId(accessorName))
-				{
-					return readAccessor<T>(*accessorId);
-				}
-				return std::nullopt;
-			}
-
-			std::vector<uint16_t> readIndices()
-			{
-				return readAccessor<uint16_t>(m_meshPrimitive.indicesAccessorId);
-			}
-
-			std::unique_ptr<MaterialInfo> readMaterial()
-			{
-				const auto& gltfMaterial = m_document.materials.Get(m_meshPrimitive.materialId);
 				auto textureId = gltfMaterial.metallicRoughness.baseColorTexture.textureId;
 
 				auto baseColorFactor = gltfMaterial.metallicRoughness.baseColorFactor;
@@ -218,6 +216,60 @@ namespace trg
 			}
 
 		private:
+			std::string m_filename;
+
+			const Microsoft::glTF::GLTFResourceReader& m_resourceReader;
+			const Microsoft::glTF::Document& m_document;
+		};
+
+		class MeshReader
+		{
+		public:
+			MeshReader(const std::string& filename,
+					   const Microsoft::glTF::GLTFResourceReader& resourceReader,
+					   const Microsoft::glTF::Document& document,
+					   const Microsoft::glTF::MeshPrimitive& meshPrimitive)
+			  : m_filename(filename)
+			  , m_resourceReader(resourceReader)
+			  , m_document(document)
+			  , m_meshPrimitive(meshPrimitive)
+			{
+			}
+
+			std::vector<MeshAttribute> readMeshAttributes()
+			{
+				static const std::map<std::string, StandardAttributes> supportedAttributes = {
+					{Microsoft::glTF::ACCESSOR_POSITION, StandardAttributes::Position},
+					{Microsoft::glTF::ACCESSOR_NORMAL, StandardAttributes::Normal},
+					{Microsoft::glTF::ACCESSOR_COLOR_0, StandardAttributes::Color},
+					{Microsoft::glTF::ACCESSOR_TEXCOORD_0, StandardAttributes::TexCoords}};
+
+				std::vector<MeshAttribute> attributes;
+
+				for(auto& attribute: supportedAttributes)
+				{
+					readAttribute(attributes, attribute.first, attribute.second);
+				}
+
+				return attributes;
+			}
+
+			template <typename T>
+			std::optional<std::vector<T>> readData(const std::string& accessorName)
+			{
+				if(auto accessorId = getAccessorId(accessorName))
+				{
+					return readAccessor<T>(*accessorId);
+				}
+				return std::nullopt;
+			}
+
+			std::vector<uint16_t> readIndices()
+			{
+				return readAccessor<uint16_t>(m_meshPrimitive.indicesAccessorId);
+			}
+
+		private:
 			std::optional<std::string> getAccessorId(const std::string& accessorName)
 			{
 				if(m_meshPrimitive.HasAttribute(accessorName))
@@ -278,21 +330,25 @@ namespace trg
 
 		Model model = Model(path.filename().replace_extension().string());
 
+		auto materialReader = GltfLoaderPrivate::MaterialReader(path.filename().string(), resourceReader, document);
+		auto materials = materialReader.readAllMaterials();
+
 		for(const auto& mesh: document.meshes.Elements())
 		{
 			for(const auto& meshPrimitive: mesh.primitives)
 			{
-				auto dataReader = GltfLoaderPrivate::DataReader(path.filename().string(), resourceReader, document, meshPrimitive);
+				auto dataReader = GltfLoaderPrivate::MeshReader(path.filename().string(), resourceReader, document, meshPrimitive);
 
 				auto attributes = dataReader.readMeshAttributes();
 
 				auto indices = dataReader.readIndices();
 
-				auto material = dataReader.readMaterial();
-
-				model.addMesh(Mesh(mesh.name, std::move(attributes), std::move(indices), std::move(material)));
+				model.addMesh(
+					Mesh(mesh.name, std::move(attributes), std::move(indices), materials.findMaterialInfo(meshPrimitive.materialId)));
 			}
 		}
+
+		model.setMaterials(std::move(materials.m_materials));
 
 		return model;
 	}
