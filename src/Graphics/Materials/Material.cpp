@@ -35,4 +35,9 @@ namespace trg
 	{
 		return m_materialInfo;
 	}
+
+	const vkwrappers::DescriptorSet& Material::getDescriptorSet() const
+	{
+		return m_descriptorSet;
+	}
 }  // namespace trg

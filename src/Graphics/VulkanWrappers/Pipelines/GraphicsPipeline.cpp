@@ -7,7 +7,7 @@ namespace trg::vkwrappers
 	namespace GraphicsPipelinePrivate
 	{
 		auto makePipelineLayout(vk::Device& device,
-								std::span<const DescriptorSetLayout> descriptorSetLayouts,
+								const std::vector<std::reference_wrapper<const DescriptorSetLayout>>& descriptorSetLayouts,
 								std::vector<vk::PushConstantRange> pushContants)
 		{
 			auto layouts = toVkHandle(descriptorSetLayouts);
@@ -64,7 +64,7 @@ namespace trg::vkwrappers
 
 
 	GraphicsPipeline::GraphicsPipeline(vk::Device& device,
-									   std::span<const DescriptorSetLayout> descriptorSetLayouts,
+									   const std::vector<std::reference_wrapper<const DescriptorSetLayout>>& descriptorSetLayouts,
 									   std::vector<vk::PushConstantRange> pushContants,
 									   std::span<const Shader> shaders,
 									   std::span<const VertexBufferSignature> bufferSignatures,

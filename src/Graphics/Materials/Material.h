@@ -16,6 +16,8 @@ namespace trg
 
 		const MaterialInfo& getMaterialInfo() const;
 
+		const vkwrappers::DescriptorSet& getDescriptorSet() const;
+
 	private:
 		std::span<const vkwrappers::Descriptor> getDescriptors() const;
 

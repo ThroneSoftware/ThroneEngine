@@ -93,4 +93,9 @@ namespace trg::vkwrappers
 													 *m_descriptorSet,
 													 {});
 	}
+
+	const DescriptorSetLayout& DescriptorSet::getLayout() const
+	{
+		return m_layout;
+	}
 }  // namespace trg::vkwrappers

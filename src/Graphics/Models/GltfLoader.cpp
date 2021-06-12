@@ -199,8 +199,26 @@ namespace trg
 						}
 
 						auto span = std::span(stbiProcessedData.get(), width * height * channelsInFile);
-						processedData.reserve(span.size());
-						processedData.insert(processedData.begin(), span.begin(), span.end());
+						constexpr auto maxColorValue = 255;
+						processedData.resize(width * height * desiredChannels, maxColorValue);
+
+						// 3 channel is often not supported so add alpha
+						if(channelsInFile == 3)
+						{
+							channelsInFile = 4;
+
+							auto pixelCount = width * height;
+
+							auto current = processedData.data();
+							for(size_t i = 0; i < pixelCount; ++i, current += 4)
+							{
+								memcpy(current, span.data() + (pixelCount * 3), 3 * sizeof(std::byte));
+							}
+						}
+						else
+						{
+							memcpy(processedData.data(), span.data(), span.size_bytes());
+						}
 					}
 
 					material.m_baseColorTexture = std::make_unique<Image>(image.name,

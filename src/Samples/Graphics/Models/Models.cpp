@@ -60,13 +60,13 @@ trg::vkwrappers::FrameBuffer makeFrameBuffer(trg::VulkanContext& vkContext,
 	return trg::vkwrappers::FrameBuffer(vkContext.m_device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
 }
 
-trg::vkwrappers::GraphicsPipeline makeGraphicsPipeline(trg::VulkanContext& vkContext,
-													   trg::vkwrappers::RenderPass& renderPass,
-													   std::span<const trg::vkwrappers::Shader> shaders,
-													   const trg::BufferLayout& bufferLayout)
+trg::vkwrappers::GraphicsPipeline
+	makeGraphicsPipeline(trg::VulkanContext& vkContext,
+						 trg::vkwrappers::RenderPass& renderPass,
+						 const std::vector<std::reference_wrapper<const trg::vkwrappers::DescriptorSetLayout>>& descriptorSetLayouts,
+						 std::span<const trg::vkwrappers::Shader> shaders,
+						 const trg::BufferLayout& bufferLayout)
 {
-	std::vector<trg::vkwrappers::DescriptorSetLayout> descriptorSetLayouts;
-
 	std::vector<trg::vkwrappers::VertexBufferSignature> vertexBufferSignatures;
 	vertexBufferSignatures.emplace_back(
 		trg::vkwrappers::VertexBufferSignature(0 /*bindingIndex*/, vk::VertexInputRate::eVertex, bufferLayout));
@@ -298,18 +298,20 @@ int main()
 	std::vector<MeshRenderingInfo> meshRenderers;
 	for(auto& mesh: voyagerModel.getMeshes())
 	{
-		auto found = std::find_if(materials.begin(), materials.end(), [&mesh](const trg::Material& material) {
+		auto foundMaterial = std::find_if(materials.begin(), materials.end(), [&mesh](const trg::Material& material) {
 			return &material.getMaterialInfo() == &mesh.getMaterialInfo();
 		});
 
-		assert(found != materials.end());
+		assert(foundMaterial != materials.end());
 
-		meshRenderers.emplace_back(
-			MeshRenderingInfo{.m_material = *found,
-							  // implement dynamic viewport
-							  // implement descriptorsetlayouts
-							  .m_graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, shaders, mesh.getBufferLayout()),
-							  .m_meshRenderer = trg::MeshRenderer(trg::MeshFilter{.m_mesh = mesh, .m_model = voyagerModel})});
+		std::vector<std::reference_wrapper<const trg::vkwrappers::DescriptorSetLayout>> descriptorSetLayouts;
+		descriptorSetLayouts.emplace_back(foundMaterial->getDescriptorSet().getLayout());
+
+		meshRenderers.emplace_back(MeshRenderingInfo{
+			.m_material = *foundMaterial,
+			// implement dynamic viewport
+			.m_graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, descriptorSetLayouts, shaders, mesh.getBufferLayout()),
+			.m_meshRenderer = trg::MeshRenderer(trg::MeshFilter{.m_mesh = mesh, .m_model = voyagerModel})});
 	}
 
 	std::vector<FrameContext> frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, meshRenderers);

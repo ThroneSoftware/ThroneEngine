@@ -64,6 +64,8 @@ namespace trg::vkwrappers
 															static_cast<uint32_t>(block.getStandardAttribute()),
 															toVkFormat(block.getComponentType(), block.getValueType())));
 			}
+
+			return bufferBlocks;
 		}
 	}  // namespace VertexBufferSignaturePrivate
 

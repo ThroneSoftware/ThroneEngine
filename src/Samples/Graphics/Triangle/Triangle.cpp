@@ -54,7 +54,7 @@ trg::vkwrappers::GraphicsPipeline makeGraphicsPipeline(trg::VulkanContext& vkCon
 													   trg::vkwrappers::RenderPass& renderPass,
 													   std::span<const trg::vkwrappers::Shader> shaders)
 {
-	std::vector<trg::vkwrappers::DescriptorSetLayout> descriptorSetLayouts;
+	std::vector<std::reference_wrapper<const trg::vkwrappers::DescriptorSetLayout>> descriptorSetLayouts;
 
 	std::vector<trg::vkwrappers::VertexBufferSignature> vertexBufferSignatures;
 	vertexBufferSignatures.emplace_back(trg::vkwrappers::VertexBufferSignature(

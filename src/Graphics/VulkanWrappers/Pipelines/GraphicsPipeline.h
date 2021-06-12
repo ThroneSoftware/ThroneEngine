@@ -14,7 +14,7 @@ namespace trg::vkwrappers
 	{
 	public:
 		GraphicsPipeline(vk::Device& device,
-						 std::span<const DescriptorSetLayout> descriptorSetLayouts,
+						 const std::vector<std::reference_wrapper<const DescriptorSetLayout>>& descriptorSetLayouts,
 						 std::vector<vk::PushConstantRange> pushContants,
 						 std::span<const Shader> shaders,
 						 std::span<const VertexBufferSignature> bufferSignatures,

@@ -30,7 +30,7 @@ namespace trg::vkwrappers
 												 layout);
 
 			vma::AllocationCreateInfo allocationCreateInfo = vma::AllocationCreateInfo();
-			allocationCreateInfo.usage = vma::MemoryUsage::eGpuOnly;
+			allocationCreateInfo.usage = vma::MemoryUsage::eCpuToGpu;
 
 			return g_vmaDefaultAllocator.createImage(imageInfo, allocationCreateInfo);
 		}
