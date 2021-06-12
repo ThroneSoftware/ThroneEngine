@@ -10,7 +10,7 @@ namespace trg
 	class Material
 	{
 	public:
-		Material(vk::Device& device, MaterialInfo&& materialInfo);
+		Material(vk::Device& device, MaterialInfo& materialInfo);
 
 		void bind(vkwrappers::BindableBindInfo& bindInfo);
 
@@ -18,7 +18,7 @@ namespace trg
 		std::span<const vkwrappers::Descriptor> getDescriptors() const;
 
 		// Do not change the order of the members because of the member initializer list.
-		MaterialInfo m_materialInfo;
+		MaterialInfo& m_materialInfo;
 
 		vkwrappers::Image m_baseColorImage;
 		vkwrappers::ImageSampler m_baseColorTexture;

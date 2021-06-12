@@ -104,7 +104,7 @@ namespace trg
 
 		struct Materials
 		{
-			std::vector<std::unique_ptr<MaterialInfo>> m_materials;
+			std::vector<MaterialInfo> m_materials;
 			std::vector<std::string> m_materialIds;
 
 			MaterialInfo& findMaterialInfo(const std::string& materialId)
@@ -119,7 +119,7 @@ namespace trg
 
 				auto index = std::distance(m_materialIds.begin(), found);
 
-				return *m_materials[index];
+				return m_materials[index];
 			}
 		};
 
@@ -148,14 +148,13 @@ namespace trg
 				return materials;
 			}
 
-			std::unique_ptr<MaterialInfo> readMaterial(const Microsoft::glTF::Material& gltfMaterial)
+			MaterialInfo readMaterial(const Microsoft::glTF::Material& gltfMaterial)
 			{
 				auto textureId = gltfMaterial.metallicRoughness.baseColorTexture.textureId;
 
 				auto baseColorFactor = gltfMaterial.metallicRoughness.baseColorFactor;
 				auto material =
-					std::make_unique<MaterialInfo>(gltfMaterial.name,
-												   glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
+					MaterialInfo(gltfMaterial.name, glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
 
 				if(!textureId.empty())
 				{
@@ -204,12 +203,11 @@ namespace trg
 						processedData.insert(processedData.begin(), span.begin(), span.end());
 					}
 
-					material->m_baseColorTexture =
-						std::make_unique<Image>(image.name,
-												getImageLayoutFromChannels(gsl::narrow<uint32_t>(channelsInFile)),
-												width,
-												height,
-												std::move(processedData));
+					material.m_baseColorTexture = std::make_unique<Image>(image.name,
+																		  getImageLayoutFromChannels(gsl::narrow<uint32_t>(channelsInFile)),
+																		  width,
+																		  height,
+																		  std::move(processedData));
 				}
 
 				return material;

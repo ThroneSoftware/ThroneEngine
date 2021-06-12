@@ -69,4 +69,9 @@ namespace trg
 	{
 		return m_indices;
 	}
+
+	const MaterialInfo& Mesh::getMaterialInfo() const
+	{
+		return m_materialInfo;
+	}
 }  // namespace trg

@@ -1,4 +1,5 @@
 #include <Graphics/GraphicsInstance.h>
+#include <Graphics/Meshes/MeshRenderer.h>
 #include <Graphics/Models/GltfLoader.h>
 
 #include <Graphics/VulkanContext.h>
@@ -19,6 +20,7 @@
 #include <gsl/gsl>
 
 #include <iostream>
+#include <unordered_map>
 
 trg::vkwrappers::Image makeDepthImage(trg::VulkanContext& vkContext)
 {
@@ -166,14 +168,14 @@ public:
 				 trg::vkwrappers::ImageView& swapchainImageView,
 				 trg::vkwrappers::RenderPass& renderPass,
 				 trg::vkwrappers::GraphicsPipeline& graphicsPipeline,
-				 trg::vkwrappers::VertexBuffer& vertexBuffer)
+				 std::unordered_map<trg::Material*, std::vector<trg::MeshRenderer>>& meshRenderers)
 	  : m_graphicsInstance(graphicsInstance)
 	  , m_vkContext(m_graphicsInstance.vulkanContext())
 	  , m_commandBuffer(commandBuffer)
 	  , m_swapchainImageView(swapchainImageView)
 	  , m_renderPass(renderPass)
 	  , m_graphicsPipeline(graphicsPipeline)
-	  , m_vertexBuffer(vertexBuffer)
+	  , m_meshRenderers(meshRenderers)
 	  , m_depthImage(makeDepthImage(m_vkContext))
 	  , m_frameBuffer(makeFrameBuffer(m_vkContext, m_swapchainImageView, m_depthImage, m_renderPass))
 	  , m_submitCommandBufferFinishedFence(makeFence(m_vkContext))
@@ -192,13 +194,20 @@ public:
 			auto renderPassScope =
 				trg::vkwrappers::RenderPassRecordScope(m_commandBuffer, m_vkContext, m_renderPass, m_frameBuffer, clearColor);
 
-			trg::vkwrappers::BindableBindInfo bindableBindInfo = {.commandBuffer = m_commandBuffer};
+			trg::vkwrappers::BindableBindInfo bindableBindInfo = {.m_commandBuffer = m_commandBuffer,
+																  .m_pipelineLayout = m_graphicsPipeline.getLayout()};
 
 			m_graphicsPipeline.bind(bindableBindInfo);
 
-			m_vertexBuffer.bind(bindableBindInfo);
+			for(auto& [material, renderers]: m_meshRenderers)
+			{
+				material->bind(bindableBindInfo);
 
-			m_commandBuffer->draw(3 /*vertexCount*/, 1 /*instanceCount*/, 0 /*firstVertex*/, 0 /*firstInstance*/);
+				for(auto& renderer: renderers)
+				{
+					renderer.render(bindableBindInfo);
+				}
+			}
 		}
 
 		std::vector submitWaitSemaphores = {*acquireNextImageSemaphore};
@@ -226,7 +235,7 @@ private:
 
 	trg::vkwrappers::GraphicsPipeline& m_graphicsPipeline;
 
-	trg::vkwrappers::VertexBuffer& m_vertexBuffer;
+	std::unordered_map<trg::Material*, std::vector<trg::MeshRenderer>>& m_meshRenderers;
 
 	trg::vkwrappers::Image m_depthImage;
 
@@ -241,7 +250,7 @@ auto makeFrameContexts(std::size_t frameContextCount,
 					   trg::vkwrappers::CommandPool& commandBuffers,
 					   trg::vkwrappers::RenderPass& renderPass,
 					   trg::vkwrappers::GraphicsPipeline& graphicsPipeline,
-					   trg::vkwrappers::VertexBuffer& vertexBuffer)
+					   std::unordered_map<trg::Material*, std::vector<trg::MeshRenderer>>& meshRenderers)
 {
 	std::vector<FrameContext> frameContexts;
 	frameContexts.reserve(frameContextCount);
@@ -253,7 +262,7 @@ auto makeFrameContexts(std::size_t frameContextCount,
 								   instance.vulkanContext().m_swapchain.getImageViews()[i],
 								   renderPass,
 								   graphicsPipeline,
-								   vertexBuffer);
+								   meshRenderers);
 	}
 
 	return frameContexts;
@@ -286,13 +295,23 @@ int main()
 
 	trg::GltfLoader gltfLoader;
 	auto voyagerModel = gltfLoader.loadFromFile("voyager.gltf");
+	std::vector<trg::Material> materials;
+	std::unordered_map<trg::Material*, std::vector<trg::MeshRenderer>> meshRenderers;
+	for(auto materialInfos = voyagerModel.getMaterials(); auto& materialInfo: materialInfos)
+	{
+		trg::Material& material = materials.emplace_back(trg::Material(vkContext.m_device, materialInfo));
 
-	auto vertexBuffer =
-		trg::vkwrappers::VertexBuffer(dataSize, vk::BufferUsageFlagBits::eVertexBuffer, vma::MemoryUsage::eCpuToGpu, 0 /*bindingIndex*/);
-	vertexBuffer.updateWithHostMemory(dataSize, triangleVertices.data());
+		for(auto& mesh: voyagerModel.getMeshes())
+		{
+			if(&mesh.getMaterialInfo() == &materialInfo)
+			{
+				meshRenderers[&material].emplace_back(trg::MeshFilter{.m_mesh = mesh, .m_model = voyagerModel});
+			}
+		}
+	}
 
 	std::vector<FrameContext> frameContexts =
-		makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, graphicsPipeline, vertexBuffer);
+		makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, graphicsPipeline, meshRenderers);
 
 	float deltaTime = 0;
 
@@ -313,7 +332,7 @@ int main()
 
 				graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, shaders);
 
-				frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, graphicsPipeline, vertexBuffer);
+				frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, graphicsPipeline, meshRenderers);
 			}
 
 			auto clearColor = glm::vec3(0.0f);

@@ -32,6 +32,8 @@ namespace trg
 		std::span<const float> getAttributeData() const;
 		std::span<const uint16_t> getIndexData() const;
 
+		const MaterialInfo& getMaterialInfo() const;
+
 	private:
 		std::string m_name;
 

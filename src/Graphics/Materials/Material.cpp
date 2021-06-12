@@ -2,8 +2,8 @@
 
 namespace trg
 {
-	Material::Material(vk::Device& device, MaterialInfo&& materialInfo)
-	  : m_materialInfo(std::move(materialInfo))
+	Material::Material(vk::Device& device, MaterialInfo& materialInfo)
+	  : m_materialInfo(materialInfo)
 	  , m_baseColorImage(
 			vkwrappers::Image(device,
 							  vk::ImageType::e2D,
