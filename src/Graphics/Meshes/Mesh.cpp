@@ -74,4 +74,17 @@ namespace trg
 	{
 		return m_materialInfo;
 	}
+
+	BufferLayout Mesh::getBufferLayout() const
+	{
+		BufferLayout layout;
+		layout.m_blocks.reserve(m_attributes.size());
+
+		for(const auto& attribute: m_attributes)
+		{
+			layout.m_blocks.emplace_back(attribute.m_bufferBlock);
+		}
+
+		return layout;
+	}
 }  // namespace trg

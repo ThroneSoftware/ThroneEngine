@@ -34,6 +34,8 @@ namespace trg
 
 		const MaterialInfo& getMaterialInfo() const;
 
+		BufferLayout getBufferLayout() const;
+
 	private:
 		std::string m_name;
 

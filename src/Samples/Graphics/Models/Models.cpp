@@ -62,16 +62,14 @@ trg::vkwrappers::FrameBuffer makeFrameBuffer(trg::VulkanContext& vkContext,
 
 trg::vkwrappers::GraphicsPipeline makeGraphicsPipeline(trg::VulkanContext& vkContext,
 													   trg::vkwrappers::RenderPass& renderPass,
-													   std::span<const trg::vkwrappers::Shader> shaders)
+													   std::span<const trg::vkwrappers::Shader> shaders,
+													   const trg::BufferLayout& bufferLayout)
 {
 	std::vector<trg::vkwrappers::DescriptorSetLayout> descriptorSetLayouts;
 
 	std::vector<trg::vkwrappers::VertexBufferSignature> vertexBufferSignatures;
-	vertexBufferSignatures.emplace_back(trg::vkwrappers::VertexBufferSignature(
-		0 /*bindingIndex*/,
-		vk::VertexInputRate::eVertex,
-		{trg::vkwrappers::VertexBufferBlock(sizeof(glm::vec3), 1 /*count*/, 0 /*location*/, vk::Format::eR32G32B32Sfloat),
-		 trg::vkwrappers::VertexBufferBlock(sizeof(glm::vec3), 1 /*count*/, 1 /*location*/, vk::Format::eR32G32B32Sfloat)}));
+	vertexBufferSignatures.emplace_back(
+		trg::vkwrappers::VertexBufferSignature(0 /*bindingIndex*/, vk::VertexInputRate::eVertex, bufferLayout));
 
 	auto inputAssemblyState =
 		vk::PipelineInputAssemblyStateCreateInfo({}, vk::PrimitiveTopology::eTriangleList, false /*primitiveRestartEnable*/);
@@ -308,9 +306,9 @@ int main()
 
 		meshRenderers.emplace_back(
 			MeshRenderingInfo{.m_material = *found,
-							  // implement bufferLayout to signature
 							  // implement dynamic viewport
-							  .m_graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, shaders),
+							  // implement descriptorsetlayouts
+							  .m_graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, shaders, mesh.getBufferLayout()),
 							  .m_meshRenderer = trg::MeshRenderer(trg::MeshFilter{.m_mesh = mesh, .m_model = voyagerModel})});
 	}
 
