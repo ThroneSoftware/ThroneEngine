@@ -23,7 +23,7 @@ namespace trg::vkwrappers
 												 mipmapCount,
 												 layerCount,
 												 samples,
-												 vk::ImageTiling::eOptimal,
+												 vk::ImageTiling::eLinear,
 												 usage,
 												 vk::SharingMode::eExclusive,
 												 {},

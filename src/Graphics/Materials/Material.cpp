@@ -4,16 +4,17 @@ namespace trg
 {
 	Material::Material(vk::Device& device, MaterialInfo& materialInfo)
 	  : m_materialInfo(materialInfo)
-	  , m_baseColorImage(
-			vkwrappers::Image(device,
-							  vk::ImageType::e2D,
-							  vkwrappers::imageLayoutToVkFormat(m_materialInfo.m_baseColorTexture->getLayout()),
-							  vk::Extent3D(m_materialInfo.m_baseColorTexture->getWidth(), m_materialInfo.m_baseColorTexture->getHeight()),
-							  1 /*mipmapCount*/,
-							  1 /*layerCount*/,
-							  vk::SampleCountFlagBits::e1,
-							  vk::ImageUsageFlagBits::eSampled,
-							  vk::ImageLayout::eShaderReadOnlyOptimal))
+		// add image view
+	  , m_baseColorImage(vkwrappers::Image(
+			device,
+			vk::ImageType::e2D,
+			vkwrappers::imageLayoutToVkFormat(m_materialInfo.m_baseColorTexture->getLayout()),
+			vk::Extent3D(m_materialInfo.m_baseColorTexture->getWidth(), m_materialInfo.m_baseColorTexture->getHeight(), 1 /*depth*/),
+			1 /*mipmapCount*/,
+			1 /*layerCount*/,
+			vk::SampleCountFlagBits::e1,
+			vk::ImageUsageFlagBits::eSampled,
+			vk::ImageLayout::eUndefined))
 	  , m_baseColorTexture(vkwrappers::ImageSampler(device, m_baseColorImage, vk::ShaderStageFlagBits::eAllGraphics))
 	  , m_descriptorSet(device, getDescriptors(), static_cast<uint32_t>(vkwrappers::StandardDescriptorSetLocations::Material))
 	{
