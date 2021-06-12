@@ -14,6 +14,8 @@ namespace trg
 
 		void bind(vkwrappers::BindableBindInfo& bindInfo);
 
+		const MaterialInfo& getMaterialInfo() const;
+
 	private:
 		std::span<const vkwrappers::Descriptor> getDescriptors() const;
 

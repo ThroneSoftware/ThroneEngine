@@ -22,6 +22,13 @@
 #include <iostream>
 #include <unordered_map>
 
+struct MeshRenderingInfo
+{
+	trg::Material& m_material;
+	trg::vkwrappers::GraphicsPipeline m_graphicsPipeline;
+	trg::MeshRenderer m_meshRenderer;
+};
+
 trg::vkwrappers::Image makeDepthImage(trg::VulkanContext& vkContext)
 {
 	auto depthImage = trg::vkwrappers::Image(vkContext.m_device,
@@ -167,14 +174,12 @@ public:
 				 trg::vkwrappers::CommandBuffer& commandBuffer,
 				 trg::vkwrappers::ImageView& swapchainImageView,
 				 trg::vkwrappers::RenderPass& renderPass,
-				 trg::vkwrappers::GraphicsPipeline& graphicsPipeline,
-				 std::unordered_map<trg::Material*, std::vector<trg::MeshRenderer>>& meshRenderers)
+				 std::vector<MeshRenderingInfo>& meshRenderers)
 	  : m_graphicsInstance(graphicsInstance)
 	  , m_vkContext(m_graphicsInstance.vulkanContext())
 	  , m_commandBuffer(commandBuffer)
 	  , m_swapchainImageView(swapchainImageView)
 	  , m_renderPass(renderPass)
-	  , m_graphicsPipeline(graphicsPipeline)
 	  , m_meshRenderers(meshRenderers)
 	  , m_depthImage(makeDepthImage(m_vkContext))
 	  , m_frameBuffer(makeFrameBuffer(m_vkContext, m_swapchainImageView, m_depthImage, m_renderPass))
@@ -194,19 +199,15 @@ public:
 			auto renderPassScope =
 				trg::vkwrappers::RenderPassRecordScope(m_commandBuffer, m_vkContext, m_renderPass, m_frameBuffer, clearColor);
 
-			trg::vkwrappers::BindableBindInfo bindableBindInfo = {.m_commandBuffer = m_commandBuffer,
-																  .m_pipelineLayout = m_graphicsPipeline.getLayout()};
-
-			m_graphicsPipeline.bind(bindableBindInfo);
-
-			for(auto& [material, renderers]: m_meshRenderers)
+			for(auto& renderer: m_meshRenderers)
 			{
-				material->bind(bindableBindInfo);
+				trg::vkwrappers::BindableBindInfo bindableBindInfo = {.m_commandBuffer = m_commandBuffer,
+																	  .m_pipelineLayout = renderer.m_graphicsPipeline.getLayout()};
 
-				for(auto& renderer: renderers)
-				{
-					renderer.render(bindableBindInfo);
-				}
+				renderer.m_graphicsPipeline.bind(bindableBindInfo);
+				renderer.m_material.bind(bindableBindInfo);
+
+				renderer.m_meshRenderer.render(bindableBindInfo);
 			}
 		}
 
@@ -233,9 +234,7 @@ private:
 
 	trg::vkwrappers::RenderPass& m_renderPass;
 
-	trg::vkwrappers::GraphicsPipeline& m_graphicsPipeline;
-
-	std::unordered_map<trg::Material*, std::vector<trg::MeshRenderer>>& m_meshRenderers;
+	std::vector<MeshRenderingInfo>& m_meshRenderers;
 
 	trg::vkwrappers::Image m_depthImage;
 
@@ -249,8 +248,7 @@ auto makeFrameContexts(std::size_t frameContextCount,
 					   trg::GraphicsInstance& instance,
 					   trg::vkwrappers::CommandPool& commandBuffers,
 					   trg::vkwrappers::RenderPass& renderPass,
-					   trg::vkwrappers::GraphicsPipeline& graphicsPipeline,
-					   std::unordered_map<trg::Material*, std::vector<trg::MeshRenderer>>& meshRenderers)
+					   std::vector<MeshRenderingInfo>& meshRenderers)
 {
 	std::vector<FrameContext> frameContexts;
 	frameContexts.reserve(frameContextCount);
@@ -261,7 +259,6 @@ auto makeFrameContexts(std::size_t frameContextCount,
 								   commandBuffers.getAll()[i],
 								   instance.vulkanContext().m_swapchain.getImageViews()[i],
 								   renderPass,
-								   graphicsPipeline,
 								   meshRenderers);
 	}
 
@@ -291,27 +288,33 @@ int main()
 	shaders.emplace_back(vkContext.m_device, "TriangleVert.spv", vk::ShaderStageFlagBits::eVertex);
 	shaders.emplace_back(vkContext.m_device, "TriangleFrag.spv", vk::ShaderStageFlagBits::eFragment);
 
-	auto graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, shaders);
 
 	trg::GltfLoader gltfLoader;
 	auto voyagerModel = gltfLoader.loadFromFile("voyager.gltf");
 	std::vector<trg::Material> materials;
-	std::unordered_map<trg::Material*, std::vector<trg::MeshRenderer>> meshRenderers;
 	for(auto materialInfos = voyagerModel.getMaterials(); auto& materialInfo: materialInfos)
 	{
-		trg::Material& material = materials.emplace_back(trg::Material(vkContext.m_device, materialInfo));
-
-		for(auto& mesh: voyagerModel.getMeshes())
-		{
-			if(&mesh.getMaterialInfo() == &materialInfo)
-			{
-				meshRenderers[&material].emplace_back(trg::MeshFilter{.m_mesh = mesh, .m_model = voyagerModel});
-			}
-		}
+		materials.emplace_back(trg::Material(vkContext.m_device, materialInfo));
 	}
 
-	std::vector<FrameContext> frameContexts =
-		makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, graphicsPipeline, meshRenderers);
+	std::vector<MeshRenderingInfo> meshRenderers;
+	for(auto& mesh: voyagerModel.getMeshes())
+	{
+		auto found = std::find_if(materials.begin(), materials.end(), [&mesh](const trg::Material& material) {
+			return &material.getMaterialInfo() == &mesh.getMaterialInfo();
+		});
+
+		assert(found != materials.end());
+
+		meshRenderers.emplace_back(
+			MeshRenderingInfo{.m_material = *found,
+							  // implement bufferLayout to signature
+							  // implement dynamic viewport
+							  .m_graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, shaders),
+							  .m_meshRenderer = trg::MeshRenderer(trg::MeshFilter{.m_mesh = mesh, .m_model = voyagerModel})});
+	}
+
+	std::vector<FrameContext> frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, meshRenderers);
 
 	float deltaTime = 0;
 
@@ -330,9 +333,7 @@ int main()
 			{
 				vkContext.m_device.waitIdle();
 
-				graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, shaders);
-
-				frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, graphicsPipeline, meshRenderers);
+				frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, meshRenderers);
 			}
 
 			auto clearColor = glm::vec3(0.0f);

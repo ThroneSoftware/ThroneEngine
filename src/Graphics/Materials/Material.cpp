@@ -30,4 +30,9 @@ namespace trg
 	{
 		return std::span(&m_baseColorTexture.getDescriptor(), 1);
 	}
+
+	const MaterialInfo& Material::getMaterialInfo() const
+	{
+		return m_materialInfo;
+	}
 }  // namespace trg
