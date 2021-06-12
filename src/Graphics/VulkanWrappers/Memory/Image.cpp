@@ -1,7 +1,7 @@
 #include "Image.h"
 
-#include "VmaAllocator.h"
 #include "..\..\Images\Image.h"
+#include "VmaAllocator.h"
 
 namespace trg::vkwrappers
 {
@@ -47,6 +47,7 @@ namespace trg::vkwrappers
 				 vk::ImageLayout layout)
 	  : m_device(device)
 	  , m_image(ImagePrivate::makeImage(type, format, dimensions, mipmapCount, layerCount, samples, usage, layout))
+	  , m_imageLayout(layout)
 	{
 	}
 
@@ -79,5 +80,15 @@ namespace trg::vkwrappers
 	std::span<const ImageView> Image::getImageViews() const
 	{
 		return m_imageViews;
+	}
+
+	vk::ImageLayout Image::getImageLayout() const
+	{
+		return m_imageLayout;
+	}
+
+	void Image::updateWithHostMemory(vk::DeviceSize dataSize, const void* srcData)
+	{
+		allocateHostMemory(dataSize, srcData, m_image.m_allocation);
 	}
 }  // namespace trg::vkwrappers

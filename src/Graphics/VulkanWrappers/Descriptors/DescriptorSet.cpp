@@ -6,14 +6,14 @@ namespace trg::vkwrappers
 {
 	namespace DescriptorSetPrivate
 	{
-		auto makeDescriptorPool(vk::Device& device, std::span<std::reference_wrapper<const Descriptor>> descriptors)
+		auto makeDescriptorPool(vk::Device& device, std::span<const Descriptor> descriptors)
 		{
 			std::vector<vk::DescriptorPoolSize> descriptorPoolSizes;
 			descriptorPoolSizes.reserve(descriptors.size());
 
 			for(const auto& descriptor: descriptors)
 			{
-				descriptorPoolSizes.emplace_back(descriptor.get().getDescriptorType(), descriptor.get().getDescriptorCount());
+				descriptorPoolSizes.emplace_back(descriptor.getDescriptorType(), descriptor.getDescriptorCount());
 			}
 
 			auto descriptorPoolCreateInfo = vk::DescriptorPoolCreateInfo({}, 1 /*maxSets*/, descriptorPoolSizes);
@@ -32,7 +32,7 @@ namespace trg::vkwrappers
 		}
 	}  // namespace DescriptorSetPrivate
 
-	DescriptorSet::DescriptorSet(vk::Device& device, std::span<std::reference_wrapper<const Descriptor>> descriptors, uint32_t setLocation)
+	DescriptorSet::DescriptorSet(vk::Device& device, std::span<const Descriptor> descriptors, uint32_t setLocation)
 	  : m_device(device)
 	  , m_descriptorPool(DescriptorSetPrivate::makeDescriptorPool(device, descriptors))
 	  , m_layout(device, descriptors)
@@ -72,16 +72,25 @@ namespace trg::vkwrappers
 		return &getVkHandle();
 	}
 
-	void DescriptorSet::update(std::span<std::reference_wrapper<const Descriptor>> descriptors)
+	void DescriptorSet::update(std::span<const Descriptor> descriptors)
 	{
 		std::vector<vk::WriteDescriptorSet> writeDescriptorSets;
 		writeDescriptorSets.reserve(descriptors.size());
 
 		for(size_t i = 0; i < descriptors.size(); ++i)
 		{
-			writeDescriptorSets.emplace_back(descriptors[i].get().getWriteDescriptorSet(*m_descriptorSet, gsl::narrow<uint32_t>(i)));
+			writeDescriptorSets.emplace_back(descriptors[i].getWriteDescriptorSet(*m_descriptorSet, gsl::narrow<uint32_t>(i)));
 		}
 
 		m_device.updateDescriptorSets(writeDescriptorSets, {});
+	}
+
+	void DescriptorSet::bind(vkwrappers::BindableBindInfo& bindInfo)
+	{
+		bindInfo.m_commandBuffer->bindDescriptorSets(vk::PipelineBindPoint::eGraphics,
+													 bindInfo.m_pipelineLayout,
+													 m_setLocation,
+													 *m_descriptorSet,
+													 {});
 	}
 }  // namespace trg::vkwrappers

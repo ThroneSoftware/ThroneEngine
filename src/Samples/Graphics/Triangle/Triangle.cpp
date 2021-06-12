@@ -191,7 +191,8 @@ public:
 			auto renderPassScope =
 				trg::vkwrappers::RenderPassRecordScope(m_commandBuffer, m_vkContext, m_renderPass, m_frameBuffer, clearColor);
 
-			trg::vkwrappers::BindableBindInfo bindableBindInfo = {.commandBuffer = m_commandBuffer};
+			trg::vkwrappers::BindableBindInfo bindableBindInfo = {.m_commandBuffer = m_commandBuffer,
+																  .m_pipelineLayout = m_graphicsPipeline.getLayout()};
 
 			m_graphicsPipeline.bind(bindableBindInfo);
 

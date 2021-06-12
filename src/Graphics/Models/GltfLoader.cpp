@@ -6,9 +6,13 @@
 #include <GLTFSDK/GLTFResourceReader.h>
 #include <Utilities/Files.h>
 
+#include <gsl/gsl>
+#include <stb_image.h>
+
 #include <fstream>
 #include <map>
 #include <optional>
+#include <span>
 
 namespace trg
 {
@@ -98,13 +102,135 @@ namespace trg
 			}
 		}
 
-		class DataReader
+		struct Materials
+		{
+			std::vector<std::unique_ptr<MaterialInfo>> m_materials;
+			std::vector<std::string> m_materialIds;
+
+			MaterialInfo& findMaterialInfo(const std::string& materialId)
+			{
+				assert(m_materials.size() == m_materialIds.size());
+
+				auto found = std::find_if(m_materialIds.begin(), m_materialIds.end(), [&materialId](const std::string& value) {
+					return value == materialId;
+				});
+
+				assert(found != m_materialIds.end());
+
+				auto index = std::distance(m_materialIds.begin(), found);
+
+				return *m_materials[index];
+			}
+		};
+
+		class MaterialReader
 		{
 		public:
-			DataReader(const Microsoft::glTF::GLTFResourceReader& resourceReader,
+			MaterialReader(const std::string& filename,
+						   const Microsoft::glTF::GLTFResourceReader& resourceReader,
+						   const Microsoft::glTF::Document& document)
+			  : m_filename(filename)
+			  , m_resourceReader(resourceReader)
+			  , m_document(document)
+			{
+			}
+
+			Materials readAllMaterials()
+			{
+				Materials materials;
+
+				for(const auto& material: m_document.materials.Elements())
+				{
+					materials.m_materials.emplace_back(readMaterial(material));
+					materials.m_materialIds.emplace_back(material.id);
+				}
+
+				return materials;
+			}
+
+			std::unique_ptr<MaterialInfo> readMaterial(const Microsoft::glTF::Material& gltfMaterial)
+			{
+				auto textureId = gltfMaterial.metallicRoughness.baseColorTexture.textureId;
+
+				auto baseColorFactor = gltfMaterial.metallicRoughness.baseColorFactor;
+				auto material =
+					std::make_unique<MaterialInfo>(gltfMaterial.name,
+												   glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
+
+				if(!textureId.empty())
+				{
+					const auto& texture = m_document.textures.Get(textureId);
+
+					const auto& image = m_document.images.Get(texture.imageId);
+
+					auto rawData = m_resourceReader.ReadBinaryData(m_document, image);
+
+					std::vector<std::uint8_t> processedData;
+
+					int width = 0;
+					int height = 0;
+					int channelsInFile = 0;
+
+					if(stbi_is_16_bit_from_memory(rawData.data(), gsl::narrow<int>(rawData.size())))
+					{
+						throw std::runtime_error(
+							fmt::format("16 bits images are not supported. File name: {}, Image name: {}", m_filename, image.name));
+					}
+					else
+					{
+						constexpr int desiredChannels = 4;
+
+						auto stbiDeleter = [](stbi_uc* data) {
+							stbi_image_free(data);
+						};
+						auto stbiProcessedData =
+							std::unique_ptr<stbi_uc, decltype(stbiDeleter)>(stbi_load_from_memory(rawData.data(),
+																								  gsl::narrow<int>(rawData.size()),
+																								  &width,
+																								  &height,
+																								  &channelsInFile,
+																								  desiredChannels),
+																			stbiDeleter);
+
+						if(width < 0 || height < 0)
+						{
+							throw std::runtime_error(fmt::format("width or heigh of an image cannot be 0. File name: {}, Image name: {}",
+																 m_filename,
+																 image.name));
+						}
+
+						auto span = std::span(stbiProcessedData.get(), width * height * channelsInFile);
+						processedData.reserve(span.size());
+						processedData.insert(processedData.begin(), span.begin(), span.end());
+					}
+
+					material->m_baseColorTexture =
+						std::make_unique<Image>(image.name,
+												getImageLayoutFromChannels(gsl::narrow<uint32_t>(channelsInFile)),
+												width,
+												height,
+												std::move(processedData));
+				}
+
+				return material;
+			}
+
+		private:
+			std::string m_filename;
+
+			const Microsoft::glTF::GLTFResourceReader& m_resourceReader;
+			const Microsoft::glTF::Document& m_document;
+		};
+
+		class MeshReader
+		{
+		public:
+			MeshReader(const std::string& filename,
+					   const Microsoft::glTF::GLTFResourceReader& resourceReader,
 					   const Microsoft::glTF::Document& document,
 					   const Microsoft::glTF::MeshPrimitive& meshPrimitive)
-			  : m_resourceReader(resourceReader)
+			  : m_filename(filename)
+			  , m_resourceReader(resourceReader)
 			  , m_document(document)
 			  , m_meshPrimitive(meshPrimitive)
 			{
@@ -143,30 +269,6 @@ namespace trg
 				return readAccessor<uint16_t>(m_meshPrimitive.indicesAccessorId);
 			}
 
-			std::unique_ptr<Material> readMaterial()
-			{
-				const auto& gltfMaterial = m_document.materials.Get(m_meshPrimitive.materialId);
-				auto textureId = gltfMaterial.metallicRoughness.baseColorTexture.textureId;
-
-				auto baseColorFactor = gltfMaterial.metallicRoughness.baseColorFactor;
-				auto material =
-					std::make_unique<Material>(gltfMaterial.name,
-											   glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
-
-				if(!textureId.empty())
-				{
-					const auto& texture = m_document.textures.Get(textureId);
-
-					const auto& image = m_document.images.Get(texture.imageId);
-
-					auto data = m_resourceReader.ReadBinaryData(m_document, image);
-
-					material->setBaseColorTexture(std::make_unique<Image>(image.name, std::move(data)));
-				}
-
-				return material;
-			}
-
 		private:
 			std::optional<std::string> getAccessorId(const std::string& accessorName)
 			{
@@ -199,6 +301,7 @@ namespace trg
 				return m_resourceReader.ReadBinaryData<T>(m_document, accessor);
 			}
 
+			std::string m_filename;
 
 			const Microsoft::glTF::GLTFResourceReader& m_resourceReader;
 			const Microsoft::glTF::Document& m_document;
@@ -227,21 +330,25 @@ namespace trg
 
 		Model model = Model(path.filename().replace_extension().string());
 
+		auto materialReader = GltfLoaderPrivate::MaterialReader(path.filename().string(), resourceReader, document);
+		auto materials = materialReader.readAllMaterials();
+
 		for(const auto& mesh: document.meshes.Elements())
 		{
 			for(const auto& meshPrimitive: mesh.primitives)
 			{
-				auto dataReader = GltfLoaderPrivate::DataReader(resourceReader, document, meshPrimitive);
+				auto dataReader = GltfLoaderPrivate::MeshReader(path.filename().string(), resourceReader, document, meshPrimitive);
 
 				auto attributes = dataReader.readMeshAttributes();
 
 				auto indices = dataReader.readIndices();
 
-				auto material = dataReader.readMaterial();
-
-				model.addMesh(Mesh(mesh.name, std::move(attributes), std::move(indices), std::move(material)));
+				model.addMesh(
+					Mesh(mesh.name, std::move(attributes), std::move(indices), materials.findMaterialInfo(meshPrimitive.materialId)));
 			}
 		}
+
+		model.setMaterials(std::move(materials.m_materials));
 
 		return model;
 	}

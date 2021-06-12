@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Bindable/Bindable.h"
 #include "Descriptor.h"
 #include "DescriptorSetLayout.h"
 
@@ -7,13 +8,26 @@
 
 namespace trg::vkwrappers
 {
+	enum class StandardDescriptorSetLocations : uint32_t
+	{
+		// Reserved range : [0, 7], [100 000, 4 294 967 295]
+		// User range : [8, 99 999]
+
+		Global = 0,
+		Scene = 1,
+		Material = 2,
+		Entity = 3,
+
+		NonStandard = std::numeric_limits<uint32_t>::max()
+	};
+
 	class DescriptorSet
 	{
 	public:
 		using VkHandleType = vk::DescriptorSet;
 
 	public:
-		DescriptorSet(vk::Device& device, std::span<std::reference_wrapper<const Descriptor>> descriptors, uint32_t setLocation);
+		DescriptorSet(vk::Device& device, std::span<const Descriptor> descriptors, uint32_t setLocation);
 
 		VkHandleType& getVkHandle();
 		const VkHandleType& getVkHandle() const;
@@ -24,7 +38,9 @@ namespace trg::vkwrappers
 		VkHandleType* operator->();
 		const VkHandleType* operator->() const;
 
-		void update(std::span<std::reference_wrapper<const Descriptor>> descriptors);
+		void update(std::span<const Descriptor> descriptors);
+
+		void bind(vkwrappers::BindableBindInfo& bindInfo);
 
 	private:
 		vk::Device& m_device;

@@ -1,5 +1,6 @@
 target_sources(Graphics PRIVATE 
 	BufferLayout.h
+	BuildDependencies/stb_image.cpp
 	GraphicsContext.cpp
 	GraphicsContext.h
 	GraphicsInstance.cpp
@@ -8,8 +9,12 @@ target_sources(Graphics PRIVATE
 	Images/Image.h
 	Materials/Material.cpp
 	Materials/Material.h
+	Materials/MaterialInfo.h
 	Meshes/Mesh.cpp
 	Meshes/Mesh.h
+	Meshes/MeshFilter.h
+	Meshes/MeshRenderer.cpp
+	Meshes/MeshRenderer.h
 	Models/GltfLoader.cpp
 	Models/GltfLoader.h
 	Models/Model.cpp
@@ -38,6 +43,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Descriptors/DescriptorSet.h
 	VulkanWrappers/Descriptors/DescriptorSetLayout.cpp
 	VulkanWrappers/Descriptors/DescriptorSetLayout.h
+	VulkanWrappers/Descriptors/ImageSampler.cpp
+	VulkanWrappers/Descriptors/ImageSampler.h
 	VulkanWrappers/FrameBuffer.cpp
 	VulkanWrappers/FrameBuffer.h
 	VulkanWrappers/Memory/Buffer.cpp
@@ -46,6 +53,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Memory/Image.h
 	VulkanWrappers/Memory/ImageView.cpp
 	VulkanWrappers/Memory/ImageView.h
+	VulkanWrappers/Memory/IndexBuffer.cpp
+	VulkanWrappers/Memory/IndexBuffer.h
 	VulkanWrappers/Memory/VertexBuffer.cpp
 	VulkanWrappers/Memory/VertexBuffer.h
 	VulkanWrappers/Memory/VmaAllocator.cpp

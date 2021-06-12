@@ -1,18 +1,17 @@
 #pragma once
 
+#include "../Memory/Image.h"
 #include "Descriptor.h"
-
-#include <Vulkan/vulkan.hpp>
 
 namespace trg::vkwrappers
 {
-	class DescriptorSetLayout
+	class ImageSampler
 	{
 	public:
-		using VkHandleType = vk::DescriptorSetLayout;
+		using VkHandleType = vk::Sampler;
 
 	public:
-		DescriptorSetLayout(vk::Device& device, std::span<const Descriptor> descriptors);
+		ImageSampler(vk::Device& device, const Image& image, vk::ShaderStageFlagBits shaderStage);
 
 		VkHandleType& getVkHandle();
 		const VkHandleType& getVkHandle() const;
@@ -23,7 +22,13 @@ namespace trg::vkwrappers
 		VkHandleType* operator->();
 		const VkHandleType* operator->() const;
 
+		const Descriptor& getDescriptor() const;
+
 	private:
-		vk::UniqueDescriptorSetLayout m_descriptorSetLayout;
+		vk::UniqueSampler m_sampler;
+
+		const Image& m_image;
+
+		Descriptor m_descriptor;
 	};
 }  // namespace trg::vkwrappers

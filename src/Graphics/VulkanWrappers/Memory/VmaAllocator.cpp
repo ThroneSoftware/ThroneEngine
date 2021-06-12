@@ -45,4 +45,17 @@ namespace trg::vkwrappers
 
 		g_vmaDefaultAllocator = vma::createAllocator(allocatorCreateInfo);
 	}
+
+	void allocateHostMemory(vk::DeviceSize dataSize, const void* srcData, vma::Allocation& allocation)
+	{
+		assert(dataSize > 0 && srcData != nullptr);
+
+		void* dstData = nullptr;
+		g_vmaDefaultAllocator.mapMemory(allocation, &dstData);
+		assert(dstData != nullptr);
+
+		memcpy(dstData, srcData, dataSize);
+
+		g_vmaDefaultAllocator.unmapMemory(allocation);
+	}
 }  // namespace trg::vkwrappers

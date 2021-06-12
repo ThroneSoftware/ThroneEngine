@@ -1,6 +1,8 @@
 #pragma once
 
+#include <algorithm>
 #include <cassert>
+#include <span>
 #include <type_traits>
 
 namespace tru
@@ -53,5 +55,11 @@ namespace tru
 			[](auto value) {
 				return value == comparedValue;
 			});
+	}
+
+	template <typename T>
+	bool allEqual(std::span<const T> values)
+	{
+		return std::adjacent_find(values.cbegin(), values.cend(), std::not_equal_to()) == values.end();
 	}
 }  // namespace tru

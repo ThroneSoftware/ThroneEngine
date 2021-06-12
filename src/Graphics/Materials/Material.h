@@ -1,26 +1,28 @@
 #pragma once
 
-#include "../Images/Image.h"
-
-#include <glm/glm.hpp>
-
-#include <memory>
-#include <string>
+#include "../VulkanWrappers/Bindable/Bindable.h"
+#include "../VulkanWrappers/Descriptors/DescriptorSet.h"
+#include "../VulkanWrappers/Descriptors/ImageSampler.h"
+#include "MaterialInfo.h"
 
 namespace trg
 {
 	class Material
 	{
 	public:
-		Material(const std::string& name, glm::vec4 baseColorFactor);
+		Material(vk::Device& device, MaterialInfo&& materialInfo);
 
-		void setBaseColorTexture(std::unique_ptr<Image> baseColorTexture);
+		void bind(vkwrappers::BindableBindInfo& bindInfo);
 
 	private:
-		std::string m_name;
+		std::span<const vkwrappers::Descriptor> getDescriptors() const;
 
-		// value in linear space.
-		glm::vec4 m_baseColorFactor;
-		std::unique_ptr<Image> m_baseColorTexture;
+		// Do not change the order of the members because of the member initializer list.
+		MaterialInfo m_materialInfo;
+
+		vkwrappers::Image m_baseColorImage;
+		vkwrappers::ImageSampler m_baseColorTexture;
+
+		vkwrappers::DescriptorSet m_descriptorSet;
 	};
 }  // namespace trg
