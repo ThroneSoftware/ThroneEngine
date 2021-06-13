@@ -39,7 +39,10 @@ namespace trg
 			vkwrappers::Swapchain m_swapchain;
 		};
 
-		vkwrappers::CommandQueue m_graphicsQueue;
+		union
+		{
+			vkwrappers::CommandQueue m_graphicsQueue;
+		};
 
 		std::atomic_bool hasWindowResizeEvent = false;
 		std::atomic_bool windowMinimized = false;

@@ -57,7 +57,7 @@ namespace trg
 			auto swapchain = makeSwapchain(*context->m_vkbDevice);
 			new(&context->m_swapchain) vkwrappers::Swapchain(context->m_device, swapchain);
 
-			context->m_graphicsQueue = makeGraphicsQueue(*context->m_vkbDevice);
+			new(&context->m_graphicsQueue) vkwrappers::CommandQueue(makeGraphicsQueue(context->m_device, *context->m_vkbDevice));
 
 			return context;
 		}

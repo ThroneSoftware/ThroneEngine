@@ -22,9 +22,9 @@ namespace trg::vkwrappers
 	{
 	}
 
-	void Buffer::updateWithHostMemory(vk::DeviceSize dataSize, const void* srcData)
+	void Buffer::updateWithHostMemory(tru::MemoryRegion memory)
 	{
-		allocateHostMemory(dataSize, srcData, m_buffer.m_allocation);
+		allocateHostMemory(memory, m_buffer.m_allocation);
 	}
 
 	Buffer::VkHandleType& Buffer::getVkHandle()

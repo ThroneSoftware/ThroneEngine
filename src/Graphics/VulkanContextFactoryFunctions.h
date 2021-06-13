@@ -131,9 +131,9 @@ namespace trg
 		return swapChainResult.value();
 	}
 
-	vkwrappers::CommandQueue makeGraphicsQueue(const vkb::Device& device)
+	vkwrappers::CommandQueue makeGraphicsQueue(vk::Device& vkDevice, const vkb::Device& vkbDevice)
 	{
-		auto queueResult = device.get_queue(vkb::QueueType::graphics);
+		auto queueResult = vkbDevice.get_queue(vkb::QueueType::graphics);
 
 		if(!queueResult.has_value())
 		{
@@ -142,7 +142,9 @@ namespace trg
 												 queueResult.error().message()));
 		}
 
-		return vkwrappers::CommandQueue(vk::Queue(queueResult.value()), device.get_queue_index(vkb::QueueType::graphics).value());
+		return vkwrappers::CommandQueue(vkDevice,
+										vk::Queue(queueResult.value()),
+										vkbDevice.get_queue_index(vkb::QueueType::graphics).value());
 	}
 
 	void glfwFrameBufferResizeCallback(GLFWwindow* window, int width, int height)

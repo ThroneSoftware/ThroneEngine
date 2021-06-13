@@ -23,7 +23,7 @@ namespace trg::vkwrappers
 
 		virtual ~Buffer() = default;
 
-		void updateWithHostMemory(vk::DeviceSize dataSize, const void* srcData);
+		void updateWithHostMemory(tru::MemoryRegion memory);
 
 	protected:
 		VkHandleType& getVkHandle();

@@ -4,9 +4,16 @@
 
 namespace trg::vkwrappers
 {
-	CommandQueue::CommandQueue(vk::Queue&& queue, uint32_t familyIndex)
+	CommandQueue::CommandQueue(vk::Device& device, vk::Queue&& queue, uint32_t familyIndex)
 	  : m_queue(std::move(queue))
 	  , m_familyIndex(familyIndex)
+	  , m_immediateFence(device)
+	  , m_immedidateCommandPool(device,
+								*this,
+								vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
+								1 /*numberOfCommandBuffers*/,
+								vk::CommandBufferLevel::ePrimary)
+	  , m_immediateCommandBuffer(m_immedidateCommandPool.getAll()[0])
 	{
 	}
 

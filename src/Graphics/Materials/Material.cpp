@@ -18,7 +18,7 @@ namespace trg
 				vk::SampleCountFlagBits::e1,
 				vk::ImageTiling::eLinear,
 				vk::ImageUsageFlagBits::eSampled,
-				vk::ImageLayout::eShaderReadOnlyOptimal,
+				vk::ImageLayout::eUndefined,
 				vma::MemoryUsage::eCpuToGpu);
 
 			image.addImageView(vk::ImageAspectFlagBits::eColor, vk::ImageViewType::e2D, imageFormat, 0 /*layer*/, 1 /*layerCount*/);
@@ -34,8 +34,7 @@ namespace trg
 	  //, m_descriptorSet(device, getDescriptors(), static_cast<uint32_t>(vkwrappers::StandardDescriptorSetLocations::Material))
 	  , m_descriptorSet(device, getDescriptors(), static_cast<uint32_t>(0))
 	{
-		m_baseColorImage.updateWithHostMemory(m_materialInfo.m_baseColorTexture->getData().size_bytes(),
-											  m_materialInfo.m_baseColorTexture->getData().data());
+		m_baseColorImage.updateWithHostMemory(m_materialInfo.m_baseColorTexture->getData());
 	}
 
 	void Material::bind(vkwrappers::BindableBindInfo& bindInfo)

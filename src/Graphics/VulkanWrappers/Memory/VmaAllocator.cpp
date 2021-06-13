@@ -46,15 +46,15 @@ namespace trg::vkwrappers
 		g_vmaDefaultAllocator = vma::createAllocator(allocatorCreateInfo);
 	}
 
-	void allocateHostMemory(vk::DeviceSize dataSize, const void* srcData, vma::Allocation& allocation)
+	void allocateHostMemory(tru::MemoryRegion memory, vma::Allocation& allocation)
 	{
-		assert(dataSize > 0 && srcData != nullptr);
+		assert(memory.byteSize > 0 && memory.data != nullptr);
 
 		void* dstData = nullptr;
 		g_vmaDefaultAllocator.mapMemory(allocation, &dstData);
 		assert(dstData != nullptr);
 
-		memcpy(dstData, srcData, dataSize);
+		memcpy(dstData, memory.data, memory.byteSize);
 
 		g_vmaDefaultAllocator.unmapMemory(allocation);
 	}

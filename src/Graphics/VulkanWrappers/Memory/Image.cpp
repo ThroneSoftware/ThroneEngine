@@ -1,6 +1,7 @@
 #include "Image.h"
 
 #include "..\..\Images\Image.h"
+#include "Buffer.h"
 #include "VmaAllocator.h"
 
 namespace trg::vkwrappers
@@ -92,8 +93,25 @@ namespace trg::vkwrappers
 		return m_imageLayout;
 	}
 
-	void Image::updateWithHostMemory(vk::DeviceSize dataSize, const void* srcData)
+	void Image::updateWithHostMemory(tru::MemoryRegion memory)
 	{
-		allocateHostMemory(dataSize, srcData, m_image.m_allocation);
+		allocateHostMemory(memory, m_image.m_allocation);
+	}
+
+	void Image::updateWithDeviceLocalMemory(CommandQueue& commandQueue,
+											tru::MemoryRegion memory,
+											vk::ImageAspectFlags aspectToUpdate,
+											vk::ImageLayout newLayout,
+											vk::AccessFlagBits newAccess,
+											vk::PipelineStageFlagBits newPipelineStage)
+	{
+		auto stagingBuffer = Buffer(memory.byteSize, vk::BufferUsageFlagBits::eTransferSrc, vma::MemoryUsage::eCpuToGpu);
+
+		stagingBuffer.updateWithHostMemory(memory);
+
+		auto command = [](CommandBuffer& commandBuffer) {
+		};
+
+		commandQueue.immediateSubmit(command);
 	}
 }  // namespace trg::vkwrappers

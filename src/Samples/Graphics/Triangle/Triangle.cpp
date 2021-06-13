@@ -290,10 +290,12 @@ int main()
 	std::vector<glm::vec3> triangleVertices =
 		{{0.0f, 0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {-0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}};
 
-	auto dataSize = triangleVertices.size() * sizeof(glm::vec3);
-	auto vertexBuffer =
-		trg::vkwrappers::VertexBuffer(dataSize, vk::BufferUsageFlagBits::eVertexBuffer, vma::MemoryUsage::eCpuToGpu, 0 /*bindingIndex*/);
-	vertexBuffer.updateWithHostMemory(dataSize, triangleVertices.data());
+	auto triangleMemory = tru::MemoryRegion(triangleVertices);
+	auto vertexBuffer = trg::vkwrappers::VertexBuffer(triangleMemory.byteSize,
+													  vk::BufferUsageFlagBits::eVertexBuffer,
+													  vma::MemoryUsage::eCpuToGpu,
+													  0 /*bindingIndex*/);
+	vertexBuffer.updateWithHostMemory(triangleMemory);
 
 	std::vector<FrameContext> frameContexts =
 		makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, graphicsPipeline, vertexBuffer);
