@@ -36,4 +36,24 @@ namespace trg::vkwrappers
 	{
 		return m_buffer.m_value;
 	}
+
+	Buffer::VkHandleType& Buffer::operator*()
+	{
+		return getVkHandle();
+	}
+
+	const Buffer::VkHandleType& Buffer::operator*() const
+	{
+		return getVkHandle();
+	}
+
+	Buffer::VkHandleType* Buffer::operator->()
+	{
+		return &getVkHandle();
+	}
+
+	const Buffer::VkHandleType* Buffer::operator->() const
+	{
+		return &getVkHandle();
+	}
 }  // namespace trg::vkwrappers

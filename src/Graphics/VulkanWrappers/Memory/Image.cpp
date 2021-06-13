@@ -15,7 +15,7 @@ namespace trg::vkwrappers
 					   uint32_t layerCount,
 					   vk::SampleCountFlagBits samples,
 					   vk::ImageTiling imageTiling,
-					   vk::ImageUsageFlagBits usage,
+					   vk::ImageUsageFlags usage,
 					   vk::ImageLayout layout,
 					   vma::MemoryUsage memoryUsage)
 		{
@@ -51,8 +51,17 @@ namespace trg::vkwrappers
 				 vk::ImageLayout layout,
 				 vma::MemoryUsage memoryUsage)
 	  : m_device(device)
-	  , m_image(
-			ImagePrivate::makeImage(type, format, dimensions, mipmapCount, layerCount, samples, imageTiling, usage, layout, memoryUsage))
+	  , m_dimensions(dimensions)
+	  , m_image(ImagePrivate::makeImage(type,
+										format,
+										dimensions,
+										mipmapCount,
+										layerCount,
+										samples,
+										imageTiling,
+										usage | vk::ImageUsageFlagBits::eTransferDst,
+										layout,
+										memoryUsage))
 	  , m_imageLayout(layout)
 	{
 	}
@@ -109,9 +118,58 @@ namespace trg::vkwrappers
 
 		stagingBuffer.updateWithHostMemory(memory);
 
-		auto command = [](CommandBuffer& commandBuffer) {
+		auto command = [this, aspectToUpdate, newAccess, newLayout, newPipelineStage, &stagingBuffer](CommandBuffer& commandBuffer) {
+			auto subresourceRange = vk::ImageSubresourceRange(aspectToUpdate,
+															  0 /*baseMipLevel*/,
+															  VK_REMAINING_MIP_LEVELS,
+															  0 /*baseArrayLayer*/,
+															  VK_REMAINING_ARRAY_LAYERS);
+
+			auto imageTransition = vk::ImageMemoryBarrier(m_accessFlags,
+														  vk::AccessFlagBits::eTransferWrite,
+														  m_imageLayout,
+														  vk::ImageLayout::eTransferDstOptimal,
+														  VK_QUEUE_FAMILY_IGNORED,
+														  VK_QUEUE_FAMILY_IGNORED,
+														  m_image.m_value,
+														  subresourceRange);
+
+			commandBuffer->pipelineBarrier(m_pipelineStage,
+										   vk::PipelineStageFlagBits::eTransfer,
+										   {} /*dependencyFlags*/,
+										   {} /*memoryBarriers*/,
+										   {} /*bufferMemoryBarriers*/,
+										   imageTransition);
+
+
+			auto imageSubresourcesLayer =
+				vk::ImageSubresourceLayers(aspectToUpdate, 0 /*mipLevel*/, 0 /*baseArrayLayer*/, 1 /*layerCount*/);
+			auto bufferRegion = vk::BufferImageCopy(0 /*bufferOffset*/,
+													0 /*bufferRowLength*/,
+													0 /*bufferImageHeight*/,
+													imageSubresourcesLayer,
+													{0, 0, 0} /*imageOffset*/,
+													m_dimensions);
+
+			commandBuffer->copyBufferToImage(*stagingBuffer, m_image.m_value, vk::ImageLayout::eTransferDstOptimal, bufferRegion);
+
+			imageTransition.srcAccessMask = imageTransition.dstAccessMask;
+			imageTransition.dstAccessMask = newAccess;
+			imageTransition.oldLayout = imageTransition.newLayout;
+			imageTransition.newLayout = newLayout;
+
+			commandBuffer->pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
+										   newPipelineStage,
+										   {} /*dependencyFlags*/,
+										   {} /*memoryBarriers*/,
+										   {} /*bufferMemoryBarriers*/,
+										   imageTransition);
 		};
 
 		commandQueue.immediateSubmit(command);
+
+		m_imageLayout = newLayout;
+		m_accessFlags = newAccess;
+		m_pipelineStage = newPipelineStage;
 	}
 }  // namespace trg::vkwrappers

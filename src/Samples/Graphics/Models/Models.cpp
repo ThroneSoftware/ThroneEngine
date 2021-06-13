@@ -294,7 +294,7 @@ int main()
 	std::vector<trg::Material> materials;
 	for(auto materialInfos = voyagerModel.getMaterials(); auto& materialInfo: materialInfos)
 	{
-		materials.emplace_back(trg::Material(vkContext.m_device, materialInfo));
+		materials.emplace_back(trg::Material(vkContext.m_device, vkContext.m_graphicsQueue, materialInfo));
 	}
 
 	std::vector<MeshRenderingInfo> meshRenderers;

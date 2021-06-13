@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../VulkanWrappers/Bindable/Bindable.h"
+#include "../VulkanWrappers/Commands/CommandQueue.h"
 #include "../VulkanWrappers/Descriptors/DescriptorSet.h"
 #include "../VulkanWrappers/Descriptors/ImageSampler.h"
 #include "MaterialInfo.h"
@@ -10,7 +11,7 @@ namespace trg
 	class Material
 	{
 	public:
-		Material(vk::Device& device, MaterialInfo& materialInfo);
+		Material(vk::Device& device, vkwrappers::CommandQueue& commandQueue, MaterialInfo& materialInfo);
 
 		void bind(vkwrappers::BindableBindInfo& bindInfo);
 

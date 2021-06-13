@@ -52,12 +52,14 @@ namespace trg::vkwrappers
 	private:
 		std::reference_wrapper<vk::Device> m_device;
 
+		vk::Extent3D m_dimensions;
+
 		VmaUnique<vk::Image> m_image;
 		std::vector<ImageView> m_imageViews;
 
 		vk::ImageLayout m_imageLayout;
 		vk::AccessFlagBits m_accessFlags = vk::AccessFlagBits::eNoneKHR;
-		vk::PipelineStageFlagBits m_pipelineStage = vk::PipelineStageFlagBits::eNoneKHR;
+		vk::PipelineStageFlagBits m_pipelineStage = vk::PipelineStageFlagBits::eTopOfPipe;
 	};
 
 	inline vk::Format imageLayoutToVkFormat(ImageLayout layout)

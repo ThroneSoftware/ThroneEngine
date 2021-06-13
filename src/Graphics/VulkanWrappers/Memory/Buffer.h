@@ -23,11 +23,16 @@ namespace trg::vkwrappers
 
 		virtual ~Buffer() = default;
 
-		void updateWithHostMemory(tru::MemoryRegion memory);
-
-	protected:
 		VkHandleType& getVkHandle();
 		const VkHandleType& getVkHandle() const;
+
+		VkHandleType& operator*();
+		const VkHandleType& operator*() const;
+
+		VkHandleType* operator->();
+		const VkHandleType* operator->() const;
+
+		void updateWithHostMemory(tru::MemoryRegion memory);
 
 	private:
 		VmaUnique<vk::Buffer> m_buffer;

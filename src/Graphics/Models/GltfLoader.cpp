@@ -168,7 +168,7 @@ namespace trg
 
 					int width = 0;
 					int height = 0;
-					int channelsInFile = 0;
+					constexpr int desiredChannels = 4;
 
 					if(stbi_is_16_bit_from_memory(rawData.data(), gsl::narrow<int>(rawData.size())))
 					{
@@ -177,7 +177,8 @@ namespace trg
 					}
 					else
 					{
-						constexpr int desiredChannels = 4;
+						// channelsInFile is ignored because stbi will convert the image to desiredChannels
+						int channelsInFile = 0;
 
 						auto stbiDeleter = [](stbi_uc* data) {
 							stbi_image_free(data);
@@ -198,34 +199,16 @@ namespace trg
 																 image.name));
 						}
 
-						auto span = std::span(stbiProcessedData.get(), width * height * channelsInFile);
-						constexpr auto maxColorValue = 255;
-						processedData.resize(width * height * desiredChannels, maxColorValue);
-
-						// 3 channel is often not supported so add alpha
-						if(channelsInFile == 3)
-						{
-							channelsInFile = 4;
-
-							auto pixelCount = width * height;
-
-							auto current = processedData.data();
-							for(size_t i = 0; i < pixelCount; ++i, current += 4)
-							{
-								memcpy(current, span.data() + (pixelCount * 3), 3 * sizeof(std::byte));
-							}
-						}
-						else
-						{
-							memcpy(processedData.data(), span.data(), span.size_bytes());
-						}
+						auto span = std::span(stbiProcessedData.get(), width * height * desiredChannels);
+						processedData.insert(processedData.begin(), span.begin(), span.end());
 					}
 
-					material.m_baseColorTexture = std::make_unique<Image>(image.name,
-																		  getImageLayoutFromChannels(gsl::narrow<uint32_t>(channelsInFile)),
-																		  width,
-																		  height,
-																		  std::move(processedData));
+					material.m_baseColorTexture =
+						std::make_unique<Image>(image.name,
+												getImageLayoutFromChannels(gsl::narrow<uint32_t>(desiredChannels)),
+												width,
+												height,
+												std::move(processedData));
 				}
 
 				return material;

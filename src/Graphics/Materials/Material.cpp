@@ -4,7 +4,7 @@ namespace trg
 {
 	namespace MaterialPrivate
 	{
-		vkwrappers::Image makeImage(vk::Device& device, MaterialInfo& materialInfo)
+		vkwrappers::Image makeImage(vk::Device& device, vkwrappers::CommandQueue& commandQueue, MaterialInfo& materialInfo)
 		{
 			auto imageFormat = vkwrappers::imageLayoutToVkFormat(materialInfo.m_baseColorTexture->getLayout());
 
@@ -16,25 +16,31 @@ namespace trg
 				1 /*mipmapCount*/,
 				1 /*layerCount*/,
 				vk::SampleCountFlagBits::e1,
-				vk::ImageTiling::eLinear,
+				vk::ImageTiling::eOptimal,
 				vk::ImageUsageFlagBits::eSampled,
 				vk::ImageLayout::eUndefined,
-				vma::MemoryUsage::eCpuToGpu);
+				vma::MemoryUsage::eGpuOnly);
 
 			image.addImageView(vk::ImageAspectFlagBits::eColor, vk::ImageViewType::e2D, imageFormat, 0 /*layer*/, 1 /*layerCount*/);
+
+			image.updateWithDeviceLocalMemory(commandQueue,
+											  materialInfo.m_baseColorTexture->getData(),
+											  vk::ImageAspectFlagBits::eColor,
+											  vk::ImageLayout::eShaderReadOnlyOptimal,
+											  vk::AccessFlagBits::eShaderRead,
+											  vk::PipelineStageFlagBits::eFragmentShader);
 
 			return image;
 		}
 	}  // namespace MaterialPrivate
 
-	Material::Material(vk::Device& device, MaterialInfo& materialInfo)
+	Material::Material(vk::Device& device, vkwrappers::CommandQueue& commandQueue, MaterialInfo& materialInfo)
 	  : m_materialInfo(materialInfo)
-	  , m_baseColorImage(MaterialPrivate::makeImage(device, m_materialInfo))
+	  , m_baseColorImage(MaterialPrivate::makeImage(device, commandQueue, m_materialInfo))
 	  , m_baseColorTexture(vkwrappers::ImageSampler(device, m_baseColorImage, vk::ShaderStageFlagBits::eAllGraphics))
 	  //, m_descriptorSet(device, getDescriptors(), static_cast<uint32_t>(vkwrappers::StandardDescriptorSetLocations::Material))
 	  , m_descriptorSet(device, getDescriptors(), static_cast<uint32_t>(0))
 	{
-		m_baseColorImage.updateWithHostMemory(m_materialInfo.m_baseColorTexture->getData());
 	}
 
 	void Material::bind(vkwrappers::BindableBindInfo& bindInfo)

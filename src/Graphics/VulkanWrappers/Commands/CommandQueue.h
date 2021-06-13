@@ -3,6 +3,7 @@
 #include "../Syncronization/Fence.h"
 #include "../Syncronization/SemaphorePool.h"
 #include "CommandBuffer.h"
+#include "CommandBufferRecordScope.h"
 #include "CommandPool.h"
 
 #include <Vulkan/vulkan.hpp>
@@ -46,12 +47,17 @@ namespace trg::vkwrappers
 		template <typename Func>
 		void immediateSubmit(Func&& func)
 		{
-			func(m_immediateCommandBuffer);
+			m_immediateFence.reset();
+
+			{
+				auto cmdScope = CommandBufferRecordScope(m_immediateCommandBuffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
+
+				func(m_immediateCommandBuffer);
+			}
 
 			submitCommandBuffer({}, {}, m_immediateCommandBuffer, {}, m_immediateFence);
 
 			m_immediateFence.wait();
-			m_immediateFence.reset();
 		}
 
 	private:
