@@ -75,8 +75,7 @@ namespace trg
 	{
 		auto messageTypes = vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral | vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance |
 							vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation;
-		auto severity = vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo | vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning |
-						vk::DebugUtilsMessageSeverityFlagBitsEXT::eError;
+		auto severity = vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning | vk::DebugUtilsMessageSeverityFlagBitsEXT::eError;
 
 		auto debugMessengerCreateInfo =
 			vk::DebugUtilsMessengerCreateInfoEXT(vk::DebugUtilsMessengerCreateFlagBitsEXT(0), severity, messageTypes, &debugCallback);

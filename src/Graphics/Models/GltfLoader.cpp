@@ -254,15 +254,15 @@ namespace trg
 
 			std::vector<MeshAttribute> readMeshAttributes()
 			{
-				static const std::map<std::string, StandardAttributes> supportedAttributes = {
+				static const std::vector<std::pair<std::string, StandardAttributes>> supportedAttributes = {
 					{Microsoft::glTF::ACCESSOR_POSITION, StandardAttributes::Position},
 					{Microsoft::glTF::ACCESSOR_NORMAL, StandardAttributes::Normal},
-					{Microsoft::glTF::ACCESSOR_COLOR_0, StandardAttributes::Color},
-					{Microsoft::glTF::ACCESSOR_TEXCOORD_0, StandardAttributes::TexCoords}};
+					{Microsoft::glTF::ACCESSOR_TEXCOORD_0, StandardAttributes::TexCoords},
+					{Microsoft::glTF::ACCESSOR_COLOR_0, StandardAttributes::Color}};
 
 				std::vector<MeshAttribute> attributes;
 
-				for(auto& attribute: supportedAttributes)
+				for(const auto& attribute: supportedAttributes)
 				{
 					readAttribute(attributes, attribute.first, attribute.second);
 				}

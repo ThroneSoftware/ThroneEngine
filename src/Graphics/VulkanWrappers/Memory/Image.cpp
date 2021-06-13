@@ -13,8 +13,10 @@ namespace trg::vkwrappers
 					   uint32_t mipmapCount,
 					   uint32_t layerCount,
 					   vk::SampleCountFlagBits samples,
+					   vk::ImageTiling imageTiling,
 					   vk::ImageUsageFlagBits usage,
-					   vk::ImageLayout layout)
+					   vk::ImageLayout layout,
+					   vma::MemoryUsage memoryUsage)
 		{
 			auto imageInfo = vk::ImageCreateInfo({},
 												 type,
@@ -23,14 +25,14 @@ namespace trg::vkwrappers
 												 mipmapCount,
 												 layerCount,
 												 samples,
-												 vk::ImageTiling::eLinear,
+												 imageTiling,
 												 usage,
 												 vk::SharingMode::eExclusive,
 												 {},
 												 layout);
 
 			vma::AllocationCreateInfo allocationCreateInfo = vma::AllocationCreateInfo();
-			allocationCreateInfo.usage = vma::MemoryUsage::eCpuToGpu;
+			allocationCreateInfo.usage = memoryUsage;
 
 			return g_vmaDefaultAllocator.createImage(imageInfo, allocationCreateInfo);
 		}
@@ -43,10 +45,13 @@ namespace trg::vkwrappers
 				 uint32_t mipmapCount,
 				 uint32_t layerCount,
 				 vk::SampleCountFlagBits samples,
+				 vk::ImageTiling imageTiling,
 				 vk::ImageUsageFlagBits usage,
-				 vk::ImageLayout layout)
+				 vk::ImageLayout layout,
+				 vma::MemoryUsage memoryUsage)
 	  : m_device(device)
-	  , m_image(ImagePrivate::makeImage(type, format, dimensions, mipmapCount, layerCount, samples, usage, layout))
+	  , m_image(
+			ImagePrivate::makeImage(type, format, dimensions, mipmapCount, layerCount, samples, imageTiling, usage, layout, memoryUsage))
 	  , m_imageLayout(layout)
 	{
 	}

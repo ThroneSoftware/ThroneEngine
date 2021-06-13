@@ -25,7 +25,7 @@ namespace trg
 		{
 			auto dataSize = meshFilter.m_mesh.getIndexData().size();
 
-			auto indexBuffer = vkwrappers::IndexBuffer(dataSize, vk::BufferUsageFlagBits::eVertexBuffer, vma::MemoryUsage::eCpuToGpu);
+			auto indexBuffer = vkwrappers::IndexBuffer(dataSize, vk::BufferUsageFlagBits::eIndexBuffer, vma::MemoryUsage::eCpuToGpu);
 
 			if(!meshFilter.m_mesh.getIndexData().empty())
 			{
@@ -48,7 +48,7 @@ namespace trg
 		m_vertexBuffer.bind(bindInfo);
 		m_indexBuffer.bind(bindInfo);
 
-		bindInfo.m_commandBuffer->drawIndexed(gsl::narrow<uint32_t>(m_meshFilter.m_mesh.getIndexData().size()),
+		bindInfo.m_commandBuffer->drawIndexed(gsl::narrow<uint32_t>(m_meshFilter.m_mesh.getIndexData().size()) / 3,
 											  1 /*instanceCount*/,
 											  0 /*firstIndex*/,
 											  0 /*vertexOffset*/,

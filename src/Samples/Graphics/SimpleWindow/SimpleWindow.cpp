@@ -27,8 +27,10 @@ trg::vkwrappers::Image makeDepthImage(trg::VulkanContext& vkContext)
 											 1,
 											 1,
 											 vk::SampleCountFlagBits::e1,
+											 vk::ImageTiling::eOptimal,
 											 vk::ImageUsageFlagBits::eDepthStencilAttachment,
-											 vk::ImageLayout::eUndefined);
+											 vk::ImageLayout::eUndefined,
+											 vma::MemoryUsage::eGpuOnly);
 
 	depthImage.addImageView(vk::ImageAspectFlagBits::eDepth, vk::ImageViewType::e2D, vk::Format::eD32Sfloat, 0, 1);
 

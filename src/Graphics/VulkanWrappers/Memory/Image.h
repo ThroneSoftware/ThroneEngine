@@ -21,8 +21,10 @@ namespace trg::vkwrappers
 			  uint32_t mipmapCount,
 			  uint32_t layerCount,
 			  vk::SampleCountFlagBits samples,
+			  vk::ImageTiling imageTiling,
 			  vk::ImageUsageFlagBits usage,
-			  vk::ImageLayout layout);
+			  vk::ImageLayout layout,
+			  vma::MemoryUsage memoryUsage);
 
 		void addImageView(vk::ImageAspectFlagBits aspect,
 						  vk::ImageViewType viewType,
