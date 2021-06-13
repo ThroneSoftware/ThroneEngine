@@ -23,7 +23,7 @@ namespace trg
 
 		vkwrappers::IndexBuffer makeIndexBuffer(const MeshFilter& meshFilter)
 		{
-			auto dataSize = meshFilter.m_mesh.getIndexData().size();
+			auto dataSize = meshFilter.m_mesh.getIndexData().size_bytes();
 
 			auto indexBuffer = vkwrappers::IndexBuffer(dataSize, vk::BufferUsageFlagBits::eIndexBuffer, vma::MemoryUsage::eCpuToGpu);
 
@@ -48,7 +48,7 @@ namespace trg
 		m_vertexBuffer.bind(bindInfo);
 		m_indexBuffer.bind(bindInfo);
 
-		bindInfo.m_commandBuffer->drawIndexed(gsl::narrow<uint32_t>(m_meshFilter.m_mesh.getIndexData().size()) / 3,
+		bindInfo.m_commandBuffer->drawIndexed(gsl::narrow<uint32_t>(m_meshFilter.m_mesh.getIndexData().size()),
 											  1 /*instanceCount*/,
 											  0 /*firstIndex*/,
 											  0 /*vertexOffset*/,
