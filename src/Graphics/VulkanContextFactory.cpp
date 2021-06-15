@@ -32,7 +32,7 @@ namespace trg
 			auto context = std::make_unique<VulkanContext>();
 
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-			context->m_swapchainExtent = vk::Extent2D(1024, 768);
+			context->m_swapchainExtent = vk::Extent2D(1280, 720);
 			context->m_window =
 				glfwCreateWindow(context->m_swapchainExtent.width, context->m_swapchainExtent.height, "Throne", nullptr, nullptr);
 			glfwSetWindowUserPointer(context->m_window, context.get());

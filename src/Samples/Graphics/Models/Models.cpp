@@ -302,11 +302,11 @@ int main()
 	auto acquireNextImageSemaphores = trg::vkwrappers::SemaphorePool(vkContext.m_device, frameContextCount);
 
 
-	auto viewProjectionMatrix = glm::perspective(glm::radians(90.0f),
-												 static_cast<float>(vkContext.m_swapchainExtent.width / vkContext.m_swapchainExtent.height),
+	auto viewProjectionMatrix = glm::perspective(glm::radians(60.0f),
+												 vkContext.m_swapchainExtent.width / static_cast<float>(vkContext.m_swapchainExtent.height),
 												 0.1f,
-												 1000.0f) *
-								glm::lookAt(glm::vec3{15, 0, 0}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0});
+												 256.0f) *
+								glm::lookAt(glm::vec3{15, 0, -6}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0});
 
 	auto viewProjectionUniformBuffer =
 		trg::vkwrappers::UniformBuffer(sizeof(glm::mat4),
