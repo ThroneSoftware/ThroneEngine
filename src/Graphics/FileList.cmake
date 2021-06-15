@@ -45,6 +45,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Descriptors/DescriptorSetLayout.h
 	VulkanWrappers/Descriptors/ImageSampler.cpp
 	VulkanWrappers/Descriptors/ImageSampler.h
+	VulkanWrappers/Descriptors/UniformBuffer.cpp
+	VulkanWrappers/Descriptors/UniformBuffer.h
 	VulkanWrappers/FrameBuffer.cpp
 	VulkanWrappers/FrameBuffer.h
 	VulkanWrappers/Memory/Buffer.cpp

@@ -2,11 +2,13 @@
 #include <Graphics/Meshes/MeshRenderer.h>
 #include <Graphics/Models/GltfLoader.h>
 
+#include <Glm/gtc/type_ptr.hpp>
 #include <Graphics/VulkanContext.h>
 #include <Graphics/VulkanContextFactory.h>
 #include <Graphics/VulkanWrappers/Commands/CommandBufferRecordScope.h>
 #include <Graphics/VulkanWrappers/Commands/CommandPool.h>
 #include <Graphics/VulkanWrappers/Commands/RenderPassRecordScope.h>
+#include <Graphics/VulkanWrappers/Descriptors/UniformBuffer.h>
 #include <Graphics/VulkanWrappers/FrameBuffer.h>
 #include <Graphics/VulkanWrappers/Memory/Image.h>
 #include <Graphics/VulkanWrappers/Memory/VertexBuffer.h>
@@ -174,12 +176,16 @@ public:
 				 trg::vkwrappers::CommandBuffer& commandBuffer,
 				 trg::vkwrappers::ImageView& swapchainImageView,
 				 trg::vkwrappers::RenderPass& renderPass,
+				 trg::vkwrappers::DescriptorSet& globalDescriptorSet,
+				 trg::vkwrappers::DescriptorSet& sceneDescriptorSet,
 				 std::vector<MeshRenderingInfo>& meshRenderers)
 	  : m_graphicsInstance(graphicsInstance)
 	  , m_vkContext(m_graphicsInstance.vulkanContext())
 	  , m_commandBuffer(commandBuffer)
 	  , m_swapchainImageView(swapchainImageView)
 	  , m_renderPass(renderPass)
+	  , m_globalDescriptorSet(globalDescriptorSet)
+	  , m_sceneDescriptorSet(sceneDescriptorSet)
 	  , m_meshRenderers(meshRenderers)
 	  , m_depthImage(makeDepthImage(m_vkContext))
 	  , m_frameBuffer(makeFrameBuffer(m_vkContext, m_swapchainImageView, m_depthImage, m_renderPass))
@@ -199,10 +205,14 @@ public:
 			auto renderPassScope =
 				trg::vkwrappers::RenderPassRecordScope(m_commandBuffer, m_vkContext, m_renderPass, m_frameBuffer, clearColor);
 
+
 			for(auto& renderer: m_meshRenderers)
 			{
 				trg::vkwrappers::BindableBindInfo bindableBindInfo = {.m_commandBuffer = m_commandBuffer,
 																	  .m_pipelineLayout = renderer.m_graphicsPipeline.getLayout()};
+
+				m_globalDescriptorSet.bind(bindableBindInfo);
+				//m_sceneDescriptorSet.bind(bindableBindInfo);
 
 				renderer.m_graphicsPipeline.bind(bindableBindInfo);
 				renderer.m_material.bind(bindableBindInfo);
@@ -234,6 +244,9 @@ private:
 
 	trg::vkwrappers::RenderPass& m_renderPass;
 
+	trg::vkwrappers::DescriptorSet& m_globalDescriptorSet;
+	trg::vkwrappers::DescriptorSet& m_sceneDescriptorSet;
+
 	std::vector<MeshRenderingInfo>& m_meshRenderers;
 
 	trg::vkwrappers::Image m_depthImage;
@@ -248,6 +261,8 @@ auto makeFrameContexts(std::size_t frameContextCount,
 					   trg::GraphicsInstance& instance,
 					   trg::vkwrappers::CommandPool& commandBuffers,
 					   trg::vkwrappers::RenderPass& renderPass,
+					   trg::vkwrappers::DescriptorSet& globalDescriptorSet,
+					   trg::vkwrappers::DescriptorSet& sceneDescriptorSet,
 					   std::vector<MeshRenderingInfo>& meshRenderers)
 {
 	std::vector<FrameContext> frameContexts;
@@ -259,6 +274,8 @@ auto makeFrameContexts(std::size_t frameContextCount,
 								   commandBuffers.getAll()[i],
 								   instance.vulkanContext().m_swapchain.getImageViews()[i],
 								   renderPass,
+								   globalDescriptorSet,
+								   sceneDescriptorSet,
 								   meshRenderers);
 	}
 
@@ -284,6 +301,31 @@ int main()
 
 	auto acquireNextImageSemaphores = trg::vkwrappers::SemaphorePool(vkContext.m_device, frameContextCount);
 
+
+	auto viewProjectionMatrix = glm::perspective(glm::radians(90.0f),
+												 static_cast<float>(vkContext.m_swapchainExtent.width / vkContext.m_swapchainExtent.height),
+												 0.1f,
+												 1000.0f) *
+								glm::lookAt(glm::vec3{15, 0, 0}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0});
+
+	auto viewProjectionUniformBuffer =
+		trg::vkwrappers::UniformBuffer(sizeof(glm::mat4),
+									   vk::BufferUsageFlagBits::eUniformBuffer,
+									   vma::MemoryUsage::eCpuToGpu,
+									   vk::ShaderStageFlagBits::eVertex | vk::ShaderStageFlagBits::eFragment);
+	viewProjectionUniformBuffer.updateWithHostMemory(tru::MemoryRegion(glm::value_ptr(viewProjectionMatrix), sizeof(glm::mat4)));
+
+	auto globalDescriptorSet =
+		trg::vkwrappers::DescriptorSet(vkContext.m_device,
+									   std::span(&viewProjectionUniformBuffer.getDescriptor(), 1),
+									   static_cast<uint32_t>(trg::vkwrappers::StandardDescriptorSetLocations::Global));
+
+
+	// replace with emptyLayout
+	auto sceneDescriptorSet = trg::vkwrappers::DescriptorSet(vkContext.m_device,
+															 {},
+															 static_cast<uint32_t>(trg::vkwrappers::StandardDescriptorSetLocations::Scene));
+
 	std::vector<trg::vkwrappers::Shader> shaders;
 	shaders.emplace_back(vkContext.m_device, "TriangleVert.spv", vk::ShaderStageFlagBits::eVertex);
 	shaders.emplace_back(vkContext.m_device, "TriangleFrag.spv", vk::ShaderStageFlagBits::eFragment);
@@ -307,6 +349,8 @@ int main()
 		assert(foundMaterial != materials.end());
 
 		std::vector<std::reference_wrapper<const trg::vkwrappers::DescriptorSetLayout>> descriptorSetLayouts;
+		descriptorSetLayouts.emplace_back(globalDescriptorSet.getLayout());
+		descriptorSetLayouts.emplace_back(sceneDescriptorSet.getLayout());
 		descriptorSetLayouts.emplace_back(foundMaterial->getDescriptorSet().getLayout());
 
 		meshRenderers.emplace_back(MeshRenderingInfo{
@@ -316,7 +360,8 @@ int main()
 			.m_meshRenderer = trg::MeshRenderer(trg::MeshFilter{.m_mesh = mesh, .m_model = voyagerModel})});
 	}
 
-	std::vector<FrameContext> frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, meshRenderers);
+	std::vector<FrameContext> frameContexts =
+		makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, globalDescriptorSet, sceneDescriptorSet, meshRenderers);
 
 	float deltaTime = 0;
 
@@ -335,7 +380,13 @@ int main()
 			{
 				vkContext.m_device.waitIdle();
 
-				frameContexts = makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, meshRenderers);
+				frameContexts = makeFrameContexts(frameContextCount,
+												  instance,
+												  commandBuffers,
+												  renderPass,
+												  globalDescriptorSet,
+												  sceneDescriptorSet,
+												  meshRenderers);
 			}
 
 			auto clearColor = glm::vec3(0.0f);

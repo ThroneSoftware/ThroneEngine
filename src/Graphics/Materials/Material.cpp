@@ -38,8 +38,7 @@ namespace trg
 	  : m_materialInfo(materialInfo)
 	  , m_baseColorImage(MaterialPrivate::makeImage(device, commandQueue, m_materialInfo))
 	  , m_baseColorTexture(vkwrappers::ImageSampler(device, m_baseColorImage, vk::ShaderStageFlagBits::eAllGraphics))
-	  //, m_descriptorSet(device, getDescriptors(), static_cast<uint32_t>(vkwrappers::StandardDescriptorSetLocations::Material))
-	  , m_descriptorSet(device, getDescriptors(), static_cast<uint32_t>(0))
+	  , m_descriptorSet(device, getDescriptors(), static_cast<uint32_t>(vkwrappers::StandardDescriptorSetLocations::Material))
 	{
 	}
 

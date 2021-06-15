@@ -1,11 +1,19 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include <ranges>
 
 namespace tru
 {
 	struct MemoryRegion
 	{
+		MemoryRegion(const void* data, size_t byteSize)
+		  : data(data)
+		  , byteSize(byteSize)
+		{
+		}
+
 		template <std::ranges::range Range>
 		MemoryRegion(Range&& range)
 		  : data(std::ranges::data(range))
