@@ -16,7 +16,8 @@ namespace trg::vkwrappers
 				descriptorPoolSizes.emplace_back(descriptor.getDescriptorType(), descriptor.getDescriptorCount());
 			}
 
-			auto descriptorPoolCreateInfo = vk::DescriptorPoolCreateInfo({}, 1 /*maxSets*/, descriptorPoolSizes);
+			auto descriptorPoolCreateInfo =
+				vk::DescriptorPoolCreateInfo(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet, 1 /*maxSets*/, descriptorPoolSizes);
 
 			return device.createDescriptorPoolUnique(descriptorPoolCreateInfo);
 		}

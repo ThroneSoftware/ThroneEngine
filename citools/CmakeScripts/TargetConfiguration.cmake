@@ -65,9 +65,11 @@ function(setCompileOptions target_name)
         target_compile_options(${target_name} PRIVATE "$<$<CONFIG:DEBUG>:/MTd>") 
         # Compile options only in release mode
         target_compile_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/Oi;/Ot;/GL;/MT>") 
+        target_compile_options(${target_name} PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:/Oi;/Ot;/GL;/MT>") 
         
         # Adds linker options to release mode
         target_link_options(${target_name} PRIVATE "$<$<CONFIG:RELEASE>:/LTCG:INCREMENTAL>")
+        target_link_options(${target_name} PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:/LTCG:INCREMENTAL>")
 
     else()
         message(FATAL_ERROR "Unsupported compiler. Add the proper compile options to the specified compiler to activate it.\ 

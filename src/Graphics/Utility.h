@@ -6,25 +6,26 @@
 
 namespace trg
 {
-	template <typename T>
-	auto toVkHandle(std::span<T> span)
+	template <typename T, std::ranges::range Range>
+	auto rangeToVkHandle(Range&& range)
 	{
 		std::vector<typename T::VkHandleType> vec;
-		vec.reserve(span.size());
-		std::transform(span.begin(), span.end(), std::back_inserter(vec), [](T& value) {
+		vec.reserve(std::ranges::size(range));
+		std::transform(std::ranges::begin(range), std::ranges::end(range), std::back_inserter(vec), [](T& value) {
 			return value.getVkHandle();
 		});
 		return vec;
 	}
 
 	template <typename T>
+	auto toVkHandle(std::span<T> span)
+	{
+		return rangeToVkHandle<T>(span);
+	}
+
+	template <typename T>
 	auto toVkHandle(std::vector<std::reference_wrapper<T>> references)
 	{
-		std::vector<typename T::VkHandleType> vec;
-		vec.reserve(references.size());
-		std::transform(references.begin(), references.end(), std::back_inserter(vec), [](T& value) {
-			return value.getVkHandle();
-		});
-		return vec;
+		return rangeToVkHandle<T>(references);
 	}
 }  // namespace trg

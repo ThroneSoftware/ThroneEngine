@@ -177,7 +177,6 @@ public:
 				 trg::vkwrappers::ImageView& swapchainImageView,
 				 trg::vkwrappers::RenderPass& renderPass,
 				 trg::vkwrappers::DescriptorSet& globalDescriptorSet,
-				 trg::vkwrappers::DescriptorSet& sceneDescriptorSet,
 				 std::vector<MeshRenderingInfo>& meshRenderers)
 	  : m_graphicsInstance(graphicsInstance)
 	  , m_vkContext(m_graphicsInstance.vulkanContext())
@@ -185,7 +184,6 @@ public:
 	  , m_swapchainImageView(swapchainImageView)
 	  , m_renderPass(renderPass)
 	  , m_globalDescriptorSet(globalDescriptorSet)
-	  , m_sceneDescriptorSet(sceneDescriptorSet)
 	  , m_meshRenderers(meshRenderers)
 	  , m_depthImage(makeDepthImage(m_vkContext))
 	  , m_frameBuffer(makeFrameBuffer(m_vkContext, m_swapchainImageView, m_depthImage, m_renderPass))
@@ -212,7 +210,6 @@ public:
 																	  .m_pipelineLayout = renderer.m_graphicsPipeline.getLayout()};
 
 				m_globalDescriptorSet.bind(bindableBindInfo);
-				//m_sceneDescriptorSet.bind(bindableBindInfo);
 
 				renderer.m_graphicsPipeline.bind(bindableBindInfo);
 				renderer.m_material.bind(bindableBindInfo);
@@ -245,7 +242,6 @@ private:
 	trg::vkwrappers::RenderPass& m_renderPass;
 
 	trg::vkwrappers::DescriptorSet& m_globalDescriptorSet;
-	trg::vkwrappers::DescriptorSet& m_sceneDescriptorSet;
 
 	std::vector<MeshRenderingInfo>& m_meshRenderers;
 
@@ -262,7 +258,6 @@ auto makeFrameContexts(std::size_t frameContextCount,
 					   trg::vkwrappers::CommandPool& commandBuffers,
 					   trg::vkwrappers::RenderPass& renderPass,
 					   trg::vkwrappers::DescriptorSet& globalDescriptorSet,
-					   trg::vkwrappers::DescriptorSet& sceneDescriptorSet,
 					   std::vector<MeshRenderingInfo>& meshRenderers)
 {
 	std::vector<FrameContext> frameContexts;
@@ -275,7 +270,6 @@ auto makeFrameContexts(std::size_t frameContextCount,
 								   instance.vulkanContext().m_swapchain.getImageViews()[i],
 								   renderPass,
 								   globalDescriptorSet,
-								   sceneDescriptorSet,
 								   meshRenderers);
 	}
 
@@ -321,10 +315,7 @@ int main()
 									   static_cast<uint32_t>(trg::vkwrappers::StandardDescriptorSetLocations::Global));
 
 
-	// replace with emptyLayout
-	auto sceneDescriptorSet = trg::vkwrappers::DescriptorSet(vkContext.m_device,
-															 {},
-															 static_cast<uint32_t>(trg::vkwrappers::StandardDescriptorSetLocations::Scene));
+	const auto emptyDescriptorSetLayout = trg::vkwrappers::DescriptorSetLayout(vkContext.m_device, {});
 
 	std::vector<trg::vkwrappers::Shader> shaders;
 	shaders.emplace_back(vkContext.m_device, "TriangleVert.spv", vk::ShaderStageFlagBits::eVertex);
@@ -350,7 +341,7 @@ int main()
 
 		std::vector<std::reference_wrapper<const trg::vkwrappers::DescriptorSetLayout>> descriptorSetLayouts;
 		descriptorSetLayouts.emplace_back(globalDescriptorSet.getLayout());
-		descriptorSetLayouts.emplace_back(sceneDescriptorSet.getLayout());
+		descriptorSetLayouts.emplace_back(emptyDescriptorSetLayout);
 		descriptorSetLayouts.emplace_back(foundMaterial->getDescriptorSet().getLayout());
 
 		meshRenderers.emplace_back(MeshRenderingInfo{
@@ -361,7 +352,7 @@ int main()
 	}
 
 	std::vector<FrameContext> frameContexts =
-		makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, globalDescriptorSet, sceneDescriptorSet, meshRenderers);
+		makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, globalDescriptorSet, meshRenderers);
 
 	float deltaTime = 0;
 
@@ -380,13 +371,8 @@ int main()
 			{
 				vkContext.m_device.waitIdle();
 
-				frameContexts = makeFrameContexts(frameContextCount,
-												  instance,
-												  commandBuffers,
-												  renderPass,
-												  globalDescriptorSet,
-												  sceneDescriptorSet,
-												  meshRenderers);
+				frameContexts =
+					makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, globalDescriptorSet, meshRenderers);
 			}
 
 			auto clearColor = glm::vec3(0.0f);
