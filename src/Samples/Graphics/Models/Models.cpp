@@ -78,15 +78,6 @@ trg::vkwrappers::GraphicsPipeline
 	auto inputAssemblyState =
 		vk::PipelineInputAssemblyStateCreateInfo({}, vk::PrimitiveTopology::eTriangleList, false /*primitiveRestartEnable*/);
 
-	auto viewport = vk::Viewport(0.0f /*x*/,
-								 static_cast<float>(vkContext.m_swapchainExtent.height),
-								 static_cast<float>(vkContext.m_swapchainExtent.width),
-								 -static_cast<float>(vkContext.m_swapchainExtent.height),
-								 0.0f /*minDepth*/,
-								 1.0f /*maxDepth*/);
-	auto scissor = vk::Rect2D(vk::Offset2D(0 /*x*/, 0 /*y*/), vkContext.m_swapchainExtent);
-	auto viewportState = vk::PipelineViewportStateCreateInfo({}, viewport, scissor);
-
 	auto rasterizationState = vk::PipelineRasterizationStateCreateInfo({},
 																	   false /*depthClampEnable*/,
 																	   false /*rasterizerDiscardEnable*/,
@@ -143,6 +134,9 @@ trg::vkwrappers::GraphicsPipeline
 																 attachmentBlendStates,
 																 std::array{0.0f, 0.0f, 0.0f, 0.0f});
 
+	auto dynamicStates = {vk::DynamicState::eViewport, vk::DynamicState::eScissor};
+	auto dynamicStatesCreateInfo = vk::PipelineDynamicStateCreateInfo({}, dynamicStates);
+
 	return trg::vkwrappers::GraphicsPipeline(vkContext.m_device,
 											 descriptorSetLayouts,
 											 {} /*pushConstants*/,
@@ -150,12 +144,12 @@ trg::vkwrappers::GraphicsPipeline
 											 vertexBufferSignatures,
 											 &inputAssemblyState,
 											 nullptr /*tesselationState*/,
-											 &viewportState,
+											 nullptr,
 											 &rasterizationState,
 											 &multisampleState,
 											 &depthStencilState,
 											 &colorBlendState,
-											 nullptr /*dynamicState*/,
+											 &dynamicStatesCreateInfo,
 											 renderPass);
 }
 
@@ -167,6 +161,21 @@ trg::vkwrappers::Fence makeFence(trg::VulkanContext& vkContext)
 trg::vkwrappers::Semaphore makeSemaphore(trg::VulkanContext& vkContext)
 {
 	return trg::vkwrappers::Semaphore(vkContext.m_device);
+}
+
+vk::Viewport makeViewport(trg::VulkanContext& vkContext)
+{
+	return vk::Viewport(0.0f /*x*/,
+						static_cast<float>(vkContext.m_swapchainExtent.height),
+						static_cast<float>(vkContext.m_swapchainExtent.width),
+						-static_cast<float>(vkContext.m_swapchainExtent.height),
+						0.0f /*minDepth*/,
+						1.0f /*maxDepth*/);
+}
+
+vk::Rect2D makeScissor(trg::VulkanContext& vkContext)
+{
+	return vk::Rect2D(vk::Offset2D(0 /*x*/, 0 /*y*/), vkContext.m_swapchainExtent);
 }
 
 class FrameContext
@@ -346,7 +355,6 @@ int main()
 
 		meshRenderers.emplace_back(MeshRenderingInfo{
 			.m_material = *foundMaterial,
-			// implement dynamic viewport
 			.m_graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, descriptorSetLayouts, shaders, mesh.getBufferLayout()),
 			.m_meshRenderer = trg::MeshRenderer(trg::MeshFilter{.m_mesh = mesh, .m_model = voyagerModel})});
 	}

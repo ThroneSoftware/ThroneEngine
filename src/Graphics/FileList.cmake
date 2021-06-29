@@ -64,6 +64,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Memory/VmaUnique.h
 	VulkanWrappers/Pipelines/GraphicsPipeline.cpp
 	VulkanWrappers/Pipelines/GraphicsPipeline.h
+	VulkanWrappers/Pipelines/PipelineDynamicState.cpp
+	VulkanWrappers/Pipelines/PipelineDynamicState.h
 	VulkanWrappers/RenderPass.cpp
 	VulkanWrappers/RenderPass.h
 	VulkanWrappers/Shaders/Shader.cpp

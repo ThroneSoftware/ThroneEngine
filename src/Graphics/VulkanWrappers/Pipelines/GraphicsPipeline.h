@@ -5,6 +5,7 @@
 #include "../RenderPass.h"
 #include "../Shaders/Shader.h"
 #include "../VertexBufferSignature.h"
+#include "PipelineDynamicState.h"
 
 #include <Vulkan/vulkan.hpp>
 
