@@ -37,7 +37,7 @@ namespace trg::vkwrappers
 	public:
 		PipelineDynamicState(State state);
 
-		void bind(BindableBindInfo& bindInfo);
+		void bind(BindableBindInfo& bindInfo) const;
 
 		vk::DynamicState getDynamicState() const;
 
@@ -50,7 +50,7 @@ namespace trg::vkwrappers
 	public:
 		PipelineDynamicStates();
 
-		void bind(BindableBindInfo& bindInfo);
+		void bind(BindableBindInfo& bindInfo) const;
 
 		void insertOrReplace(const PipelineDynamicState& state);
 		void insertOrReplace(const PipelineDynamicStates& states);
