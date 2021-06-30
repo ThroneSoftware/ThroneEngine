@@ -97,10 +97,21 @@ namespace trg::vkwrappers
 	void GraphicsPipeline::bind(BindableBindInfo& bindInfo)
 	{
 		bindInfo.m_commandBuffer->bindPipeline(vk::PipelineBindPoint::eGraphics, *m_pipeline);
+		m_dynamicStates.bind(bindInfo);
 	}
 
 	vk::PipelineLayout& GraphicsPipeline::getLayout()
 	{
 		return *m_layout;
+	}
+
+	PipelineDynamicStates& GraphicsPipeline::getPipelineDynamicStates()
+	{
+		return m_dynamicStates;
+	}
+
+	const PipelineDynamicStates& GraphicsPipeline::getPipelineDynamicStates() const
+	{
+		return m_dynamicStates;
 	}
 }  // namespace trg::vkwrappers

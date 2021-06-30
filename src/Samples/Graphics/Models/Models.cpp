@@ -64,6 +64,22 @@ trg::vkwrappers::FrameBuffer makeFrameBuffer(trg::VulkanContext& vkContext,
 	return trg::vkwrappers::FrameBuffer(vkContext.m_device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
 }
 
+
+vk::Viewport makeViewport(trg::VulkanContext& vkContext)
+{
+	return vk::Viewport(0.0f /*x*/,
+						static_cast<float>(vkContext.m_swapchainExtent.height),
+						static_cast<float>(vkContext.m_swapchainExtent.width),
+						-static_cast<float>(vkContext.m_swapchainExtent.height),
+						0.0f /*minDepth*/,
+						1.0f /*maxDepth*/);
+}
+
+vk::Rect2D makeScissor(trg::VulkanContext& vkContext)
+{
+	return vk::Rect2D(vk::Offset2D(0 /*x*/, 0 /*y*/), vkContext.m_swapchainExtent);
+}
+
 trg::vkwrappers::GraphicsPipeline
 	makeGraphicsPipeline(trg::VulkanContext& vkContext,
 						 trg::vkwrappers::RenderPass& renderPass,
@@ -77,6 +93,10 @@ trg::vkwrappers::GraphicsPipeline
 
 	auto inputAssemblyState =
 		vk::PipelineInputAssemblyStateCreateInfo({}, vk::PrimitiveTopology::eTriangleList, false /*primitiveRestartEnable*/);
+
+	auto viewport = makeViewport(vkContext);
+	auto scissor = makeScissor(vkContext);
+	auto viewportState = vk::PipelineViewportStateCreateInfo({}, viewport, scissor);
 
 	auto rasterizationState = vk::PipelineRasterizationStateCreateInfo({},
 																	   false /*depthClampEnable*/,
@@ -144,7 +164,7 @@ trg::vkwrappers::GraphicsPipeline
 											 vertexBufferSignatures,
 											 &inputAssemblyState,
 											 nullptr /*tesselationState*/,
-											 nullptr,
+											 &viewportState,
 											 &rasterizationState,
 											 &multisampleState,
 											 &depthStencilState,
@@ -163,19 +183,46 @@ trg::vkwrappers::Semaphore makeSemaphore(trg::VulkanContext& vkContext)
 	return trg::vkwrappers::Semaphore(vkContext.m_device);
 }
 
-vk::Viewport makeViewport(trg::VulkanContext& vkContext)
+std::vector<MeshRenderingInfo> makeMeshRenderers(trg::VulkanContext& vkContext,
+												 trg::vkwrappers::RenderPass& renderPass,
+												 std::vector<trg::vkwrappers::Shader>& shaders,
+												 std::vector<trg::Material>& materials,
+												 trg::Model& model,
+												 trg::vkwrappers::DescriptorSet& globalDescriptorSet,
+												 const trg::vkwrappers::DescriptorSetLayout& emptyDescriptorSetLayout)
 {
-	return vk::Viewport(0.0f /*x*/,
-						static_cast<float>(vkContext.m_swapchainExtent.height),
-						static_cast<float>(vkContext.m_swapchainExtent.width),
-						-static_cast<float>(vkContext.m_swapchainExtent.height),
-						0.0f /*minDepth*/,
-						1.0f /*maxDepth*/);
+	std::vector<MeshRenderingInfo> meshRenderers;
+
+	for(auto& mesh: model.getMeshes())
+	{
+		auto foundMaterial = std::find_if(materials.begin(), materials.end(), [&mesh](const trg::Material& material) {
+			return &material.getMaterialInfo() == &mesh.getMaterialInfo();
+		});
+
+		assert(foundMaterial != materials.end());
+
+		std::vector<std::reference_wrapper<const trg::vkwrappers::DescriptorSetLayout>> descriptorSetLayouts;
+		descriptorSetLayouts.emplace_back(globalDescriptorSet.getLayout());
+		descriptorSetLayouts.emplace_back(emptyDescriptorSetLayout);
+		descriptorSetLayouts.emplace_back(foundMaterial->getDescriptorSet().getLayout());
+
+		meshRenderers.emplace_back(MeshRenderingInfo{
+			.m_material = *foundMaterial,
+			.m_graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, descriptorSetLayouts, shaders, mesh.getBufferLayout()),
+			.m_meshRenderer = trg::MeshRenderer(trg::MeshFilter{.m_mesh = mesh, .m_model = model})});
+	}
+
+	return meshRenderers;
 }
 
-vk::Rect2D makeScissor(trg::VulkanContext& vkContext)
+trg::vkwrappers::PipelineDynamicStates makeViewportDynamicStates(trg::VulkanContext& vkContext)
 {
-	return vk::Rect2D(vk::Offset2D(0 /*x*/, 0 /*y*/), vkContext.m_swapchainExtent);
+	trg::vkwrappers::PipelineDynamicStates dynamicStates;
+
+	dynamicStates.insertOrReplace(trg::vkwrappers::PipelineDynamicState(makeViewport(vkContext)));
+	dynamicStates.insertOrReplace(trg::vkwrappers::PipelineDynamicState(makeScissor(vkContext)));
+
+	return dynamicStates;
 }
 
 class FrameContext
@@ -285,6 +332,59 @@ auto makeFrameContexts(std::size_t frameContextCount,
 	return frameContexts;
 }
 
+void refreshViewportDynamicStates(trg::VulkanContext& vkContext, std::vector<MeshRenderingInfo>& meshRenderers)
+{
+	auto viewportDynamicStates = makeViewportDynamicStates(vkContext);
+	for(auto& meshRenderer: meshRenderers)
+	{
+		meshRenderer.m_graphicsPipeline.getPipelineDynamicStates().insertOrReplace(viewportDynamicStates);
+	}
+}
+
+void renderLoop(trg::GraphicsInstance& instance,
+				trg::VulkanContext& vkContext,
+				std::size_t frameContextCount,
+				trg::vkwrappers::SemaphorePool& acquireNextImageSemaphores,
+				std::vector<MeshRenderingInfo>& meshRenderers,
+				std::function<std::vector<FrameContext>()> makeFrameContexts)
+{
+	refreshViewportDynamicStates(vkContext, meshRenderers);
+
+	std::vector<FrameContext> frameContexts = makeFrameContexts();
+
+	uint64_t frameId = 0;
+	while(!instance.windowShouldClose())
+	{
+		auto currentResourceIndex = frameId % frameContextCount;
+
+		instance.processWindowEvents();
+
+		if(!vkContext.windowMinimized)
+		{
+			if(bool expected = true; vkContext.hasWindowResizeEvent.compare_exchange_strong(expected, false))
+			{
+				vkContext.m_device.waitIdle();
+
+				refreshViewportDynamicStates(vkContext, meshRenderers);
+
+				frameContexts = makeFrameContexts();
+			}
+
+			auto clearColor = glm::vec3(0.0f);
+
+			auto& acquireNextImageSemaphore = acquireNextImageSemaphores.getAll()[currentResourceIndex];
+			auto imageIndex = vkContext.m_swapchain.acquireImage(acquireNextImageSemaphore);
+
+			FrameContext& frameContext = frameContexts[imageIndex];
+			frameContext.renderFrame(clearColor, imageIndex, acquireNextImageSemaphore);
+		}
+
+		frameId++;
+	}
+
+	vkContext.m_device.waitIdle();
+}
+
 int main()
 {
 	std::filesystem::current_path(std::filesystem::absolute(__FILE__).parent_path());
@@ -305,10 +405,7 @@ int main()
 	auto acquireNextImageSemaphores = trg::vkwrappers::SemaphorePool(vkContext.m_device, frameContextCount);
 
 
-	auto viewProjectionMatrix = glm::perspective(glm::radians(60.0f),
-												 vkContext.m_swapchainExtent.width / static_cast<float>(vkContext.m_swapchainExtent.height),
-												 0.1f,
-												 256.0f) *
+	auto viewProjectionMatrix = glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.1f, 256.0f) *
 								glm::lookAt(glm::vec3{15, 0, -6}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0});
 
 	auto viewProjectionUniformBuffer =
@@ -339,65 +436,14 @@ int main()
 		materials.emplace_back(trg::Material(vkContext.m_device, vkContext.m_graphicsQueue, materialInfo));
 	}
 
-	std::vector<MeshRenderingInfo> meshRenderers;
-	for(auto& mesh: voyagerModel.getMeshes())
-	{
-		auto foundMaterial = std::find_if(materials.begin(), materials.end(), [&mesh](const trg::Material& material) {
-			return &material.getMaterialInfo() == &mesh.getMaterialInfo();
-		});
+	std::vector<MeshRenderingInfo> meshRenderers =
+		makeMeshRenderers(vkContext, renderPass, shaders, materials, voyagerModel, globalDescriptorSet, emptyDescriptorSetLayout);
 
-		assert(foundMaterial != materials.end());
+	auto makeFrameContextsFunction = [frameContextCount, &instance, &commandBuffers, &renderPass, &globalDescriptorSet, &meshRenderers]() {
+		return makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, globalDescriptorSet, meshRenderers);
+	};
 
-		std::vector<std::reference_wrapper<const trg::vkwrappers::DescriptorSetLayout>> descriptorSetLayouts;
-		descriptorSetLayouts.emplace_back(globalDescriptorSet.getLayout());
-		descriptorSetLayouts.emplace_back(emptyDescriptorSetLayout);
-		descriptorSetLayouts.emplace_back(foundMaterial->getDescriptorSet().getLayout());
-
-		meshRenderers.emplace_back(MeshRenderingInfo{
-			.m_material = *foundMaterial,
-			.m_graphicsPipeline = makeGraphicsPipeline(vkContext, renderPass, descriptorSetLayouts, shaders, mesh.getBufferLayout()),
-			.m_meshRenderer = trg::MeshRenderer(trg::MeshFilter{.m_mesh = mesh, .m_model = voyagerModel})});
-	}
-
-	std::vector<FrameContext> frameContexts =
-		makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, globalDescriptorSet, meshRenderers);
-
-	float deltaTime = 0;
-
-	uint64_t frameId = 0;
-	while(!instance.windowShouldClose())
-	{
-		auto currentResourceIndex = frameId % frameContextCount;
-
-		auto begin = std::chrono::steady_clock::now();
-
-		instance.processWindowEvents();
-
-		if(!vkContext.windowMinimized)
-		{
-			if(bool expected = true; vkContext.hasWindowResizeEvent.compare_exchange_strong(expected, false))
-			{
-				vkContext.m_device.waitIdle();
-
-				frameContexts =
-					makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, globalDescriptorSet, meshRenderers);
-			}
-
-			auto clearColor = glm::vec3(0.0f);
-
-			auto& acquireNextImageSemaphore = acquireNextImageSemaphores.getAll()[currentResourceIndex];
-			auto imageIndex = vkContext.m_swapchain.acquireImage(acquireNextImageSemaphore);
-
-			FrameContext& frameContext = frameContexts[imageIndex];
-			frameContext.renderFrame(clearColor, imageIndex, acquireNextImageSemaphore);
-		}
-
-		frameId++;
-
-		auto end = std::chrono::steady_clock::now();
-
-		deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(end - begin).count();
-	}
+	renderLoop(instance, vkContext, frameContextCount, acquireNextImageSemaphores, meshRenderers, makeFrameContextsFunction);
 
 	vkContext.m_device.waitIdle();
 }

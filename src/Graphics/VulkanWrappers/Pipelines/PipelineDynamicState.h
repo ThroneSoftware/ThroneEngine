@@ -48,8 +48,6 @@ namespace trg::vkwrappers
 	class PipelineDynamicStates
 	{
 	public:
-		PipelineDynamicStates();
-
 		void bind(BindableBindInfo& bindInfo) const;
 
 		void insertOrReplace(const PipelineDynamicState& state);

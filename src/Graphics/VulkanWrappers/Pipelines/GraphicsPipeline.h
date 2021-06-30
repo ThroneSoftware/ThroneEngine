@@ -33,8 +33,13 @@ namespace trg::vkwrappers
 
 		vk::PipelineLayout& getLayout();
 
+		PipelineDynamicStates& getPipelineDynamicStates();
+		const PipelineDynamicStates& getPipelineDynamicStates() const;
+
 	private:
 		vk::UniquePipelineLayout m_layout;
 		vk::UniquePipeline m_pipeline;
+
+		PipelineDynamicStates m_dynamicStates;
 	};
 }  // namespace trg::vkwrappers
