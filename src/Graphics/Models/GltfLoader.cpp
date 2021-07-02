@@ -104,7 +104,7 @@ namespace trg
 
 		struct Materials
 		{
-			std::vector<std::unique_ptr<MaterialInfo>> m_materials;
+			std::vector<MaterialInfo> m_materials;
 			std::vector<std::string> m_materialIds;
 
 			MaterialInfo& findMaterialInfo(const std::string& materialId)
@@ -119,7 +119,7 @@ namespace trg
 
 				auto index = std::distance(m_materialIds.begin(), found);
 
-				return *m_materials[index];
+				return m_materials[index];
 			}
 		};
 
@@ -148,14 +148,13 @@ namespace trg
 				return materials;
 			}
 
-			std::unique_ptr<MaterialInfo> readMaterial(const Microsoft::glTF::Material& gltfMaterial)
+			MaterialInfo readMaterial(const Microsoft::glTF::Material& gltfMaterial)
 			{
 				auto textureId = gltfMaterial.metallicRoughness.baseColorTexture.textureId;
 
 				auto baseColorFactor = gltfMaterial.metallicRoughness.baseColorFactor;
 				auto material =
-					std::make_unique<MaterialInfo>(gltfMaterial.name,
-												   glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
+					MaterialInfo(gltfMaterial.name, glm::vec4(baseColorFactor.r, baseColorFactor.g, baseColorFactor.b, baseColorFactor.a));
 
 				if(!textureId.empty())
 				{
@@ -169,7 +168,7 @@ namespace trg
 
 					int width = 0;
 					int height = 0;
-					int channelsInFile = 0;
+					constexpr int desiredChannels = 4;
 
 					if(stbi_is_16_bit_from_memory(rawData.data(), gsl::narrow<int>(rawData.size())))
 					{
@@ -178,7 +177,8 @@ namespace trg
 					}
 					else
 					{
-						constexpr int desiredChannels = 4;
+						// channelsInFile is ignored because stbi will convert the image to desiredChannels
+						int channelsInFile = 0;
 
 						auto stbiDeleter = [](stbi_uc* data) {
 							stbi_image_free(data);
@@ -199,14 +199,13 @@ namespace trg
 																 image.name));
 						}
 
-						auto span = std::span(stbiProcessedData.get(), width * height * channelsInFile);
-						processedData.reserve(span.size());
+						auto span = std::span(stbiProcessedData.get(), width * height * desiredChannels);
 						processedData.insert(processedData.begin(), span.begin(), span.end());
 					}
 
-					material->m_baseColorTexture =
+					material.m_baseColorTexture =
 						std::make_unique<Image>(image.name,
-												getImageLayoutFromChannels(gsl::narrow<uint32_t>(channelsInFile)),
+												getImageLayoutFromChannels(gsl::narrow<uint32_t>(desiredChannels)),
 												width,
 												height,
 												std::move(processedData));
@@ -238,15 +237,15 @@ namespace trg
 
 			std::vector<MeshAttribute> readMeshAttributes()
 			{
-				static const std::map<std::string, StandardAttributes> supportedAttributes = {
+				static const std::vector<std::pair<std::string, StandardAttributes>> supportedAttributes = {
 					{Microsoft::glTF::ACCESSOR_POSITION, StandardAttributes::Position},
 					{Microsoft::glTF::ACCESSOR_NORMAL, StandardAttributes::Normal},
-					{Microsoft::glTF::ACCESSOR_COLOR_0, StandardAttributes::Color},
-					{Microsoft::glTF::ACCESSOR_TEXCOORD_0, StandardAttributes::TexCoords}};
+					{Microsoft::glTF::ACCESSOR_TEXCOORD_0, StandardAttributes::TexCoords},
+					{Microsoft::glTF::ACCESSOR_COLOR_0, StandardAttributes::Color}};
 
 				std::vector<MeshAttribute> attributes;
 
-				for(auto& attribute: supportedAttributes)
+				for(const auto& attribute: supportedAttributes)
 				{
 					readAttribute(attributes, attribute.first, attribute.second);
 				}

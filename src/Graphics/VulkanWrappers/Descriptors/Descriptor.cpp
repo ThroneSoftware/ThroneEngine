@@ -22,7 +22,7 @@ namespace trg::vkwrappers
 	}  // namespace DescriptorPrivate
 
 
-	Descriptor::Descriptor(DescriptorInfo descriptorInfo, vk::DescriptorType descriptorType, vk::ShaderStageFlagBits shaderStage)
+	Descriptor::Descriptor(DescriptorInfo descriptorInfo, vk::DescriptorType descriptorType, vk::ShaderStageFlags shaderStage)
 	  : m_descriptorInfo(std::move(descriptorInfo))
 	  , m_descriptorType(descriptorType)
 	  , m_shaderStage(shaderStage)

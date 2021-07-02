@@ -6,7 +6,7 @@ namespace trg
 	{
 	}
 
-	void Model::setMaterials(std::vector<std::unique_ptr<MaterialInfo>> materialInfos)
+	void Model::setMaterials(std::vector<MaterialInfo> materialInfos)
 	{
 		m_materialInfos = std::move(materialInfos);
 	}
@@ -14,5 +14,15 @@ namespace trg
 	void Model::addMesh(Mesh&& mesh)
 	{
 		m_meshes.emplace_back(std::move(mesh));
+	}
+
+	std::span<MaterialInfo> Model::getMaterials()
+	{
+		return m_materialInfos;
+	}
+
+	std::span<Mesh> Model::getMeshes()
+	{
+		return m_meshes;
 	}
 }  // namespace trg

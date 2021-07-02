@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Utilities/MemoryRegion.h>
+
 #include <Vendors/VulkanMemoryAllocator/vk_mem_alloc.hpp>
 
 namespace trg::vkwrappers
@@ -8,5 +10,5 @@ namespace trg::vkwrappers
 
 	void initializeVmaDefaultAllocator(vk::PhysicalDevice& physicalDevice, vk::Device& device);
 
-	void allocateHostMemory(vk::DeviceSize dataSize, const void* srcData, vma::Allocation& allocation);
+	void allocateHostMemory(tru::MemoryRegion memory, vma::Allocation& allocation);
 }  // namespace trg::vkwrappers

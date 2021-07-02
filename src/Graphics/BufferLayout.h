@@ -81,6 +81,21 @@ namespace trg
 		Uint32,
 	};
 
+	inline uint32_t bufferBlockValueTypeByteSize(BufferBlockValueType valueType)
+	{
+		switch(valueType)
+		{
+			case trg::BufferBlockValueType::Float:
+				return sizeof(float);
+			case trg::BufferBlockValueType::Uint32:
+				return sizeof(uint32_t);
+			default:
+				assert(false);
+				throw std::runtime_error("Invalid range");
+				break;
+		}
+	}
+
 	enum class StandardAttributes : uint32_t
 	{
 		// Enum value represents the location in the shader.
@@ -125,6 +140,21 @@ namespace trg
 		BufferBlockComponentType getComponentType() const
 		{
 			return m_componentType;
+		}
+
+		BufferBlockValueType getValueType() const
+		{
+			return m_valueType;
+		}
+
+		StandardAttributes getStandardAttribute() const
+		{
+			return m_attribute;
+		}
+
+		uint32_t totalByteSize() const
+		{
+			return componentTypeFullLength(m_componentType) * bufferBlockValueTypeByteSize(m_valueType);
 		}
 
 	private:

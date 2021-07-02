@@ -42,6 +42,8 @@ namespace trg::vkwrappers
 
 		void bind(vkwrappers::BindableBindInfo& bindInfo);
 
+		const DescriptorSetLayout& getLayout() const;
+
 	private:
 		vk::Device& m_device;
 		vk::UniqueDescriptorPool m_descriptorPool;

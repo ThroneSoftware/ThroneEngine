@@ -45,6 +45,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Descriptors/DescriptorSetLayout.h
 	VulkanWrappers/Descriptors/ImageSampler.cpp
 	VulkanWrappers/Descriptors/ImageSampler.h
+	VulkanWrappers/Descriptors/UniformBuffer.cpp
+	VulkanWrappers/Descriptors/UniformBuffer.h
 	VulkanWrappers/FrameBuffer.cpp
 	VulkanWrappers/FrameBuffer.h
 	VulkanWrappers/Memory/Buffer.cpp
@@ -62,6 +64,8 @@ target_sources(Graphics PRIVATE
 	VulkanWrappers/Memory/VmaUnique.h
 	VulkanWrappers/Pipelines/GraphicsPipeline.cpp
 	VulkanWrappers/Pipelines/GraphicsPipeline.h
+	VulkanWrappers/Pipelines/PipelineDynamicState.cpp
+	VulkanWrappers/Pipelines/PipelineDynamicState.h
 	VulkanWrappers/RenderPass.cpp
 	VulkanWrappers/RenderPass.h
 	VulkanWrappers/Shaders/Shader.cpp

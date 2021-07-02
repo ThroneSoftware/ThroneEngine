@@ -5,6 +5,7 @@
 #include "../RenderPass.h"
 #include "../Shaders/Shader.h"
 #include "../VertexBufferSignature.h"
+#include "PipelineDynamicState.h"
 
 #include <Vulkan/vulkan.hpp>
 
@@ -14,7 +15,7 @@ namespace trg::vkwrappers
 	{
 	public:
 		GraphicsPipeline(vk::Device& device,
-						 std::span<const DescriptorSetLayout> descriptorSetLayouts,
+						 const std::vector<std::reference_wrapper<const DescriptorSetLayout>>& descriptorSetLayouts,
 						 std::vector<vk::PushConstantRange> pushContants,
 						 std::span<const Shader> shaders,
 						 std::span<const VertexBufferSignature> bufferSignatures,
@@ -32,8 +33,13 @@ namespace trg::vkwrappers
 
 		vk::PipelineLayout& getLayout();
 
+		PipelineDynamicStates& getPipelineDynamicStates();
+		const PipelineDynamicStates& getPipelineDynamicStates() const;
+
 	private:
 		vk::UniquePipelineLayout m_layout;
 		vk::UniquePipeline m_pipeline;
+
+		PipelineDynamicStates m_dynamicStates;
 	};
 }  // namespace trg::vkwrappers

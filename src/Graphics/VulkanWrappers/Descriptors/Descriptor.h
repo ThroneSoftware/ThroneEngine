@@ -13,7 +13,7 @@ namespace trg::vkwrappers
 	class Descriptor
 	{
 	public:
-		Descriptor(DescriptorInfo descriptorInfo, vk::DescriptorType descriptorType, vk::ShaderStageFlagBits shaderStage);
+		Descriptor(DescriptorInfo descriptorInfo, vk::DescriptorType descriptorType, vk::ShaderStageFlags shaderStage);
 
 		vk::WriteDescriptorSet getWriteDescriptorSet(vk::DescriptorSet& descriptorSet, uint32_t binding) const;
 		vk::DescriptorSetLayoutBinding getDescriptorSetLayoutBinding(uint32_t binding) const;
@@ -24,7 +24,7 @@ namespace trg::vkwrappers
 	private:
 		DescriptorInfo m_descriptorInfo;
 		vk::DescriptorType m_descriptorType;
-		vk::ShaderStageFlagBits m_shaderStage;
+		vk::ShaderStageFlags m_shaderStage;
 		uint32_t m_descriptorCount;
 	};
 }  // namespace trg::vkwrappers

@@ -32,7 +32,7 @@ namespace trg
 			auto context = std::make_unique<VulkanContext>();
 
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-			context->m_swapchainExtent = vk::Extent2D(1024, 768);
+			context->m_swapchainExtent = vk::Extent2D(1280, 720);
 			context->m_window =
 				glfwCreateWindow(context->m_swapchainExtent.width, context->m_swapchainExtent.height, "Throne", nullptr, nullptr);
 			glfwSetWindowUserPointer(context->m_window, context.get());
@@ -57,7 +57,7 @@ namespace trg
 			auto swapchain = makeSwapchain(*context->m_vkbDevice);
 			new(&context->m_swapchain) vkwrappers::Swapchain(context->m_device, swapchain);
 
-			context->m_graphicsQueue = makeGraphicsQueue(*context->m_vkbDevice);
+			new(&context->m_graphicsQueue) vkwrappers::CommandQueue(makeGraphicsQueue(context->m_device, *context->m_vkbDevice));
 
 			return context;
 		}

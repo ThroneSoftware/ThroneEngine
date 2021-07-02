@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../Images/Image.h"
+#include "../Commands/CommandQueue.h"
 #include "ImageView.h"
 #include "VmaUnique.h"
 
@@ -21,8 +22,10 @@ namespace trg::vkwrappers
 			  uint32_t mipmapCount,
 			  uint32_t layerCount,
 			  vk::SampleCountFlagBits samples,
+			  vk::ImageTiling imageTiling,
 			  vk::ImageUsageFlagBits usage,
-			  vk::ImageLayout layout);
+			  vk::ImageLayout layout,
+			  vma::MemoryUsage memoryUsage);
 
 		void addImageView(vk::ImageAspectFlagBits aspect,
 						  vk::ImageViewType viewType,
@@ -38,15 +41,25 @@ namespace trg::vkwrappers
 
 		vk::ImageLayout getImageLayout() const;
 
-		void updateWithHostMemory(vk::DeviceSize dataSize, const void* srcData);
+		void updateWithHostMemory(tru::MemoryRegion memory);
+		void updateWithDeviceLocalMemory(CommandQueue& commandQueue,
+										 tru::MemoryRegion memory,
+										 vk::ImageAspectFlags aspectToUpdate,
+										 vk::ImageLayout newLayout,
+										 vk::AccessFlagBits newAccess,
+										 vk::PipelineStageFlagBits newPipelineStage);
 
 	private:
 		std::reference_wrapper<vk::Device> m_device;
+
+		vk::Extent3D m_dimensions;
 
 		VmaUnique<vk::Image> m_image;
 		std::vector<ImageView> m_imageViews;
 
 		vk::ImageLayout m_imageLayout;
+		vk::AccessFlagBits m_accessFlags = vk::AccessFlagBits::eNoneKHR;
+		vk::PipelineStageFlagBits m_pipelineStage = vk::PipelineStageFlagBits::eTopOfPipe;
 	};
 
 	inline vk::Format imageLayoutToVkFormat(ImageLayout layout)

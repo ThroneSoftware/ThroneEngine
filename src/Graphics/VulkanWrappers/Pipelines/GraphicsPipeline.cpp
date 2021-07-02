@@ -7,7 +7,7 @@ namespace trg::vkwrappers
 	namespace GraphicsPipelinePrivate
 	{
 		auto makePipelineLayout(vk::Device& device,
-								std::span<const DescriptorSetLayout> descriptorSetLayouts,
+								const std::vector<std::reference_wrapper<const DescriptorSetLayout>>& descriptorSetLayouts,
 								std::vector<vk::PushConstantRange> pushContants)
 		{
 			auto layouts = toVkHandle(descriptorSetLayouts);
@@ -64,7 +64,7 @@ namespace trg::vkwrappers
 
 
 	GraphicsPipeline::GraphicsPipeline(vk::Device& device,
-									   std::span<const DescriptorSetLayout> descriptorSetLayouts,
+									   const std::vector<std::reference_wrapper<const DescriptorSetLayout>>& descriptorSetLayouts,
 									   std::vector<vk::PushConstantRange> pushContants,
 									   std::span<const Shader> shaders,
 									   std::span<const VertexBufferSignature> bufferSignatures,
@@ -97,10 +97,21 @@ namespace trg::vkwrappers
 	void GraphicsPipeline::bind(BindableBindInfo& bindInfo)
 	{
 		bindInfo.m_commandBuffer->bindPipeline(vk::PipelineBindPoint::eGraphics, *m_pipeline);
+		m_dynamicStates.bind(bindInfo);
 	}
 
 	vk::PipelineLayout& GraphicsPipeline::getLayout()
 	{
 		return *m_layout;
+	}
+
+	PipelineDynamicStates& GraphicsPipeline::getPipelineDynamicStates()
+	{
+		return m_dynamicStates;
+	}
+
+	const PipelineDynamicStates& GraphicsPipeline::getPipelineDynamicStates() const
+	{
+		return m_dynamicStates;
 	}
 }  // namespace trg::vkwrappers

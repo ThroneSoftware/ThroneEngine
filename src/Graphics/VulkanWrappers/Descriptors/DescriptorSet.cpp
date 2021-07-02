@@ -16,7 +16,8 @@ namespace trg::vkwrappers
 				descriptorPoolSizes.emplace_back(descriptor.getDescriptorType(), descriptor.getDescriptorCount());
 			}
 
-			auto descriptorPoolCreateInfo = vk::DescriptorPoolCreateInfo({}, 1 /*maxSets*/, descriptorPoolSizes);
+			auto descriptorPoolCreateInfo =
+				vk::DescriptorPoolCreateInfo(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet, 1 /*maxSets*/, descriptorPoolSizes);
 
 			return device.createDescriptorPoolUnique(descriptorPoolCreateInfo);
 		}
@@ -92,5 +93,10 @@ namespace trg::vkwrappers
 													 m_setLocation,
 													 *m_descriptorSet,
 													 {});
+	}
+
+	const DescriptorSetLayout& DescriptorSet::getLayout() const
+	{
+		return m_layout;
 	}
 }  // namespace trg::vkwrappers
