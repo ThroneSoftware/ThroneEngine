@@ -55,7 +55,11 @@ namespace trg::vkwrappers
 				func(m_immediateCommandBuffer);
 			}
 
-			submitCommandBuffer({}, {}, m_immediateCommandBuffer, {}, m_immediateFence);
+			submitCommandBuffer({} /*waitSemaphores*/,
+								{} /*waitingStages*/,
+								m_immediateCommandBuffer,
+								{} /*semaphoresToSignal*/,
+								m_immediateFence);
 
 			m_immediateFence.wait();
 		}
