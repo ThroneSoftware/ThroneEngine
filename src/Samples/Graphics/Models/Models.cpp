@@ -37,15 +37,15 @@ trg::vkwrappers::Image makeDepthImage(trg::VulkanContext& vkContext)
 											 vk::ImageType::e2D,
 											 vk::Format::eD32Sfloat,
 											 vk::Extent3D(vkContext.m_swapchainExtent, 1),
-											 1,
-											 1,
+											 1 /*mipmapCount*/,
+											 1 /*layerCount*/,
 											 vk::SampleCountFlagBits::e1,
 											 vk::ImageTiling::eOptimal,
 											 vk::ImageUsageFlagBits::eDepthStencilAttachment,
 											 vk::ImageLayout::eUndefined,
 											 vma::MemoryUsage::eGpuOnly);
 
-	depthImage.addImageView(vk::ImageAspectFlagBits::eDepth, vk::ImageViewType::e2D, vk::Format::eD32Sfloat, 0, 1);
+	depthImage.addImageView(vk::ImageAspectFlagBits::eDepth, vk::ImageViewType::e2D, vk::Format::eD32Sfloat, 0 /*layer*/, 1 /*layerCount*/);
 
 	return depthImage;
 }
@@ -61,7 +61,7 @@ trg::vkwrappers::FrameBuffer makeFrameBuffer(trg::VulkanContext& vkContext,
 											 trg::vkwrappers::RenderPass& renderPass)
 {
 	std::vector<vk::ImageView> attachments = {*swapchainImageView, *depthImage.getImageView()};
-	return trg::vkwrappers::FrameBuffer(vkContext.m_device, renderPass, attachments, vkContext.m_swapchainExtent, 1);
+	return trg::vkwrappers::FrameBuffer(vkContext.m_device, renderPass, attachments, vkContext.m_swapchainExtent, 1 /*layers*/);
 }
 
 
@@ -265,9 +265,10 @@ public:
 				trg::vkwrappers::BindableBindInfo bindableBindInfo = {.m_commandBuffer = m_commandBuffer,
 																	  .m_pipelineLayout = renderer.m_graphicsPipeline.getLayout()};
 
+				renderer.m_graphicsPipeline.bind(bindableBindInfo);
+
 				m_globalDescriptorSet.bind(bindableBindInfo);
 
-				renderer.m_graphicsPipeline.bind(bindableBindInfo);
 				renderer.m_material.bind(bindableBindInfo);
 
 				renderer.m_meshRenderer.render(bindableBindInfo);
@@ -375,6 +376,7 @@ void renderLoop(trg::GraphicsInstance& instance,
 			auto& acquireNextImageSemaphore = acquireNextImageSemaphores.getAll()[currentResourceIndex];
 			auto imageIndex = vkContext.m_swapchain.acquireImage(acquireNextImageSemaphore);
 
+			// use imageIndex to choose the FrameContext because images could be out of order.
 			FrameContext& frameContext = frameContexts[imageIndex];
 			frameContext.renderFrame(clearColor, imageIndex, acquireNextImageSemaphore);
 		}
