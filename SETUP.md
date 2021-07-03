@@ -9,30 +9,30 @@
 # Commands
 All the steps should be executed in this order.
 
-##### Installing external dependencies
+#### Installing external dependencies
 
-###### Installing vcpkg
+##### Installing vcpkg
 You can install vcpkg [here](https://github.com/microsoft/vcpkg).
 By default, Throne will check for C:\vcpkg\ (on windows), but it is possible to change the path with the cmake variable VCPKG_ROOT_FOLDER.  
 
 You don't have to install any packages since it is done with Cmake.
 
-###### Installing the LunarG SDK
+##### Installing the LunarG SDK
 You can install the LunarG SDK [here](https://vulkan.lunarg.com/).  
 We carry the headers in the repository and linking is done dynamically at runtime so the SDK install path does not really matter.
 
-##### Cloning the repo
+#### Cloning the repo
 ```
 git clone https://github.com/ThroneSoftware/ThroneEngine.git
 cd ThroneEngine
 git lfs fetch
 git lfs pull
 ```
-##### Generating the files for the build system
+#### Generating the files for the build system
 ```
 cmake -S "." -B "Build/"
 ```
-##### Building Throne and the tests
+#### Building Throne and the tests
 ```
 cmake --build "Build/" -j
 ```
