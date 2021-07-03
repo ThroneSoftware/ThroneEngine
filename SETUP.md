@@ -1,4 +1,4 @@
-# Required programs
+# Required dependencies
 1. Git
 2. Git lfs
 3. Cmake version 3.16 or higher
