@@ -12,7 +12,7 @@ All the steps should be executed in this order.
 #### Installing external dependencies
 
 ##### Installing vcpkg
-You can install vcpkg [here](https://github.com/microsoft/vcpkg).
+You can install vcpkg [here](https://github.com/microsoft/vcpkg).  
 By default, Throne will check for C:\vcpkg\ (on windows), but it is possible to change the path with the cmake variable VCPKG_ROOT_FOLDER.  
 
 You don't have to install any packages since it is done with Cmake.
