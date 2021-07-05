@@ -18,4 +18,6 @@ target_sources(Core PRIVATE
 	SharedComponent.h
 	System.h
 	SystemFactory.h
+	Transform.cpp
+	Transform.h
 )
