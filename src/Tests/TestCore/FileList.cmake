@@ -1,5 +1,6 @@
 target_sources(TestCore PRIVATE 
 	MockComponent.h
+	TestAngle.cpp
 	TestCoreMain.cpp
 	TestDependencies.cpp
 	TestEntity.cpp
@@ -7,4 +8,5 @@ target_sources(TestCore PRIVATE
 	TestManagerList.cpp
 	TestSystem.cpp
 	TestSystemFactory.cpp
+	TestTransform.cpp
 )

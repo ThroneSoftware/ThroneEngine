@@ -14,10 +14,11 @@ target_sources(Core PRIVATE
 	ISystemFactory.h
 	ManagerList.cpp
 	ManagerList.h
+	Math/Angle.h
+	Math/Transform.cpp
+	Math/Transform.h
 	SharedComponent.cpp
 	SharedComponent.h
 	System.h
 	SystemFactory.h
-	Transform.cpp
-	Transform.h
 )
