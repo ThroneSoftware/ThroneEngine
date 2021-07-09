@@ -75,10 +75,10 @@ namespace Tests
 	{
 		GIVEN("A radian angle")
 		{
-			auto rad1 = trc::Radian(degValue1);
-			auto rad2 = trc::Radian(degValue2);
-			auto rad3 = trc::Radian(degValue3);
-			auto rad4 = trc::Radian(degValue4);
+			auto rad1 = trc::Radian(radValue1);
+			auto rad2 = trc::Radian(radValue2);
+			auto rad3 = trc::Radian(radValue3);
+			auto rad4 = trc::Radian(radValue4);
 
 			WHEN("Converting to radian")
 			{
@@ -153,10 +153,10 @@ namespace Tests
 					REQUIRE(convertedRad3 == deg3);
 					REQUIRE(convertedRad4 == deg4);
 
-					REQUIRE(convertedRad1 == trc::Radian(degValue1));
-					REQUIRE(convertedRad2 == trc::Radian(degValue2));
-					REQUIRE(convertedRad3 == trc::Radian(degValue3));
-					REQUIRE(convertedRad4 == trc::Radian(degValue4));
+					REQUIRE(convertedRad1 == trc::Radian(radValue1));
+					REQUIRE(convertedRad2 == trc::Radian(radValue2));
+					REQUIRE(convertedRad3 == trc::Radian(radValue3));
+					REQUIRE(convertedRad4 == trc::Radian(radValue4));
 				}
 			}
 		}
