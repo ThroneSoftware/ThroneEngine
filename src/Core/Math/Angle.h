@@ -1,19 +1,66 @@
 #pragma once
 
+#include <compare>
 #include <numbers>
 
 namespace trc
 {
+	// to string
+
+	template <typename ValueType>
+	class Real
+	{
+	public:
+		using value_type = ValueType;
+
+		constexpr Real() noexcept = default;
+		constexpr Real(value_type value)
+		  : m_value(value)
+		{
+		}
+
+		constexpr operator value_type() const
+		{
+			return m_value;
+		}
+
+		constexpr auto operator==(Real other) const noexcept
+		{
+			auto abs = [](auto val) {
+				return val < 0 ? -val : val;
+			};
+			auto unitInLastPlace = static_cast<value_type>(4.0);
+			auto val1 = m_value;
+			auto val2 = other.m_value;
+			return abs(val1 - val2) < std::numeric_limits<value_type>::epsilon() * abs(val1 + val2) * unitInLastPlace ||
+				   abs(val1 - val2) < std::numeric_limits<value_type>::min();
+		}
+
+		value_type m_value = {};
+	};
+
 	template <typename Type, Type fromUnitSize, Type toUnitSize>
 	constexpr Type convertAngleFromTo(Type angle) noexcept
 	{
 		return angle * (toUnitSize / fromUnitSize);
 	}
 
+	template <typename Type, Type fromUnitSize, Type toUnitSize>
+	constexpr Type convertAngleFromTo(Type angle) noexcept requires(fromUnitSize == toUnitSize)
+	{
+		return angle;
+	}
+
 	template <typename Type, Type unitSize>
-	float normalizeAngle(Type angle)
+	constexpr Type normalizeAngle(Type angle) requires std::is_integral_v<Type>
 	{
 		return angle % unitSize;
+	}
+
+	template <typename Type, Type unitSize>
+	constexpr Type normalizeAngle(Type angle) requires std::is_floating_point_v<Type>
+	{
+		return std::fmod(angle, unitSize);
 	}
 
 	template <typename ValueType, ValueType unitSizeV>
@@ -21,7 +68,7 @@ namespace trc
 	{
 	public:
 		using value_type = ValueType;
-		static constexpr value_type unitSize = unitSizeV;
+		constexpr static value_type unitSize = unitSizeV;
 		using type = Angle<value_type, unitSize>;
 
 		constexpr Angle() noexcept = default;
@@ -39,56 +86,51 @@ namespace trc
 			return *this;
 		}
 
-		Angle(const Angle& other) = default;
-		Angle& operator=(const Angle& other) = default;
+		constexpr Angle(const Angle& other) = default;
+		constexpr Angle& operator=(const Angle& other) = default;
 
-		Angle(Angle&& other) = default;
-		Angle& operator=(Angle&& other) = default;
+		constexpr Angle(Angle&& other) = default;
+		constexpr Angle& operator=(Angle&& other) = default;
 
-		explicit constexpr Angle(value_type value) noexcept
+		constexpr explicit Angle(Real<value_type> value) noexcept
 		  : m_value(value)
 		{
 		}
 
-		constexpr value_type getValue() const noexcept
+		constexpr Real<value_type> getValue() const noexcept
 		{
 			return m_value;
 		}
 
-		template <value_type unitSizeOtherV>
-		constexpr auto operator<=>(Angle<value_type, unitSizeOtherV> other) const noexcept requires(unitSizeOtherV != unitSize)
-		{
-			return m_value <=> convertAngleFromTo<value_type, unitSizeOtherV, unitSize>(other.getValue());
-		}
-
-		template <value_type unitSizeOtherV>
-		constexpr auto operator==(Angle<value_type, unitSizeOtherV> other) const noexcept requires(unitSizeOtherV != unitSize)
-		{
-			return (*this <=> other) == 0;
-		}
-
-		constexpr auto operator<=>(Angle other) const noexcept
-		{
-			return m_value <=> other.m_value;
-		}
-
-		constexpr auto operator==(Angle other) const noexcept
-		{
-			return (*this <=> other) == 0;
-		}
-
-		void normalize()
+		constexpr void normalize()
 		{
 			m_value = getNormalized();
 		}
 
-		value_type getNormalized()
+		constexpr Real<value_type> getNormalized()
 		{
 			return normalizeAngle<value_type, unitSize>(m_value);
 		}
 
+		template <value_type unitSizeOtherV>
+		constexpr std::compare_three_way_result_t<value_type, value_type>
+			operator<=>(const Angle<value_type, unitSizeOtherV>& other) const noexcept requires(unitSizeOtherV != unitSize)
+		{
+			return *this <=> Angle(other);
+		}
+
+		template <value_type unitSizeOtherV>
+		constexpr bool operator==(const Angle<value_type, unitSizeOtherV>& other) const noexcept requires(unitSizeOtherV != unitSize)
+		{
+			return (*this <=> other) == 0;
+		}
+
+		constexpr std::compare_three_way_result_t<value_type, value_type> operator<=>(const Angle& other) const noexcept = default;
+
+		constexpr bool operator==(const Angle& other) const noexcept = default;
+
 	private:
-		value_type m_value = 0.0f;
+		Real<value_type> m_value = {};
 	};
 
 	using Radian = Angle<float, 2.0f * std::numbers::pi_v<float>>;

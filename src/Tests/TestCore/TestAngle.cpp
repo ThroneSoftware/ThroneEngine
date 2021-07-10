@@ -8,16 +8,14 @@
 namespace Tests
 {
 	constexpr auto radValue1 = std::numbers::pi_v<float>;
-	constexpr auto radValue2 = 2 * std::numbers::pi_v<float>;
+	constexpr auto radValue2 = 2.0f * std::numbers::pi_v<float>;
 	constexpr auto radValue3 = 0.0f;
-	constexpr auto radValue4 = std::numbers::pi_v<float> / 3.0f;
+	constexpr auto radValue4 = std::numbers::pi_v<float> / 3.3333f;
 
 	constexpr auto degValue1 = 180.0f;
 	constexpr auto degValue2 = 360.0f;
 	constexpr auto degValue3 = 0.0f;
-	constexpr auto degValue4 = 180.0f / 3.0f;
-
-	// add normalization tests
+	constexpr auto degValue4 = 180.0f / 3.3333f;
 
 	SCENARIO("Same angle conversion", "free function")
 	{
@@ -30,11 +28,11 @@ namespace Tests
 
 			WHEN("Converting to radian")
 			{
-				constexpr float radianSize = 2 * std::numbers::pi_v<float>;
-				auto convertedRad1 = trc::convertAngleFromTo<float, radianSize, radianSize>(rad1);
-				auto convertedRad2 = trc::convertAngleFromTo<float, radianSize, radianSize>(rad2);
-				auto convertedRad3 = trc::convertAngleFromTo<float, radianSize, radianSize>(rad3);
-				auto convertedRad4 = trc::convertAngleFromTo<float, radianSize, radianSize>(rad4);
+				constexpr double radianSize = 2 * std::numbers::pi;
+				auto convertedRad1 = trc::convertAngleFromTo<double, radianSize, radianSize>(rad1);
+				auto convertedRad2 = trc::convertAngleFromTo<double, radianSize, radianSize>(rad2);
+				auto convertedRad3 = trc::convertAngleFromTo<double, radianSize, radianSize>(rad3);
+				auto convertedRad4 = trc::convertAngleFromTo<double, radianSize, radianSize>(rad4);
 
 				THEN("Value is not changed")
 				{
@@ -55,10 +53,10 @@ namespace Tests
 
 			WHEN("Converting to degree")
 			{
-				auto convertedDeg1 = trc::convertAngleFromTo<float, 360.0f, 360.0f>(deg1);
-				auto convertedDeg2 = trc::convertAngleFromTo<float, 360.0f, 360.0f>(deg2);
-				auto convertedDeg3 = trc::convertAngleFromTo<float, 360.0f, 360.0f>(deg3);
-				auto convertedDeg4 = trc::convertAngleFromTo<float, 360.0f, 360.0f>(deg4);
+				auto convertedDeg1 = trc::convertAngleFromTo<double, 360.0, 360.0>(deg1);
+				auto convertedDeg2 = trc::convertAngleFromTo<double, 360.0, 360.0>(deg2);
+				auto convertedDeg3 = trc::convertAngleFromTo<double, 360.0, 360.0>(deg3);
+				auto convertedDeg4 = trc::convertAngleFromTo<double, 360.0, 360.0>(deg4);
 
 				THEN("Value is not changed")
 				{
@@ -157,6 +155,57 @@ namespace Tests
 					REQUIRE(convertedRad2 == trc::Radian(radValue2));
 					REQUIRE(convertedRad3 == trc::Radian(radValue3));
 					REQUIRE(convertedRad4 == trc::Radian(radValue4));
+				}
+			}
+		}
+	}
+
+	SCENARIO("TestAngleNormalization", "Angle class")
+	{
+		GIVEN("A radian angle")
+		{
+			auto rad1 = trc::Radian(radValue1 + trc::Radian::unitSize);
+			auto rad2 = trc::Radian(radValue2 + trc::Radian::unitSize);
+			auto rad3 = trc::Radian(radValue3 + trc::Radian::unitSize);
+			auto rad4 = trc::Radian(radValue4 + trc::Radian::unitSize);
+
+			WHEN("Normalizing")
+			{
+				rad1.normalize();
+				rad2.normalize();
+				rad3.normalize();
+				rad4.normalize();
+
+				THEN("Value is normalized")
+				{
+					REQUIRE(rad1 == trc::Radian(radValue1));
+					REQUIRE(rad2 == trc::Radian(0.0f));
+					REQUIRE(rad3 == trc::Radian(radValue3));
+					REQUIRE(rad4 == trc::Radian(radValue4));
+				}
+			}
+		}
+
+		GIVEN("A degree angle")
+		{
+			auto deg1 = trc::Degree(degValue1 + trc::Degree::unitSize);
+			auto deg2 = trc::Degree(degValue2 + trc::Degree::unitSize);
+			auto deg3 = trc::Degree(degValue3 + trc::Degree::unitSize);
+			auto deg4 = trc::Degree(degValue4 + trc::Degree::unitSize);
+
+			WHEN("Normalizing")
+			{
+				deg1.normalize();
+				deg2.normalize();
+				deg3.normalize();
+				deg4.normalize();
+
+				THEN("Value is normalized")
+				{
+					REQUIRE(deg1 == trc::Degree(degValue1));
+					REQUIRE(deg2 == trc::Degree(0.0f));
+					REQUIRE(deg3 == trc::Degree(degValue3));
+					REQUIRE(deg4 == trc::Degree(degValue4));
 				}
 			}
 		}
