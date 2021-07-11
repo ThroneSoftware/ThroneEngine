@@ -15,6 +15,7 @@ target_sources(Core PRIVATE
 	ManagerList.cpp
 	ManagerList.h
 	Math/Angle.h
+	Math/Real.h
 	Math/Transform.cpp
 	Math/Transform.h
 	SharedComponent.cpp
