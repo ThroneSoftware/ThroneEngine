@@ -11,12 +11,12 @@ namespace trc
 		using value_type = ValueType;
 
 		constexpr Real() noexcept = default;
-		constexpr Real(value_type value)
+		constexpr Real(value_type value) noexcept
 		  : m_value(value)
 		{
 		}
 
-		constexpr operator value_type() const
+		constexpr operator value_type() const noexcept
 		{
 			return m_value;
 		}

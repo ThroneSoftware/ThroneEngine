@@ -28,11 +28,11 @@ namespace Tests
 
 			WHEN("Converting to radian")
 			{
-				constexpr double radianSize = 2 * std::numbers::pi;
-				auto convertedRad1 = trc::convertAngleFromTo<double, radianSize, radianSize>(rad1);
-				auto convertedRad2 = trc::convertAngleFromTo<double, radianSize, radianSize>(rad2);
-				auto convertedRad3 = trc::convertAngleFromTo<double, radianSize, radianSize>(rad3);
-				auto convertedRad4 = trc::convertAngleFromTo<double, radianSize, radianSize>(rad4);
+				constexpr float radianSize = 2 * std::numbers::pi_v<float>;
+				auto convertedRad1 = trc::convertAngleFromTo<float, radianSize, radianSize>(rad1);
+				auto convertedRad2 = trc::convertAngleFromTo<float, radianSize, radianSize>(rad2);
+				auto convertedRad3 = trc::convertAngleFromTo<float, radianSize, radianSize>(rad3);
+				auto convertedRad4 = trc::convertAngleFromTo<float, radianSize, radianSize>(rad4);
 
 				THEN("Value is not changed")
 				{
@@ -53,10 +53,10 @@ namespace Tests
 
 			WHEN("Converting to degree")
 			{
-				auto convertedDeg1 = trc::convertAngleFromTo<double, 360.0, 360.0>(deg1);
-				auto convertedDeg2 = trc::convertAngleFromTo<double, 360.0, 360.0>(deg2);
-				auto convertedDeg3 = trc::convertAngleFromTo<double, 360.0, 360.0>(deg3);
-				auto convertedDeg4 = trc::convertAngleFromTo<double, 360.0, 360.0>(deg4);
+				auto convertedDeg1 = trc::convertAngleFromTo<float, 360.0f, 360.0f>(deg1);
+				auto convertedDeg2 = trc::convertAngleFromTo<float, 360.0f, 360.0f>(deg2);
+				auto convertedDeg3 = trc::convertAngleFromTo<float, 360.0f, 360.0f>(deg3);
+				auto convertedDeg4 = trc::convertAngleFromTo<float, 360.0f, 360.0f>(deg4);
 
 				THEN("Value is not changed")
 				{

@@ -49,18 +49,18 @@ namespace trc
 
 		constexpr Angle() noexcept = default;
 
-		template <value_type unitSizeOtherV>
-		constexpr Angle(Angle<value_type, unitSizeOtherV> other) noexcept
-			requires AnglePrivate::needAngleConversion<value_type, unitSizeOtherV, unitSize>
-		  : m_value(convertAngleFromTo<value_type, unitSizeOtherV, unitSize>(other.getValue()))
+		template <value_type unitSizeOther>
+		constexpr Angle(Angle<value_type, unitSizeOther> other) noexcept
+			requires AnglePrivate::needAngleConversion<value_type, unitSizeOther, unitSize>
+		  : m_value(convertAngleFromTo<value_type, unitSizeOther, unitSize>(other.getValue()))
 		{
 		}
 
-		template <value_type unitSizeOtherV>
-		constexpr Angle& operator=(Angle<value_type, unitSizeOtherV> other) noexcept
-			requires AnglePrivate::needAngleConversion<value_type, unitSizeOtherV, unitSize>
+		template <value_type unitSizeOther>
+		constexpr Angle& operator=(Angle<value_type, unitSizeOther> other) noexcept
+			requires AnglePrivate::needAngleConversion<value_type, unitSizeOther, unitSize>
 		{
-			m_value = convertAngleFromTo<value_type, unitSizeOtherV, unitSize>(other.getValue());
+			m_value = convertAngleFromTo<value_type, unitSizeOther, unitSize>(other.getValue());
 			return *this;
 		}
 
@@ -95,17 +95,17 @@ namespace trc
 			return normalizeAngle<value_type, unitSize>(m_value);
 		}
 
-		template <value_type unitSizeOtherV>
+		template <value_type unitSizeOther>
 		constexpr std::compare_three_way_result_t<value_type, value_type>
-			operator<=>(const Angle<value_type, unitSizeOtherV>& other) const noexcept
-			requires AnglePrivate::needAngleConversion<value_type, unitSizeOtherV, unitSize>
+			operator<=>(const Angle<value_type, unitSizeOther>& other) const noexcept
+			requires AnglePrivate::needAngleConversion<value_type, unitSizeOther, unitSize>
 		{
 			return *this <=> Angle(other);
 		}
 
-		template <value_type unitSizeOtherV>
-		constexpr bool operator==(const Angle<value_type, unitSizeOtherV>& other) const noexcept
-			requires AnglePrivate::needAngleConversion<value_type, unitSizeOtherV, unitSize>
+		template <value_type unitSizeOther>
+		constexpr bool operator==(const Angle<value_type, unitSizeOther>& other) const noexcept
+			requires AnglePrivate::needAngleConversion<value_type, unitSizeOther, unitSize>
 		{
 			return (*this <=> other) == 0;
 		}
