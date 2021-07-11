@@ -16,6 +16,11 @@ namespace trc
 		{
 		}
 
+		constexpr value_type operator*() const noexcept
+		{
+			return m_value;
+		}
+
 		constexpr operator value_type() const noexcept
 		{
 			return m_value;
@@ -31,6 +36,11 @@ namespace trc
 			auto val2 = other.m_value;
 			return abs(val1 - val2) < std::numeric_limits<value_type>::epsilon() * abs(val1 + val2) * unitInLastPlace ||
 				   abs(val1 - val2) < std::numeric_limits<value_type>::min();
+		}
+
+		constexpr auto operator==(value_type other) const noexcept
+		{
+			return *this == Real(other);
 		}
 
 		value_type m_value = {};

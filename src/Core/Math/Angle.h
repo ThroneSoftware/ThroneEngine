@@ -75,6 +75,11 @@ namespace trc
 		{
 		}
 
+		constexpr WrapperType operator*() const noexcept
+		{
+			return getValue();
+		}
+
 		constexpr operator WrapperType() const noexcept
 		{
 			return getValue();

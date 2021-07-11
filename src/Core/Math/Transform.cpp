@@ -4,16 +4,53 @@ namespace trc
 {
 	void Transform::lookAt(const Transform& target)
 	{
-		///
-
-		resetCachedTransform();
+		lookAt(target.m_position);
 	}
 
 	void Transform::lookAt(const glm::vec3& target)
 	{
-		///
+		rotate(getLookAtRotation(target), trc::TransformSpace::World);
+	}
 
-		resetCachedTransform();
+	glm::quat Transform::getLookAtRotation(const glm::vec3& target) const
+	{
+		// Based on https://www.ogre3d.org/docs/api/1.7/_ogre_vector3_8h_source.html#l00649
+
+		glm::vec3 vec1 = glm::normalize(m_position);
+		glm::vec3 vec2 = glm::normalize(target);
+
+		auto dot = Real(glm::dot(vec1, vec2));
+
+		if(dot == 1.0f)	 // Same direction, no rotation needed
+		{
+			return glm::identity<glm::quat>();
+		}
+
+		else if(dot == -1.0f)  // Directly opposed direction
+		{
+			//////////////////////// could this be replaced by axis = up()?
+
+
+			glm::vec3 axis = glm::cross(vec1, glm::vec3(0.0f, 1.0f, 0.0f));
+			if(Real(glm::length(axis)) == 0.0f)
+			{
+				// vec1 is parallel to up, use right instead.
+				axis = glm::cross(vec1, glm::vec3(1.0f, 0.0f, 0.0f));
+			}
+
+			return glm::normalize(glm::angleAxis(**Radian(std::numbers::pi_v<float>), axis));
+		}
+		else
+		{
+			// s = 2 * cos(theta / 2)
+			auto s = std::sqrt((dot + 1.0f) * 2.0f);
+			// inverseS = sin(theta / 2)
+			auto inverseS = 1.0f / s;
+
+			auto axis = glm::cross(vec1, vec2);
+
+			return glm::normalize(glm::quat(s / 2.0f, axis.x * inverseS, axis.y * inverseS, axis.z * inverseS));
+		}
 	}
 
 	void Transform::rotate(const glm::quat& rotation, TransformSpace space)
@@ -25,9 +62,7 @@ namespace trc
 
 	void Transform::rotateOnAxis(const glm::vec3& axis, Radian angle, TransformSpace space)
 	{
-		///
-
-		resetCachedTransform();
+		rotate(glm::angleAxis(**angle, axis), space);
 	}
 
 	void Transform::setRotation(const glm::quat& rotation)
@@ -44,7 +79,26 @@ namespace trc
 
 	void Transform::translate(const glm::vec3& translation, TransformSpace space)
 	{
-		///
+		switch(space)
+		{
+			case trc::TransformSpace::Local:
+			{
+				m_position += m_rotation * translation;
+				break;
+			}
+			case trc::TransformSpace::World:
+			{
+				m_position += translation;
+				break;
+			}
+			case trc::TransformSpace::Parent:
+			{
+				// todo
+				break;
+			}
+			default:
+				break;
+		}
 
 		resetCachedTransform();
 	}

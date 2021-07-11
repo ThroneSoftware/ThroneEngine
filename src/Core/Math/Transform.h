@@ -27,6 +27,7 @@ namespace trc
 	public:
 		void lookAt(const Transform& target);
 		void lookAt(const glm::vec3& target);
+		glm::quat getLookAtRotation(const glm::vec3& target) const;
 
 		void rotate(const glm::quat& rotation, TransformSpace space);
 		void rotateOnAxis(const glm::vec3& axis, Radian angle, TransformSpace space);
