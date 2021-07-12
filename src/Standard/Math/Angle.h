@@ -7,7 +7,7 @@
 #include <compare>
 #include <numbers>
 
-namespace trc
+namespace trs
 {
 	namespace AnglePrivate
 	{
@@ -125,13 +125,13 @@ namespace trc
 
 	using Radian = Angle<float, 2.0f * std::numbers::pi_v<float>>;
 	using Degree = Angle<float, 360.0f>;
-}  // namespace trc
+}  // namespace trs
 
 namespace fmt
 {
 	template <typename ValueType, ValueType unitSize>
-	std::string to_string(trc::Angle<ValueType, unitSize> angle)
+	std::string to_string(trs::Angle<ValueType, unitSize> angle)
 	{
-		return to_string(static_cast<trc::Angle<ValueType, unitSize>::WrapperType>(angle));
+		return to_string(static_cast<trs::Angle<ValueType, unitSize>::WrapperType>(angle));
 	}
 }  // namespace fmt

@@ -1,6 +1,6 @@
 #include "Transform.h"
 
-namespace trc
+namespace trs
 {
 	void Transform::lookAt(const Transform& target)
 	{
@@ -9,7 +9,7 @@ namespace trc
 
 	void Transform::lookAt(const glm::vec3& target)
 	{
-		rotate(getLookAtRotation(target), trc::TransformSpace::World);
+		rotate(getLookAtRotation(target), TransformSpace::World);
 	}
 
 	glm::quat Transform::getLookAtRotation(const glm::vec3& target) const
@@ -42,14 +42,14 @@ namespace trc
 		}
 		else
 		{
-			// s = 2 * cos(theta / 2)
-			auto s = std::sqrt((dot + 1.0f) * 2.0f);
-			// inverseS = sin(theta / 2)
-			auto inverseS = 1.0f / s;
+			// cos = cos(theta / 2)
+			auto cos = std::sqrt((dot + 1.0f) * 2.0f) / 2.0f;
+			// sin = sin(theta / 2)
+			auto sin = 1.0f / (cos * 2.0f);
 
 			auto axis = glm::cross(vec1, vec2);
 
-			return glm::normalize(glm::quat(s / 2.0f, axis.x * inverseS, axis.y * inverseS, axis.z * inverseS));
+			return glm::normalize(glm::quat(cos, axis * sin));
 		}
 	}
 
@@ -57,17 +57,17 @@ namespace trc
 	{
 		switch(space)
 		{
-			case trc::TransformSpace::Local:
+			case TransformSpace::Local:
 			{
 				m_rotation = m_rotation * rotation;
 				break;
 			}
-			case trc::TransformSpace::World:
+			case TransformSpace::World:
 			{
 				m_rotation = glm::inverse(m_rotation) * rotation * m_rotation;
 				break;
 			}
-			case trc::TransformSpace::Parent:
+			case TransformSpace::Parent:
 			{
 				// todo
 
@@ -101,17 +101,17 @@ namespace trc
 	{
 		switch(space)
 		{
-			case trc::TransformSpace::Local:
+			case TransformSpace::Local:
 			{
 				m_position += m_rotation * translation;
 				break;
 			}
-			case trc::TransformSpace::World:
+			case TransformSpace::World:
 			{
 				m_position += translation;
 				break;
 			}
-			case trc::TransformSpace::Parent:
+			case TransformSpace::Parent:
 			{
 				// todo
 				break;
@@ -139,12 +139,12 @@ namespace trc
 	{
 		switch(mode)
 		{
-			case trc::ScalingMode::Additive:
+			case ScalingMode::Additive:
 			{
 				m_scale += scale;
 				break;
 			}
-			case trc::ScalingMode::Multiplicative:
+			case ScalingMode::Multiplicative:
 			{
 				m_scale *= scale;
 				break;
@@ -213,4 +213,4 @@ namespace trc
 	{
 		m_cachedTransform.reset();
 	}
-}  // namespace trc
+}  // namespace trs

@@ -2,7 +2,7 @@
 
 #include <numeric>
 
-namespace trc
+namespace trs
 {
 	template <typename ValueType>
 	class Real

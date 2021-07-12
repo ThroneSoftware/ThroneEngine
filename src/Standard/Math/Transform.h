@@ -7,7 +7,7 @@
 
 #include <optional>
 
-namespace trc
+namespace trs
 {
 	enum class TransformSpace
 	{
@@ -64,4 +64,4 @@ namespace trc
 	};
 
 	//constexpr auto size = sizeof(Transform);
-}  // namespace trc
+}  // namespace trs
