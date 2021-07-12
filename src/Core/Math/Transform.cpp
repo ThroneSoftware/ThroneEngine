@@ -55,7 +55,27 @@ namespace trc
 
 	void Transform::rotate(const glm::quat& rotation, TransformSpace space)
 	{
-		///
+		switch(space)
+		{
+			case trc::TransformSpace::Local:
+			{
+				m_rotation = m_rotation * rotation;
+				break;
+			}
+			case trc::TransformSpace::World:
+			{
+				m_rotation = glm::inverse(m_rotation) * rotation * m_rotation;
+				break;
+			}
+			case trc::TransformSpace::Parent:
+			{
+				// todo
+
+				break;
+			}
+			default:
+				break;
+		}
 
 		resetCachedTransform();
 	}
@@ -170,9 +190,14 @@ namespace trc
 
 	glm::mat4 Transform::computeTransform() const
 	{
-		///
+		glm::mat4 transform = glm::identity<glm::mat4>();
 
-		return glm::mat4();
+		transform = glm::scale(transform, m_scale);
+		transform = glm::mat4_cast(m_rotation) * transform;
+
+		transform[3] = glm::vec4(m_position, 1.0f);
+
+		return transform;
 	}
 
 	glm::mat4& Transform::getCachedTransformRef()
