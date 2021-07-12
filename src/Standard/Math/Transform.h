@@ -58,9 +58,9 @@ namespace trs
 
 		std::optional<glm::mat4> m_cachedTransform;
 
-		glm::quat m_rotation;
-		glm::vec3 m_position;
-		glm::vec3 m_scale;
+		glm::quat m_rotation = glm::identity<glm::quat>();
+		glm::vec3 m_position = glm::vec3(0.0f);
+		glm::vec3 m_scale = glm::vec3(1.0f);
 	};
 
 	//constexpr auto size = sizeof(Transform);

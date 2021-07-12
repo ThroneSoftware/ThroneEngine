@@ -37,6 +37,8 @@ namespace trg
 				glfwCreateWindow(context->m_swapchainExtent.width, context->m_swapchainExtent.height, "Throne", nullptr, nullptr);
 			glfwSetWindowUserPointer(context->m_window, context.get());
 			glfwSetFramebufferSizeCallback(context->m_window, &glfwFrameBufferResizeCallback);
+			glfwSetCursorPosCallback(context->m_window, &glfwMouseMove);
+			glfwSetInputMode(context->m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 			auto instance = makeInstance();
 			context->m_instance = vk::Instance(instance.instance);

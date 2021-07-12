@@ -64,7 +64,8 @@ namespace trs
 			}
 			case TransformSpace::World:
 			{
-				m_rotation = glm::inverse(m_rotation) * rotation * m_rotation;
+				// why the fuck does this work
+				m_rotation = m_rotation * glm::inverse(m_rotation) * rotation * m_rotation;
 				break;
 			}
 			case TransformSpace::Parent:

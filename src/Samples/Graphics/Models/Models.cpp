@@ -1,3 +1,4 @@
+#include <Core/Cameras/FPCamera.h>
 #include <Graphics/GraphicsInstance.h>
 #include <Graphics/Meshes/MeshRenderer.h>
 #include <Graphics/Models/GltfLoader.h>
@@ -225,6 +226,11 @@ trg::vkwrappers::PipelineDynamicStates makeViewportDynamicStates(trg::VulkanCont
 	return dynamicStates;
 }
 
+glm::mat4 makeProjectionViewMatrix(trc::FPCamera& camera)
+{
+	return glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.1f, 256.0f) * camera.getViewMatrix();
+}
+
 class FrameContext
 {
 public:
@@ -347,12 +353,15 @@ void renderLoop(trg::GraphicsInstance& instance,
 				std::size_t frameContextCount,
 				trg::vkwrappers::SemaphorePool& acquireNextImageSemaphores,
 				std::vector<MeshRenderingInfo>& meshRenderers,
-				std::function<std::vector<FrameContext>()> makeFrameContexts)
+				std::function<std::vector<FrameContext>()> makeFrameContexts,
+				trc::FPCamera& camera,
+				trg::vkwrappers::UniformBuffer& viewProjectionUniformBuffer)
 {
 	refreshViewportDynamicStates(vkContext, meshRenderers);
 
 	std::vector<FrameContext> frameContexts = makeFrameContexts();
 
+	float deltaTime = 0;
 	uint64_t frameId = 0;
 	while(!instance.windowShouldClose())
 	{
@@ -360,15 +369,28 @@ void renderLoop(trg::GraphicsInstance& instance,
 
 		instance.processWindowEvents();
 
-		if(!vkContext.windowMinimized)
+		if(!vkContext.m_windowMinimized)
 		{
-			if(bool expected = true; vkContext.hasWindowResizeEvent.compare_exchange_strong(expected, false))
+			auto begin = std::chrono::steady_clock::now();
+
+			if(bool expected = true; vkContext.m_hasWindowResizeEvent.compare_exchange_strong(expected, false))
 			{
 				vkContext.m_device.waitIdle();
 
 				refreshViewportDynamicStates(vkContext, meshRenderers);
 
 				frameContexts = makeFrameContexts();
+			}
+			if(vkContext.m_mouseMove)
+			{
+				camera.rotate(glm::vec2(*vkContext.m_mouseMove - vkContext.m_mousePosition) * deltaTime);
+				vkContext.m_mousePosition = *vkContext.m_mouseMove;
+				vkContext.m_mouseMove = std::nullopt;
+
+				auto viewProjectionMatrix = makeProjectionViewMatrix(camera);
+
+				viewProjectionUniformBuffer.updateWithHostMemory(
+					tru::MemoryRegion(glm::value_ptr(viewProjectionMatrix), sizeof(glm::mat4)));
 			}
 
 			auto clearColor = glm::vec3(0.0f);
@@ -379,6 +401,10 @@ void renderLoop(trg::GraphicsInstance& instance,
 			// use imageIndex to choose the FrameContext because images could be out of order.
 			FrameContext& frameContext = frameContexts[imageIndex];
 			frameContext.renderFrame(clearColor, imageIndex, acquireNextImageSemaphore);
+
+			auto end = std::chrono::steady_clock::now();
+
+			deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(end - begin).count();
 		}
 
 		frameId++;
@@ -406,9 +432,14 @@ int main()
 
 	auto acquireNextImageSemaphores = trg::vkwrappers::SemaphorePool(vkContext.m_device, frameContextCount);
 
+	trs::Transform cameraTransform;
+	cameraTransform.translate(glm::vec3(15.0f, 0.0f, 0.0f), trs::TransformSpace::World);
+	cameraTransform.rotateOnAxis(glm::vec3(0.0f, 1.0f, 0.0f), trs::Radian(std::numbers::pi_v<float> / 2.0f), trs::TransformSpace::Local);
+	//cameraTransform.rotateOnAxis(glm::vec3(0.0f, 1.0f, 0.0f), trs::Radian(std::numbers::pi_v<float> / 2.0f), trs::TransformSpace::Local); 
+	//cameraTransform.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+	auto camera = trc::FPCamera(cameraTransform);
 
-	auto viewProjectionMatrix = glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.1f, 256.0f) *
-								glm::lookAt(glm::vec3{15, 0, -6}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0});
+	auto viewProjectionMatrix = makeProjectionViewMatrix(camera);
 
 	auto viewProjectionUniformBuffer =
 		trg::vkwrappers::UniformBuffer(sizeof(glm::mat4),
@@ -445,7 +476,14 @@ int main()
 		return makeFrameContexts(frameContextCount, instance, commandBuffers, renderPass, globalDescriptorSet, meshRenderers);
 	};
 
-	renderLoop(instance, vkContext, frameContextCount, acquireNextImageSemaphores, meshRenderers, makeFrameContextsFunction);
+	renderLoop(instance,
+			   vkContext,
+			   frameContextCount,
+			   acquireNextImageSemaphores,
+			   meshRenderers,
+			   makeFrameContextsFunction,
+			   camera,
+			   viewProjectionUniformBuffer);
 
 	vkContext.m_device.waitIdle();
 }

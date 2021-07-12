@@ -44,7 +44,10 @@ namespace trg
 			vkwrappers::CommandQueue m_graphicsQueue;
 		};
 
-		std::atomic_bool hasWindowResizeEvent = false;
-		std::atomic_bool windowMinimized = false;
+		std::atomic_bool m_hasWindowResizeEvent = false;
+		std::atomic_bool m_windowMinimized = false;
+
+		glm::ivec2 m_mousePosition;
+		std::optional<glm::ivec2> m_mouseMove;
 	};
 }  // namespace trg
