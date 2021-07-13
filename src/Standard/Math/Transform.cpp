@@ -25,12 +25,12 @@ namespace trs
 
 		auto dot = Real(glm::dot(vec1, vec2));
 
-		// Same direction, no rotation needed
+		// Parallel, no rotation needed
 		if(dot == 1.0f)
 		{
 			return glm::identity<glm::quat>();
 		}
-		// Directly opposed direction
+		// Antiparallel
 		else if(dot == -1.0f)
 		{
 			// Rotate 180 degree on the up axis
