@@ -100,6 +100,16 @@ namespace trs
 			return normalizeAngle<value_type, unitSize>(m_value);
 		}
 
+		constexpr void clamp(Angle low, Angle high) noexcept
+		{
+			m_value = getClamped(low, high);
+		}
+
+		constexpr WrapperType getClamped(Angle low, Angle high) const noexcept
+		{
+			return std::clamp(m_value, *low, *high);
+		}
+
 		template <value_type unitSizeOther>
 		constexpr std::compare_three_way_result_t<value_type, value_type>
 			operator<=>(const Angle<value_type, unitSizeOther>& other) const noexcept
@@ -118,6 +128,74 @@ namespace trs
 		constexpr std::compare_three_way_result_t<value_type, value_type> operator<=>(const Angle& other) const noexcept = default;
 
 		constexpr bool operator==(const Angle& other) const noexcept = default;
+
+		template <value_type unitSizeOther>
+		constexpr Angle& operator+=(const Angle<value_type, unitSizeOther>& other) noexcept
+		{
+			return operator+=(Angle(other));
+		}
+
+		template <value_type unitSizeOther>
+		constexpr Angle& operator-=(const Angle<value_type, unitSizeOther>& other) noexcept
+		{
+			return operator-=(Angle(other));
+		}
+
+		template <value_type unitSizeOther>
+		constexpr Angle operator+(const Angle<value_type, unitSizeOther>& other) const noexcept
+		{
+			return operator+(Angle(other));
+		}
+
+		template <value_type unitSizeOther>
+		constexpr Angle operator-(const Angle<value_type, unitSizeOther>& other) const noexcept
+		{
+			return operator-(Angle(other));
+		}
+
+		constexpr Angle& operator+=(const Angle& other) noexcept
+		{
+			m_value += other.m_value;
+			return *this;
+		}
+
+		constexpr Angle& operator-=(const Angle& other) noexcept
+		{
+			m_value -= other.m_value;
+			return *this;
+		}
+
+		constexpr Angle& operator*=(WrapperType value) noexcept
+		{
+			m_value *= value;
+			return *this;
+		}
+
+		constexpr Angle& operator/=(WrapperType value) noexcept
+		{
+			m_value /= value;
+			return *this;
+		}
+
+		constexpr Angle operator+(const Angle& other) const noexcept
+		{
+			return Angle(m_value + other.m_value);
+		}
+
+		constexpr Angle operator-(const Angle& other) const noexcept
+		{
+			return Angle(m_value - other.m_value);
+		}
+
+		constexpr Angle operator*(WrapperType value) const noexcept
+		{
+			return Angle(m_value * value);
+		}
+
+		constexpr Angle operator/(WrapperType value) const noexcept
+		{
+			return Angle(m_value / value);
+		}
 
 	private:
 		WrapperType m_value = {};

@@ -43,6 +43,36 @@ namespace trs
 			return *this == Real(other);
 		}
 
+		constexpr Real& operator+=(const Real& other) noexcept
+		{
+			m_value += other.m_value;
+			return *this;
+		}
+
+		constexpr Real& operator-=(const Real& other) noexcept
+		{
+			m_value -= other.m_value;
+			return *this;
+		}
+
+		constexpr Real& operator*=(const Real& other) noexcept
+		{
+			m_value *= other.m_value;
+			return *this;
+		}
+
+		constexpr Real& operator/=(const Real& other) noexcept
+		{
+			m_value /= other.m_value;
+			return *this;
+		}
+
+		constexpr Real& operator%=(const Real& other) noexcept
+		{
+			m_value %= other.m_value;
+			return *this;
+		}
+
 		value_type m_value = {};
 	};
-}  // namespace trc
+}  // namespace trs
