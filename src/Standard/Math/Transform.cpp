@@ -14,6 +14,7 @@ namespace trs
 
 	glm::quat Transform::getLookAtRotation(const glm::vec3& target) const
 	{
+		// target == m_position causes a division by 0 so return identity
 		if(target == m_position)
 		{
 			return glm::identity<glm::quat>();
@@ -24,11 +25,13 @@ namespace trs
 
 		auto dot = Real(glm::dot(vec1, vec2));
 
-		if(dot == 1.0f)	 // Same direction, no rotation needed
+		// Same direction, no rotation needed
+		if(dot == 1.0f)
 		{
 			return glm::identity<glm::quat>();
 		}
-		else if(dot == -1.0f)  // Directly opposed direction
+		// Directly opposed direction
+		else if(dot == -1.0f)
 		{
 			// Rotate 180 degree on the up axis
 			// Valid because:
