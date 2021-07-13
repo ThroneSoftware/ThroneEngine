@@ -39,6 +39,9 @@ namespace trg
 			glfwSetFramebufferSizeCallback(context->m_window, &glfwFrameBufferResizeCallback);
 			glfwSetCursorPosCallback(context->m_window, &glfwMouseMove);
 			glfwSetInputMode(context->m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			double xpos, ypos;
+			glfwGetCursorPos(context->m_window, &xpos, &ypos);
+			context->m_mousePosition = glm::ivec2(xpos, ypos);
 
 			auto instance = makeInstance();
 			context->m_instance = vk::Instance(instance.instance);

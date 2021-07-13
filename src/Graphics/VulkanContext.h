@@ -47,7 +47,7 @@ namespace trg
 		std::atomic_bool m_hasWindowResizeEvent = false;
 		std::atomic_bool m_windowMinimized = false;
 
-		glm::ivec2 m_mousePosition;
+		glm::ivec2 m_mousePosition = glm::ivec2(0);
 		std::optional<glm::ivec2> m_mouseMove;
 	};
 }  // namespace trg

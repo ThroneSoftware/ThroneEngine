@@ -14,10 +14,13 @@ namespace trs
 
 	glm::quat Transform::getLookAtRotation(const glm::vec3& target) const
 	{
-		// Based on https://www.ogre3d.org/docs/api/1.7/_ogre_vector3_8h_source.html#l00649
+		if(target == m_position)
+		{
+			return glm::identity<glm::quat>();
+		}
 
-		glm::vec3 vec1 = glm::normalize(m_position);
-		glm::vec3 vec2 = glm::normalize(target);
+		glm::vec3 vec1 = forward();
+		glm::vec3 vec2 = glm::normalize(target - m_position);
 
 		auto dot = Real(glm::dot(vec1, vec2));
 
@@ -25,20 +28,15 @@ namespace trs
 		{
 			return glm::identity<glm::quat>();
 		}
-
 		else if(dot == -1.0f)  // Directly opposed direction
 		{
-			//////////////////////// could this be replaced by axis = up()?
-
-
-			glm::vec3 axis = glm::cross(vec1, glm::vec3(0.0f, 1.0f, 0.0f));
-			if(Real(glm::length(axis)) == 0.0f)
-			{
-				// vec1 is parallel to up, use right instead.
-				axis = glm::cross(vec1, glm::vec3(1.0f, 0.0f, 0.0f));
-			}
-
-			return glm::normalize(glm::angleAxis(**Radian(std::numbers::pi_v<float>), axis));
+			// Rotate 180 degree on the up axis
+			// Valid because:
+			// vec1 == forward
+			// forward and up are perpendicular
+			// vec1 and vec2 are antiparallel
+			// vec1 and vec2 are perpendicular to up
+			return glm::normalize(glm::angleAxis(**Radian(std::numbers::pi_v<float>), up()));
 		}
 		else
 		{

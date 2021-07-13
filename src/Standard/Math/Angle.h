@@ -210,6 +210,6 @@ namespace fmt
 	template <typename ValueType, ValueType unitSize>
 	std::string to_string(trs::Angle<ValueType, unitSize> angle)
 	{
-		return to_string(static_cast<trs::Angle<ValueType, unitSize>::WrapperType>(angle));
+		return to_string(**angle);
 	}
 }  // namespace fmt

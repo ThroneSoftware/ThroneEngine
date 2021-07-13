@@ -433,10 +433,8 @@ int main()
 	auto acquireNextImageSemaphores = trg::vkwrappers::SemaphorePool(vkContext.m_device, frameContextCount);
 
 	trs::Transform cameraTransform;
-	cameraTransform.translate(glm::vec3(15.0f, 0.0f, 0.0f), trs::TransformSpace::World);
-	cameraTransform.rotateOnAxis(glm::vec3(0.0f, 1.0f, 0.0f), trs::Radian(std::numbers::pi_v<float> / 2.0f), trs::TransformSpace::Local);
-	//cameraTransform.rotateOnAxis(glm::vec3(0.0f, 1.0f, 0.0f), trs::Radian(std::numbers::pi_v<float> / 2.0f), trs::TransformSpace::Local); 
-	//cameraTransform.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+	//cameraTransform.translate(glm::vec3(15.0f, 0.0f, 0.0f), trs::TransformSpace::World);
+	cameraTransform.lookAt(glm::vec3(0.0f, 0.0f, -1.0f));
 	auto camera = trc::FPCamera(cameraTransform);
 
 	auto viewProjectionMatrix = makeProjectionViewMatrix(camera);
