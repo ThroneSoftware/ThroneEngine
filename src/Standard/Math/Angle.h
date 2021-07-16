@@ -197,6 +197,16 @@ namespace trs
 			return Angle(m_value / value);
 		}
 
+		constexpr Angle operator+() const noexcept
+		{
+			return Angle(-m_value);
+		}
+
+		constexpr Angle operator-() const noexcept
+		{
+			return Angle(-m_value);
+		}
+
 	private:
 		WrapperType m_value = {};
 	};

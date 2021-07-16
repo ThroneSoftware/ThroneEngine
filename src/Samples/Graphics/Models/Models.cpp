@@ -383,6 +383,7 @@ void renderLoop(trg::GraphicsInstance& instance,
 			}
 			if(vkContext.m_mouseMove)
 			{
+				//std::cout << "frameTime: " << deltaTime << "\n";
 				camera.rotate(glm::vec2(*vkContext.m_mouseMove - vkContext.m_mousePosition) * deltaTime);
 				vkContext.m_mousePosition = *vkContext.m_mouseMove;
 				vkContext.m_mouseMove = std::nullopt;

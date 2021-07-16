@@ -16,7 +16,5 @@ namespace trc
 
 	private:
 		trs::Transform& m_transform;
-
-		trs::Degree m_pitch;
 	};
 }  // namespace trc
