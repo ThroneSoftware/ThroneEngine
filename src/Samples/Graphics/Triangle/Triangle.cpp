@@ -311,9 +311,9 @@ int main()
 
 		instance.processWindowEvents();
 
-		if(!vkContext.windowMinimized)
+		if(!vkContext.m_windowMinimized)
 		{
-			if(bool expected = true; vkContext.hasWindowResizeEvent.compare_exchange_strong(expected, false))
+			if(bool expected = true; vkContext.m_hasWindowResizeEvent.compare_exchange_strong(expected, false))
 			{
 				vkContext.m_device.waitIdle();
 

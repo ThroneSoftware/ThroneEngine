@@ -1,6 +1,8 @@
 target_sources(Core PRIVATE 
 	BaseComponent.cpp
 	BaseComponent.h
+	Cameras/FPCamera.cpp
+	Cameras/FPCamera.h
 	Component.h
 	ComponentTypeTraits/ComponentTypeTrait.cpp
 	ComponentTypeTraits/ComponentTypeTrait.h

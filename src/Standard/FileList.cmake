@@ -7,6 +7,10 @@ target_sources(Standard PRIVATE
 	IManagerFactory.h
 	Manager.h
 	ManagerFactory.h
+	Math/Angle.h
+	Math/Real.h
+	Math/Transform.cpp
+	Math/Transform.h
 	Pointers/BasePtr.h
 	Pointers/Comparisons.h
 	Pointers/EnableSharedFromThis.h
