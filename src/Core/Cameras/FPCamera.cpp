@@ -37,4 +37,14 @@ namespace trc
 
 		return glm::lookAt(position, view, up);
 	}
+
+	trs::Transform& FPCamera::getTransform()
+	{
+		return m_transform;
+	}
+
+	const trs::Transform& FPCamera::getTransform() const
+	{
+		return m_transform;
+	}
 }  // namespace trc

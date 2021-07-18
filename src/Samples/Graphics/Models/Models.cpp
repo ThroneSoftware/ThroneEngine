@@ -363,6 +363,7 @@ void renderLoop(trg::GraphicsInstance& instance,
 
 	float deltaTime = 0;
 	uint64_t frameId = 0;
+	float totalTime = 0.0f;
 	while(!instance.windowShouldClose())
 	{
 		auto currentResourceIndex = frameId % frameContextCount;
@@ -372,6 +373,7 @@ void renderLoop(trg::GraphicsInstance& instance,
 		if(!vkContext.m_windowMinimized)
 		{
 			auto begin = std::chrono::steady_clock::now();
+
 
 			if(bool expected = true; vkContext.m_hasWindowResizeEvent.compare_exchange_strong(expected, false))
 			{
@@ -383,16 +385,19 @@ void renderLoop(trg::GraphicsInstance& instance,
 			}
 			if(vkContext.m_mouseMove)
 			{
-				//std::cout << "frameTime: " << deltaTime << "\n";
 				camera.rotate(glm::vec2(*vkContext.m_mouseMove - vkContext.m_mousePosition) * deltaTime);
 				vkContext.m_mousePosition = *vkContext.m_mouseMove;
 				vkContext.m_mouseMove = std::nullopt;
-
-				auto viewProjectionMatrix = makeProjectionViewMatrix(camera);
-
-				viewProjectionUniformBuffer.updateWithHostMemory(
-					tru::MemoryRegion(glm::value_ptr(viewProjectionMatrix), sizeof(glm::mat4)));
 			}
+
+			// this should be a "rotateAround" function
+			/*camera.getTransform().setPosition(camera.getTransform().getPosition() *
+											  glm::angleAxis(**trs::Radian(trs::Degree(0.01f)) * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+			camera.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));*/
+
+			auto viewProjectionMatrix = makeProjectionViewMatrix(camera);
+			viewProjectionUniformBuffer.updateWithHostMemory(tru::MemoryRegion(glm::value_ptr(viewProjectionMatrix), sizeof(glm::mat4)));
 
 			auto clearColor = glm::vec3(0.0f);
 
@@ -406,6 +411,7 @@ void renderLoop(trg::GraphicsInstance& instance,
 			auto end = std::chrono::steady_clock::now();
 
 			deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(end - begin).count();
+			totalTime += deltaTime;
 		}
 
 		frameId++;

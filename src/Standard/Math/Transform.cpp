@@ -1,5 +1,9 @@
 #include "Transform.h"
 
+#include <fmt/format.h>
+
+#include <iostream>
+
 namespace trs
 {
 	void Transform::lookAt(const Transform& target)
@@ -9,49 +13,40 @@ namespace trs
 
 	void Transform::lookAt(const glm::vec3& target)
 	{
-		rotate(getLookAtRotation(target), TransformSpace::World);
+		setRotation(getLookAtRotation(target));
 	}
 
 	glm::quat Transform::getLookAtRotation(const glm::vec3& target) const
 	{
-		// target == m_position causes a division by 0 so return identity
-		if(target == m_position)
+		constexpr auto worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+		constexpr auto worldForward = glm::vec3(0.0f, 0.0f, 1.0f);
+
+		auto normTarget = glm::normalize(target - m_position);
+
+		if(normTarget == glm::vec3(0.0f))
 		{
-			return glm::identity<glm::quat>();
+			return m_rotation;
 		}
 
-		glm::vec3 vec1 = forward();
-		glm::vec3 vec2 = glm::normalize(target - m_position);
+		glm::vec3 perpendicularToForward = {};
 
-		auto dot = Real(glm::dot(vec1, vec2));
-
-		// Parallel, no rotation needed
-		if(dot == 1.0f)
+		if(auto dot = glm::dot(normTarget, worldUp); dot != 1.0f && dot != -1.0f)
 		{
-			return glm::identity<glm::quat>();
-		}
-		// Antiparallel
-		else if(dot == -1.0f)
-		{
-			// Rotate 180 degree on the up axis
-			// Valid because:
-			// vec1 == forward
-			// forward and up are perpendicular
-			// vec1 and vec2 are antiparallel
-			// vec1 and vec2 are perpendicular to up
-			return glm::normalize(glm::angleAxis(**Radian(std::numbers::pi_v<float>), up()));
+			perpendicularToForward = worldUp;
 		}
 		else
 		{
-			// cos = cos(theta / 2)
-			auto cos = std::sqrt((dot + 1.0f) * 2.0f) / 2.0f;
-			// sin = sin(theta / 2)
-			auto sin = 1.0f / (cos * 2.0f);
-
-			auto axis = glm::cross(vec1, vec2);
-
-			return glm::normalize(glm::quat(cos, axis * sin));
+			perpendicularToForward = worldForward;
 		}
+
+
+		auto forward = normTarget;
+		auto right = glm::normalize(glm::cross(perpendicularToForward, forward));
+		auto up = glm::normalize(glm::cross(forward, right));
+
+		glm::mat3 rotation = glm::mat3(right, up, forward);
+
+		return glm::quat_cast(rotation);
 	}
 
 	void Transform::rotate(const glm::quat& rotation, TransformSpace space)
