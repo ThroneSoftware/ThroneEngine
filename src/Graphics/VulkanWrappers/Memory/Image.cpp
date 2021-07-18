@@ -114,7 +114,7 @@ namespace trg::vkwrappers
 											vk::AccessFlagBits newAccess,
 											vk::PipelineStageFlagBits newPipelineStage)
 	{
-		auto stagingBuffer = Buffer(memory.byteSize, vk::BufferUsageFlagBits::eTransferSrc, vma::MemoryUsage::eCpuToGpu);
+		auto stagingBuffer = Buffer(memory.byteSize, vk::BufferUsageFlagBits::eTransferSrc | vk::BufferUsageFlagBits::eTransferDst, vma::MemoryUsage::eCpuToGpu);
 
 		stagingBuffer.updateWithHostMemory(memory);
 

@@ -14,6 +14,9 @@ namespace trc
 
 		glm::mat4 getViewMatrix() const;
 
+		trs::Transform& getTransform();
+		const trs::Transform& getTransform() const;
+
 	private:
 		trs::Transform& m_transform;
 	};
