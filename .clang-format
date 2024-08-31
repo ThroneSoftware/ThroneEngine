@@ -23,6 +23,7 @@ BinPackParameters: 'false'
 BreakBeforeBinaryOperators: None
 BreakBeforeBraces: Allman
 BreakBeforeTernaryOperators: 'false'
+BreakBeforeConceptDeclarations: 'true'
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 BreakStringLiterals: 'false'

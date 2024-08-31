@@ -9,7 +9,7 @@
 namespace trg::vkwrappers
 {
 	template <typename T>
-	concept IsMemoryResource = trs::isOneOf<T, vk::Buffer, vk::Image>();
+	concept IsMemoryResource = trs::IsOneOf<T, vk::Buffer, vk::Image>;
 
 	template <IsMemoryResource Type>
 	class VmaUnique

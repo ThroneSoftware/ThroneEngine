@@ -10,6 +10,7 @@
 #include <VkBootstrap.h>
 #include <Vulkan/vulkan.hpp>
 #include <fmt/format.h>
+#include <gsl/gsl>
 
 #include <iostream>
 #include <string>
@@ -152,15 +153,15 @@ namespace trg
 		void* userPointer = glfwGetWindowUserPointer(window);
 		VulkanContext* vkContext = reinterpret_cast<VulkanContext*>(userPointer);
 
-		vkContext->hasWindowResizeEvent = true;
+		vkContext->m_hasWindowResizeEvent = true;
 
 		if(width == 0 || height == 0)
 		{
-			vkContext->windowMinimized = true;
+			vkContext->m_windowMinimized = true;
 		}
 		else
 		{
-			vkContext->windowMinimized = false;
+			vkContext->m_windowMinimized = false;
 
 			vkContext->m_device.waitIdle();
 
@@ -170,5 +171,13 @@ namespace trg
 			vkContext->m_swapchain.~Swapchain();
 			new(&vkContext->m_swapchain) vkwrappers::Swapchain(vkContext->m_device, swapchain);
 		}
+	}
+
+	void glfwMouseMove(GLFWwindow* window, double xpos, double ypos)
+	{
+		void* userPointer = glfwGetWindowUserPointer(window);
+		VulkanContext* vkContext = reinterpret_cast<VulkanContext*>(userPointer);
+
+		vkContext->m_mouseMove = glm::ivec2(gsl::narrow<int>(xpos), gsl::narrow<int>(ypos));
 	}
 }  // namespace trg

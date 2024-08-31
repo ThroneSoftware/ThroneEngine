@@ -2,6 +2,7 @@ target_sources(TestStandard PRIVATE
 	main.cpp
 	MockDeleter.h
 	MockResource.h
+	TestAngle.cpp
 	TestCompressedPair.cpp
 	TestEnableSharedFromThis.cpp
 	TestManager.cpp
@@ -10,4 +11,5 @@ target_sources(TestStandard PRIVATE
 	TestResource.cpp
 	TestTask.cpp
 	TestTaskFence.cpp
+	TestTransform.cpp
 )
